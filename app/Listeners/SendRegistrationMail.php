@@ -2,6 +2,8 @@
 
 namespace App\Listeners;
 
+use App\Mail\RegistrationEmail;
+use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -27,12 +29,7 @@ class SendRegistrationMail
      */
     public function handle(Verified $event)
     {
-        $data = array('name'=>"Virat Gandhi");
-        Mail::send(['text'=>'mail'], $data, function($message) {
-            $message->to('filippo@localidautore.it', 'Tutorials Point')->subject
-            ('Laravel Basic Testing Mail');
-            $message->from('luca@localidautore.it','Virat Gandhi');
-        });
-        echo "Basic Email Sent. Check your inbox.";
+        $user = User::whereNotNull('email_verified_at')->get()->last();
+        Mail::to('filippo@localidautore.it')->send(new \App\Mail\RegistrationEmail($user));
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use UniSharp\LaravelFilemanager\Lfm;
 
@@ -19,10 +20,35 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+Route::get('send-mail', function () {
+
+    $details = [
+        'title' => 'Mail from ItSolutionStuff.com',
+        'body' => 'This is for testing email using smtp'
+    ];
+
+
+
+    dd("Email is Sent.");
+});
+
+Route::get('/home', function () {
+    return view('home');
+})->middleware('verified');
+
+
+Route::group(['namespace' => 'Auth', 'prefix' => '', 'middleware' => ['role:user']], function () {
+    Route::get('/guest', function () {
+        return view('guest.index');
+    })->middleware('verified');
+});
+
 Route::group(['namespace' => 'Auth', 'prefix' => 'admin', 'middleware' => ['role:superadministrator']], function () {
-    Route::get('/home', function () {
+
+    Route::get('/', function () {
         return view('home');
     })->middleware('verified');
+
 });
 
 Route::group(['namespace' => 'Auth', 'prefix' => 'admin', 'middleware' => ['role:user']], function () {

@@ -52,8 +52,8 @@
             </div>
 
             <div class="input-group mb-3 col-6">
-                <select class="form-control" id="title" name="title">
-                    <option value="NULL">Title</option>
+                <select id="title" name="title"  class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}">
+                    <option value="">Title</option>
                     <option value="Prof">Prof.</option>
                     <option value="Dr">Dr.</option>
                     <option value="Mr">Mr.</option>
@@ -65,11 +65,15 @@
                         <span class="fas fa-address-book {{ config('adminlte.classes_auth_icon', '') }}"></span>
                     </div>
                 </div>
-
+                @if($errors->has('title'))
+                    <div class="invalid-feedback">
+                        <strong>{{ $errors->first('title') }}</strong>
+                    </div>
+                @endif
             </div>
 
             <div class="input-group mb-3 col-6">
-                <select class="form-control" id="gender" name="gender">
+                <select id="gender" name="gender"  class="form-control {{ $errors->has('gender') ? 'is-invalid' : '' }}">
                     <option value="">Gender</option>
                     <option value="M">Male</option>
                     <option value="F">Female</option>
@@ -79,21 +83,34 @@
                         <span class="fas fa-mars {{ config('adminlte.classes_auth_icon', '') }}"></span>
                     </div>
                 </div>
+
+                @if($errors->has('gender'))
+                    <div class="invalid-feedback">
+                        <strong>{{ $errors->first('gender') }}</strong>
+                    </div>
+                @endif
+
             </div>
 
             <div class="input-group mb-3 col-6">
-                <select id="country" class="form-control" name="country">
-                    <option value="NULL">Country</option>
+                <select id="country" name="country"  class="form-control {{ $errors->has('country') ? 'is-invalid' : '' }}">
+                    <option value="">Country</option>
                     @foreach($countries  as $key => $value)
                       <option value="{{$key}}">{{$value}}</option>
                         @endforeach
-
                 </select>
                 <div class="input-group-append">
                     <div class="input-group-text">
                         <span class="fas fa-globe {{ config('adminlte.classes_auth_icon', '') }}"></span>
                     </div>
                 </div>
+
+                @if($errors->has('country'))
+                    <div class="invalid-feedback">
+                        <strong>{{ $errors->first('country') }}</strong>
+                    </div>
+                @endif
+
             </div>
 
             {{-- City field --}}
