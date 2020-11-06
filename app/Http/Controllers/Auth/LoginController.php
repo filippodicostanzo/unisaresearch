@@ -48,7 +48,7 @@ class LoginController extends Controller
             return '/guest';
         }
 
-        if ($user->hasRolse('researcher')) {
+        if ($user->hasRole('researcher')) {
             return '/home';
         }
 

@@ -4,6 +4,8 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
+
+
 require('./bootstrap');
 require('./admin')
 require('../../public/vendor/adminlte/dist/js/adminlte.min.js');
@@ -21,7 +23,34 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+import axios from 'axios';
+import Vuelidate from 'vuelidate'
+import CKEditor from 'ckeditor4-vue';
+
+import route from 'ziggy-js';
+import { Ziggy } from './ziggy';
+
+import CardWidget from "./components/CardWidget";
+import CardTable from "./components/CardTable";
+import TemplateCreate from "./components/TemplateCreate";
+import TemplateTable from "./components/TemplateTable";
+import CategoryCreate from "./components/CategoryCreate";
+import CategoryTable from "./components/CategoryTable";
+import AuthorCreate from "./components/AuthorCreate";
+import AuthorTable from "./components/AuthorTable";
+
+window.route = route;
+window.Ziggy = Ziggy;
+
+Vue.prototype.$http = axios;
+Vue.use(Vuelidate);
+Vue.use( CKEditor );
+
+Vue.mixin({
+    methods: {
+        route: (name, params, absolute) => route(name, params, absolute, Ziggy),
+    },
+});
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -29,7 +58,19 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-/*const app = new Vue({
+
+const app = new Vue({
     el: '#app',
+    components: {
+        'card-widget': CardWidget,
+        'card-table': CardTable,
+        'template-table': TemplateTable,
+        'template-create': TemplateCreate,
+        'category-table': CategoryTable,
+        'category-create': CategoryCreate,
+        'author-table': AuthorTable,
+        'author-create': AuthorCreate,
+
+    }
 });
-*/
+

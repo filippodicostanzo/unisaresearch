@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Template;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
@@ -28,7 +29,6 @@ Route::get('send-mail', function () {
     ];
 
 
-
     dd("Email is Sent.");
 });
 
@@ -37,17 +37,23 @@ Route::get('/home', function () {
 })->middleware('verified');
 
 
-Route::group(['namespace' => 'Auth', 'prefix' => '', 'middleware' => ['role:user']], function () {
+Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => '', 'middleware' => ['role:user|superadministrator']], function () {
     Route::get('/guest', function () {
         return view('guest.index');
     })->middleware('verified');
+
+    Route::resource('posts', 'PostController');
 });
 
-Route::group(['namespace' => 'Auth', 'prefix' => 'admin', 'middleware' => ['role:superadministrator']], function () {
+Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', 'middleware' => ['role:superadministrator']], function () {
 
     Route::get('/', function () {
-        return view('home');
+        return view('admin.home.index');
     })->middleware('verified');
+
+    Route::resource('templates', 'TemplateController');
+    Route::resource('categories', 'CategoryController');
+    Route::resource('authors', 'AuthorController');
 
 });
 
@@ -82,7 +88,10 @@ Route::group(['namespace' => 'Auth', 'prefix'=>'admin', 'middleware' => ['role:a
 })->name('home')->middleware('verified');*/
 
 
-/*Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
+Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
     Lfm::routes();
 });
-*/
+
+Route::get('/{catchall?}', function () {
+    return response()->view('authors.create');
+})->where('catchall', '(.*)');

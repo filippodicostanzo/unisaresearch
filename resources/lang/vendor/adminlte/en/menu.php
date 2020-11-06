@@ -12,8 +12,14 @@ return [
     'level_one'                     => 'Level 1',
     'level_two'                     => 'Level 2',
     'level_three'                   => 'Level 3',
-    'labels'                        => 'LABL',
+    'admin_settings'                => 'ADMIN SETTINGS',
     'important'                     => 'Important',
     'warning'                       => 'Warning',
     'information'                   => 'Information',
+    'dashboard'                     => 'Dashboard',
+    'templates'                     => 'Templates',
+    'categories'                    => 'Categories',
+    'posts'                         => 'Posts',
+    'users'                         => 'Users',
+    'authors'                       => 'Authors'
 ];
