@@ -60,9 +60,15 @@ class TemplateController extends Controller
      */
     public function store(Request $request)
     {
+
+        $this->validate($request, [
+            'name' => 'required',
+            'fields' => 'required'
+        ]);
+
         $template = new Template($request->all());
 
-        $template->fields = json_encode($request->all('fields'));
+        $template->fields = json_encode($request->fields);
 
         $res = $template->save();
         $message = $res ? 'Il Video ' . $template->name . ' è stato inserito' : 'Il Video ' . $template->name . ' non è stato inserito';
@@ -90,7 +96,8 @@ class TemplateController extends Controller
      */
     public function edit(Template $template)
     {
-        //
+        $item = $template;
+        return view('admin.templates.edit', ['item' => $item, 'title' => $this->title]);
     }
 
     /**

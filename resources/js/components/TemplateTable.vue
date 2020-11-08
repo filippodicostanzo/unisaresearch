@@ -35,6 +35,10 @@
                                     <a class="btn btn-default btn-xs" :href="route('templates.show', {id: item.id})">
                                         <i class="fas fa-eye fa-1x fa-lg" aria-hidden="true"></i>
                                     </a>
+                                    <a class="btn btn-default btn-xs"
+                                       :href="route('templates.edit', {id: item.id})">
+                                        <i class="fas fa-pencil-alt fa-1x fa-lg" aria-hidden="true"></i>
+                                    </a>
                                     <a class="btn btn-danger btn-xs" v-on:click="deleteItem(item.id, $event)">
                                         <i class="fas fa-minus-circle fa-1x fa-lg" aria-hidden="true"></i>
                                     </a>

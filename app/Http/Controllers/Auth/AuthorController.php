@@ -37,7 +37,7 @@ class AuthorController extends Controller
      */
     public function index()
     {
-        if (Auth::user()->hasRole('superadministrator|administrator')) {
+        if ($this->user->hasRole('superadministrator|administrator')) {
             $items = Author::orderBy('id', 'ASC')->get();
             return view('authors.index', ['items' => $items, 'title' => $this->title]);
         }

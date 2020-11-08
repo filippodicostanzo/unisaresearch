@@ -5,7 +5,6 @@
  */
 
 
-
 require('./bootstrap');
 require('./admin')
 require('../../public/vendor/adminlte/dist/js/adminlte.min.js');
@@ -24,6 +23,7 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 import axios from 'axios';
+import lodash from 'lodash'
 import Vuelidate from 'vuelidate'
 import CKEditor from 'ckeditor4-vue';
 
@@ -38,11 +38,13 @@ import CategoryCreate from "./components/CategoryCreate";
 import CategoryTable from "./components/CategoryTable";
 import AuthorCreate from "./components/AuthorCreate";
 import AuthorTable from "./components/AuthorTable";
+import PostsTable from "./components/PostsTable";
 
 window.route = route;
 window.Ziggy = Ziggy;
 
 Vue.prototype.$http = axios;
+Vue.prototype.$_ = lodash;
 Vue.use(Vuelidate);
 Vue.use( CKEditor );
 
@@ -70,6 +72,7 @@ const app = new Vue({
         'category-create': CategoryCreate,
         'author-table': AuthorTable,
         'author-create': AuthorCreate,
+        'posts-table': PostsTable,
 
     }
 });

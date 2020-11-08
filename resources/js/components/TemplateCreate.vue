@@ -7,7 +7,7 @@
                         Create New Template
                     </h1>
                     <div class="card-action">
-                        <a :href="route('template.index')">
+                        <a :href="route('templates.index')">
                             <i class="fas fa-arrow-circle-left fa-3x fa-fw" aria-hidden="true"></i>
                         </a>
 
@@ -36,20 +36,17 @@
                             <div class="col-md-12 col-xs-12">
                                 <div class="form-group">
                                     <label class="form__label">Insert Fields</label>
-                                    <div class="form-group" v-for="(input,k) in template.fields" :key="k">
+                                    <div class="form-group" v-for="(input,k) in template.fields" :key="k"
+                                         :class="{ 'form-group--error': $v.template.fields.$error }">
                                         <input type="text" class="form__input" v-model="input.name"/>
-                                        <span>
-                    <i
-                        class="fas fa-minus-circle"
-                        @click="remove(k)"
-                        v-show="k || ( !k && template.fields.length > 1)"
-                    ></i>
-                    <i
-                        class="fas fa-plus-circle"
-                        @click="add(k)"
-                        v-show="k == template.fields.length-1"
-                    ></i>
-                </span>
+                                        <span class="remove">
+                                            <i class="fas fa-minus-circle" @click="remove(k)"
+                                            v-show="k || ( !k && template.fields.length > 1)"></i>
+                                        </span>
+                                        <span class="add">
+                                            <i class="fas fa-plus-circle" @click="add(k)"
+                                                  v-show="k == template.fields.length-1"></i>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -57,7 +54,8 @@
                         <div class="row padding">
                             <div class="col-md-12 col-xs-12 center">
                                 <div class="form-group">
-                                    <button class="button btn-primary btn btn-block" type="submit" :disabled="submitStatus === 'PENDING'"><i
+                                    <button class="button btn-primary btn btn-block" type="submit"
+                                            :disabled="submitStatus === 'PENDING'"><i
                                         class="fa fa-floppy-o" aria-hidden="true"></i> Submit!
                                     </button>
                                     <p class="typo__p" v-if="submitStatus === 'OK'">Thanks for your submission!</p>
@@ -101,23 +99,33 @@
         },
         mounted() {
             if (this.item) {
-                this.category = JSON.parse(this.item);
+                this.template = JSON.parse(this.item);
+                this.template.fields = JSON.parse(this.template.fields);
                 this.source = 'edit'
             } else {
                 this.source = 'new'
             }
+
         },
         validations: {
             template: {
                 name: {
                     required,
                     minLength: minLength(4)
+                },
+                fields: {
+                    required,
                 }
             },
         },
         methods: {
             add(index) {
-                this.template.fields.push({name: ""});
+                if (this.template.fields.length<10) {
+                    this.template.fields.push({name: ""});
+                }
+                else {
+                    window.alert('Max Fields');
+                }
             },
             remove(index) {
                 this.template.fields.splice(index, 1);
@@ -127,7 +135,7 @@
 
                 console.log('submit!')
                 this.$v.$touch()
-                if (this.$v.$invalid) {
+                if (this.$v.$invalid || this.template.fields[0].name === '') {
                     this.submitStatus = 'ERROR'
                 } else {
                     console.log(this.template);
@@ -137,21 +145,20 @@
                             .then(response => {
 
                                 if (response.status === 200) {
-                                    window.location.href = route('template.index')
+                                    window.location.href = route('templates.index')
                                 }
                             })
                             .catch(error => {
                                 alert(error.message)
                             });
-                    }
-
-                    else {
+                    } else {
+                        console.log(this.template);
                         this.$http
-                            .patch("/admin/templates/"+this.template.id, this.template)
+                            .patch("/admin/templates/" + this.template.id, this.template)
                             .then(response => {
 
                                 if (response.status === 200) {
-                                    window.location.href = route('template.index')
+                                    window.location.href = route('templates.index')
                                 }
                             })
                             .catch(error => {
@@ -187,6 +194,21 @@
     }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+    .add {
+        cursor: pointer;
+        i {
+            color: #143059;
+            font-size: 2rem;
+            padding: 10px;
+        }
+    }
+    .remove {
+        cursor: pointer;
+        i {
+            color: #dc3545;
+            font-size: 2rem;
+            padding: 10px;
+        }
+    }
 </style>
