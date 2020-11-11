@@ -67,17 +67,50 @@ class AppServiceProvider extends ServiceProvider
                   //  'label' => Category::count(),
                     'label_color' => 'success',
                 ],
-                [
-                    'text' => 'users',
-                    'url' => 'admin/users',
-                    'icon' => 'fas fa-fw fa-users',
-                    'label' => User::count(),
-                    'label_color' => 'success',
-                ],
             ];
             $event->menu->addAfter('admin_settings', ...$array);
         });
 
+
+        $events->listen(BuildingMenu::class, function (BuildingMenu $event) {
+
+            $administrators = User::whereRoleIs('superadministrator')->orwhereRoleIs('administrator')->get();
+            $supervisors  = User::whereRoleIs('supervisor')->get();
+            $researchers = User::whereRoleIs('researcher')->get();
+            $users  = User::whereRoleIs('user')->get();
+
+            $array = [
+                [
+                    'text' => 'administrators',
+                    'url' => 'admin/users?type=administrator',
+                    'icon' => 'fas fa-fw fa-user-cog',
+                    'label' => count($administrators),
+                    'label_color' => 'success',
+                ],
+                [
+                    'text' => 'supervisors',
+                    'url' => 'admin/users?type=supervisor',
+                    'icon' => 'fas fa-fw fa-user-tag',
+                    'label' => count($supervisors),
+                    'label_color' => 'success',
+                ],
+                [
+                    'text' => 'researchers',
+                    'url' => 'admin/users?type=researcher',
+                    'icon' => 'fas fa-fw fa-user-edit',
+                    'label' => count($researchers),
+                    'label_color' => 'success',
+                ],
+                [
+                    'text' => 'users',
+                    'url' => 'admin/users?type=user',
+                    'icon' => 'fas fa-fw fa-user-clock',
+                    'label' => count($users),
+                    'label_color' => 'success',
+                ],
+            ];
+            $event->menu->addAfter('users_settings', ...$array);
+        });
 
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Template;
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
@@ -54,6 +55,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
     Route::resource('templates', 'TemplateController');
     Route::resource('categories', 'CategoryController');
     Route::resource('authors', 'AuthorController');
+    Route::resource('users', 'UserController');
+    Route::resource('posts', 'PostController');
 
 });
 

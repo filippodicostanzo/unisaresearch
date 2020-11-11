@@ -252,34 +252,14 @@ return [
 
         ['header' => 'admin_settings', 'role' => 'superadministrator|administrator', 'key' => 'admin_settings'],
 
+        ['header' => 'users_settings', 'key'=>'users_settings'],
+
         ['header' => 'account_settings'],
         [
             'text' => 'profile',
             'url'  => 'admin/settings',
             'icon' => 'fas fa-fw fa-user',
-        ],
-        [
-            'text' => 'change_password',
-            'url'  => 'admin/settings',
-            'icon' => 'fas fa-fw fa-lock',
-        ],
-
-        [
-            'text'       => 'important',
-            'icon_color' => 'red',
-            'url'        => '#',
-            'role'       => 'user'
-        ],
-        [
-            'text'       => 'warning',
-            'icon_color' => 'yellow',
-            'url'        => '#',
-        ],
-        [
-            'text'       => 'information',
-            'icon_color' => 'cyan',
-            'url'        => '#',
-        ],
+        ]
     ],
 
     /*

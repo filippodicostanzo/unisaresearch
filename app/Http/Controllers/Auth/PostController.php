@@ -37,7 +37,14 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        if ($this->user->hasRole('superadministrator|administrator')) {
+            $items = Post::orderBy('id', 'ASC')->get();
+            return view('posts.index', ['items' => $items, 'title' => $this->title]);
+        }
+
+        else {
+
+        }
     }
 
     /**
