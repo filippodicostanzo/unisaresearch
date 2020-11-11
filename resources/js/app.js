@@ -3,6 +3,7 @@
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
+import UserTable from "./components/UserTable";
 
 
 require('./bootstrap');
@@ -38,7 +39,8 @@ import CategoryCreate from "./components/CategoryCreate";
 import CategoryTable from "./components/CategoryTable";
 import AuthorCreate from "./components/AuthorCreate";
 import AuthorTable from "./components/AuthorTable";
-import PostsTable from "./components/PostsTable";
+import PostTable from "./components/PostTable";
+import UserCreate from "./components/UserCreate";
 
 window.route = route;
 window.Ziggy = Ziggy;
@@ -72,8 +74,16 @@ const app = new Vue({
         'category-create': CategoryCreate,
         'author-table': AuthorTable,
         'author-create': AuthorCreate,
-        'posts-table': PostsTable,
-
+        'post-table': PostTable,
+        'user-table': UserTable,
+        'user-create': UserCreate,
     }
 });
 
+/*
+import jquery from 'jquery';
+jquery(document).ready(function($) {
+    console.log('a');
+    $("#lfm_pdf").filemanager('file')
+});
+*/

@@ -21,5 +21,9 @@ return [
     'categories'                    => 'Categories',
     'posts'                         => 'Posts',
     'users'                         => 'Users',
-    'authors'                       => 'Authors'
+    'authors'                       => 'Authors',
+    'users_settings'                => 'USERS SETTINGS',
+    'administrators'                => 'Administrators',
+    'supervisors'                   => 'Supervisors',
+    'researchers'                   => 'Researchers',
 ];

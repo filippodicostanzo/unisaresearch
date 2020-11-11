@@ -3302,7 +3302,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "UserCreate",
-  props: ['item', 'roles', 'countries', 'role'],
+  props: ['item', 'roles', 'countries', 'role', 'profile', 'password'],
   mounted: function mounted() {
     this.json_countries = JSON.parse(this.countries);
     this.json_roles = JSON.parse(this.roles);
@@ -3313,6 +3313,7 @@ __webpack_require__.r(__webpack_exports__);
       this.json_role = JSON.parse(this.role);
       this.key = this.json_role.id;
       this.active_role = this.json_role.name;
+      this.user.password = this.password;
       console.log(this.active_role);
       this.source = 'edit';
     } else {
@@ -3484,6 +3485,8 @@ __webpack_require__.r(__webpack_exports__);
             alert(error.message);
           });
         } else {
+          this.user.new_password = this.password !== this.user.password;
+          console.log(this.user);
           this.$http.patch("/admin/users/" + this.user.id, this.user).then(function (response) {
             if (response.status === 200) {
               window.location.href = route('users.index');
@@ -41903,72 +41906,75 @@ var render = function() {
               }
             },
             [
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col-md-12 col-xs-12" }, [
-                  _c("div", { staticClass: "form-group" }, [
-                    _c(
-                      "select",
-                      {
-                        directives: [
+              !_vm.profile
+                ? _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "col-md-12 col-xs-12" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c(
+                          "select",
                           {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.key,
-                            expression: "key"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: { name: "role" },
-                        on: {
-                          change: [
-                            function($event) {
-                              var $$selectedVal = Array.prototype.filter
-                                .call($event.target.options, function(o) {
-                                  return o.selected
-                                })
-                                .map(function(o) {
-                                  var val = "_value" in o ? o._value : o.value
-                                  return val
-                                })
-                              _vm.key = $event.target.multiple
-                                ? $$selectedVal
-                                : $$selectedVal[0]
-                            },
-                            function($event) {
-                              return _vm.selectChange($event)
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.key,
+                                expression: "key"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: { name: "role" },
+                            on: {
+                              change: [
+                                function($event) {
+                                  var $$selectedVal = Array.prototype.filter
+                                    .call($event.target.options, function(o) {
+                                      return o.selected
+                                    })
+                                    .map(function(o) {
+                                      var val =
+                                        "_value" in o ? o._value : o.value
+                                      return val
+                                    })
+                                  _vm.key = $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                },
+                                function($event) {
+                                  return _vm.selectChange($event)
+                                }
+                              ]
                             }
-                          ]
-                        }
-                      },
-                      [
-                        _c("option", { attrs: { value: "" } }, [
-                          _vm._v("Choose Type Of User")
-                        ]),
-                        _vm._v(" "),
-                        _vm._l(this.json_roles, function(role) {
-                          return _c(
-                            "option",
-                            {
-                              attrs: {
-                                "data-name": role.name,
-                                id: "role_" + role.id
-                              },
-                              domProps: { value: role.id }
-                            },
-                            [
-                              _vm._v(
-                                _vm._s(role.display_name) +
-                                  "\n                                    "
+                          },
+                          [
+                            _c("option", { attrs: { value: "" } }, [
+                              _vm._v("Choose Type Of User")
+                            ]),
+                            _vm._v(" "),
+                            _vm._l(this.json_roles, function(role) {
+                              return _c(
+                                "option",
+                                {
+                                  attrs: {
+                                    "data-name": role.name,
+                                    id: "role_" + role.id
+                                  },
+                                  domProps: { value: role.id }
+                                },
+                                [
+                                  _vm._v(
+                                    _vm._s(role.display_name) +
+                                      "\n                                    "
+                                  )
+                                ]
                               )
-                            ]
-                          )
-                        })
-                      ],
-                      2
-                    )
+                            })
+                          ],
+                          2
+                        )
+                      ])
+                    ])
                   ])
-                ])
-              ]),
+                : _vm._e(),
               _vm._v(" "),
               _c("div", { staticClass: "row" }, [
                 _c("div", { staticClass: "col-md-6 col-xs-12" }, [
@@ -42107,6 +42113,7 @@ var render = function() {
                           }
                         ],
                         staticClass: "form__input",
+                        attrs: { disabled: _vm.source === "edit" },
                         domProps: { value: _vm.$v.user.email.$model },
                         on: {
                           input: function($event) {

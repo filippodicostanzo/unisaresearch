@@ -1,9 +1,7 @@
 <?php
 
-use App\Models\Template;
-use Illuminate\Http\Client\Request;
+use App\Http\Controllers\Auth\ProfileController;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use UniSharp\LaravelFilemanager\Lfm;
 
@@ -58,15 +56,20 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
     Route::resource('users', 'UserController');
     Route::resource('posts', 'PostController');
 
+    Route::get('/profile', [ProfileController::class, 'edit']);
+
 });
 
-Route::group(['namespace' => 'Auth', 'prefix' => 'admin', 'middleware' => ['role:user']], function () {
-    Route::get('/profile', function () {
+Route::group(['namespace' => 'Auth', 'middleware' => ['role:user']], function () {
+
+    Route::get('/profile', [ProfileController::class, 'edit'])->middleware('verified');
+
+    /*    Route::get('/profile', function () {
         return view('profile.index');
-    })->middleware('verified');
+    })->middleware('verified');*/
 });
 
-Auth::routes(['verify'=>true]);
+Auth::routes(['verify' => true]);
 
 /*
 Route::group(['namespace' => 'Auth','prefix'=>'admin', 'middleware' => ['role:superadministrator']], function () {
@@ -83,7 +86,6 @@ Route::group(['namespace' => 'Auth', 'prefix'=>'admin', 'middleware' => ['role:a
 });
 */
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 
 
 /*Route::get('/home', function() {

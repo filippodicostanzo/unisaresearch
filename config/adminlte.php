@@ -252,7 +252,7 @@ return [
 
         ['header' => 'admin_settings', 'role' => 'superadministrator|administrator', 'key' => 'admin_settings'],
 
-        ['header' => 'users_settings', 'key'=>'users_settings'],
+        ['header' => 'users_settings', 'role' => 'superadministrator|administrator', 'key'=>'users_settings' ],
 
         ['header' => 'account_settings'],
         [
