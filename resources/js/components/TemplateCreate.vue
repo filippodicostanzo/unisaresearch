@@ -3,8 +3,12 @@
         <div class="col-lg-12 margin-tb">
             <div class="card card-mini">
                 <div class="card-header">
-                    <h1 class="m0 text-dark card-title text-xl">
+                    <h1 class="m0 text-dark card-title text-xl" v-show="source==='new'">
                         Create New Template
+                    </h1>
+
+                    <h1 class="m0 text-dark card-title text-xl" v-show="source==='edit'">
+                        Edit {{template.name}}
                     </h1>
                     <div class="card-action">
                         <a :href="route('templates.index')">
@@ -27,8 +31,8 @@
                                 </div>
                             </div>
                             <div class="col-md-6 col-xs-12">
-                                <label class="form__label">Visible</label>
-                                <input type="checkbox" name="visible" v-model="template.active">
+                                <label class="form__label">Active</label>
+                                <input type="checkbox" name="active" v-model="template.active">
                             </div>
                         </div>
 
@@ -38,14 +42,15 @@
                                     <label class="form__label">Insert Fields</label>
                                     <div class="form-group" v-for="(input,k) in template.fields" :key="k"
                                          :class="{ 'form-group--error': $v.template.fields.$error }">
-                                        <input type="text" class="form__input" v-model="input.name"/>
-                                        <span class="remove">
+                                        <input type="text" class="form__input" v-model="input.name"
+                                               :disabled="source==='edit'"/>
+                                        <span class="remove" v-show="source==='new'">
                                             <i class="fas fa-minus-circle" @click="remove(k)"
-                                            v-show="k || ( !k && template.fields.length > 1)"></i>
+                                               v-show="k || ( !k && template.fields.length > 1)"></i>
                                         </span>
                                         <span class="add">
                                             <i class="fas fa-plus-circle" @click="add(k)"
-                                                  v-show="k == template.fields.length-1"></i>
+                                               v-show="(k == template.fields.length-1 && template.fields.length<10) && source==='new'"></i>
                                         </span>
                                     </div>
                                 </div>
@@ -120,11 +125,8 @@
         },
         methods: {
             add(index) {
-                if (this.template.fields.length<10) {
+                if (this.template.fields.length < 10) {
                     this.template.fields.push({name: ""});
-                }
-                else {
-                    window.alert('Max Fields');
                 }
             },
             remove(index) {
@@ -156,10 +158,10 @@
                         this.$http
                             .patch("/admin/templates/" + this.template.id, this.template)
                             .then(response => {
-
                                 if (response.status === 200) {
                                     window.location.href = route('templates.index')
                                 }
+
                             })
                             .catch(error => {
                                 alert(error.message)
@@ -197,14 +199,17 @@
 <style scoped lang="scss">
     .add {
         cursor: pointer;
+
         i {
             color: #143059;
             font-size: 2rem;
             padding: 10px;
         }
     }
+
     .remove {
         cursor: pointer;
+
         i {
             color: #dc3545;
             font-size: 2rem;

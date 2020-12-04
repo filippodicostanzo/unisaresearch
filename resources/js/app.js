@@ -41,6 +41,14 @@ import AuthorCreate from "./components/AuthorCreate";
 import AuthorTable from "./components/AuthorTable";
 import PostTable from "./components/PostTable";
 import UserCreate from "./components/UserCreate";
+import TemplateShow from "./components/TemplateShow";
+import CategoryShow from "./components/CategoryShow";
+import AuthorShow from "./components/AuthorShow";
+import UserShow from "./components/UserShow";
+import PostShow from "./components/PostShow";
+import StatusTable from "./components/StatusTable";
+import StatusCreate from "./components/StatusCreate";
+import StatusShow from "./components/StatusShow";
 
 window.route = route;
 window.Ziggy = Ziggy;
@@ -70,13 +78,21 @@ const app = new Vue({
         'card-table': CardTable,
         'template-table': TemplateTable,
         'template-create': TemplateCreate,
+        'template-show': TemplateShow,
         'category-table': CategoryTable,
         'category-create': CategoryCreate,
+        'category-show': CategoryShow,
         'author-table': AuthorTable,
         'author-create': AuthorCreate,
+        'author-show': AuthorShow,
         'post-table': PostTable,
+        'post-show': PostShow,
+        'status-table': StatusTable,
+        'status-create': StatusCreate,
+        'status-show': StatusShow,
         'user-table': UserTable,
         'user-create': UserCreate,
+        'user-show': UserShow
     }
 });
 

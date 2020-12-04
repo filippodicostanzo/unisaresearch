@@ -74,7 +74,7 @@
             return {
                 rendered: {},
                 pages: 0,
-                perpage: 4,
+                perpage: 20,
                 page: 1,
                 renderedPaginate: []
             }

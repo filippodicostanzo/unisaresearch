@@ -31231,9 +31231,8 @@ a.text-muted:hover {
 
 #regForm {
   background-color: #ffffff;
-  margin: 100px auto;
   padding: 40px;
-  width: 70%;
+  width: 100%;
   min-width: 300px;
 }
 
@@ -31282,6 +31281,12 @@ input.invalid {
 
 .step.finish {
   background-color: #4CAF50;
+}
+
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active,
+.sidebar-light-primary .nav-sidebar > .nav-item > .nav-link.active {
+  background-color: #6c757d;
+  color: #ffffff;
 }
 
 @-webkit-keyframes loading-frame {
@@ -31783,5 +31788,24 @@ input.invalid {
   text-align: center;
   color: #f04124;
   padding-top: 30px;
+}
+
+.post-form .form-check {
+  display: flex;
+  align-items: center;
+}
+
+.post-form .form-check .form-check-label {
+  vertical-align: top;
+  margin-left: 10px;
+}
+
+.post-form .form-check input[type=checkbox] {
+  height: 35px;
+  width: 35px;
+}
+
+.invalid + .cke {
+  border: 1px solid red;
 }
 

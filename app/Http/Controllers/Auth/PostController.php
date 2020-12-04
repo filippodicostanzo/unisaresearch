@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\Author;
 use App\Models\Post;
+use Carbon\Carbon;
+use Carbon\Traits\Date;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
@@ -39,6 +42,20 @@ class PostController extends Controller
     {
         if ($this->user->hasRole('superadministrator|administrator')) {
             $items = Post::orderBy('id', 'ASC')->get();
+
+            foreach ($items as $item) {
+
+                $postauthor = [];
+                $authors = explode(',', $item['authors']);
+                foreach ($authors as $author) {
+                    array_push($postauthor, Author::where('id',$author)->first());
+                }
+                $item['json_authors'] = json_encode($postauthor,true);
+                $item['category'] = $item->category_fk->name;
+                $item['template'] = $item->template_fk->name;
+
+            }
+
             return view('posts.index', ['items' => $items, 'title' => $this->title]);
         }
 
@@ -65,7 +82,25 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+
+
+        $post = new Post($request->all());
+
+        $authors = $request->input('authors');
+
+        if ($authors != null) {
+            $authors = implode(',', $authors);
+        }
+
+
+        $post['authors'] = $authors;
+        $post['state'] = 'create';
+        $post['latest_modify'] = Carbon::now();
+
+        $res = $post->save();
+        $message = $res ? 'The Post ' . $post->title . ' has been saved' : 'The Post ' . $post->title . ' was not saved';
+        session()->flash('message', $message);
+        return redirect()->route('posts.index');
     }
 
     /**
@@ -76,7 +111,18 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        $item = $post;
+        $postauthor = [];
+        $authors = explode(',', $item['authors']);
+        foreach ($authors as $author) {
+            array_push($postauthor, Author::where('id',$author)->first());
+        }
+        $item['json_authors'] = json_encode($postauthor,true);
+        $item['category'] = $post->category_fk->name;
+        $item['template'] = $post->template_fk->name;
+        $item['template_fields'] = $post->template_fk->fields;
+
+        return view('posts.show', ['item' => $item]);
     }
 
     /**
@@ -87,7 +133,8 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        $item = $post;
+        return view('posts.edit', ['title' => $this->title, 'item'=>$item]);
     }
 
     /**
@@ -99,7 +146,21 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        $authors = $request->input('authors');
+
+        if ($authors != null) {
+            $authors = implode(',', $authors);
+        }
+
+        $data = $request->all();
+        $data['authors'] = $authors;
+        $data['state'] = 'create';
+        $data['latest_modify'] = Carbon::now();
+
+        $res = Post::find($post->id)->update($data);
+        $message = $res ? 'The Post ' . $data['title'] . ' has been saved' : 'The Post ' . $data['title'] . ' was not saved';
+        session()->flash('message', $message);
+        return redirect()->route('posts.index');
     }
 
     /**

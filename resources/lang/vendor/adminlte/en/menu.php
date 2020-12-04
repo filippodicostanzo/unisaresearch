@@ -19,6 +19,7 @@ return [
     'dashboard'                     => 'Dashboard',
     'templates'                     => 'Templates',
     'categories'                    => 'Categories',
+    'statuses'                      => 'Status',
     'posts'                         => 'Posts',
     'users'                         => 'Users',
     'authors'                       => 'Authors',

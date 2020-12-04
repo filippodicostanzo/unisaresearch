@@ -55,7 +55,7 @@ class TemplateController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -70,8 +70,12 @@ class TemplateController extends Controller
 
         $template->fields = json_encode($request->fields);
 
+        if ($template->active) {
+            Template::where('active', '=', 1)->update(['active' => 0]);
+        }
+
         $res = $template->save();
-        $message = $res ? 'Il Video ' . $template->name . ' è stato inserito' : 'Il Video ' . $template->name . ' non è stato inserito';
+        $message = $res ? 'Template ' . $template->name . ' has been saved' : 'Template ' . $template->name . ' was note saved';
         session()->flash('message', $message);
         //return redirect()->route('templates.index');
 
@@ -80,18 +84,19 @@ class TemplateController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Template  $template
+     * @param \App\Models\Template $template
      * @return \Illuminate\Http\Response
      */
     public function show(Template $template)
     {
-        dd($template);
+        $item = $template;
+        return view('admin.templates.show', ['item' => $item]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Template  $template
+     * @param \App\Models\Template $template
      * @return \Illuminate\Http\Response
      */
     public function edit(Template $template)
@@ -103,19 +108,28 @@ class TemplateController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Template  $template
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Template $template
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Template $template)
     {
-        //
+
+        $data = $request->except(['fields']);
+
+        if ($request->active) {
+            Template::where('active', '=', 1)->update(['active' => 0]);
+        }
+
+        $res = Template::find($template->id)->update($data);
+        $message = $res ? 'Template ' . $data['name'] . ' has been saved' : 'Template ' . $data['name'] . ' was note saved';
+        session()->flash('message', $message);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Template  $template
+     * @param \App\Models\Template $template
      * @return \Illuminate\Http\Response
      */
     public function destroy(Template $template)

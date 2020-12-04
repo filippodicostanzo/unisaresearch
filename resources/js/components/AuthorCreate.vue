@@ -40,31 +40,6 @@
 
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 col-xs-12">
-                                <div class="form-group" :class="{ 'form-group--error': $v.author.email.$error }">
-                                    <label class="form__label">Email</label>
-                                    <input class="form__input" v-model="$v.author.email.$model"/>
-                                </div>
-                                <div class="error" v-if="!$v.author.email.required">Email is required</div>
-                                <div class="error" v-if="!$v.author.email.minLength">Email must have at least
-                                    {{$v.author.email.$params.minLength.min}} letters.
-                                </div>
-                                <div class="error" v-if="!$v.author.email.email">Email is not correct</div>
-                            </div>
-
-                            <div class="col-md-6 col-xs-12">
-                                <div class="form-group" :class="{ 'form-group--error': $v.author.affiliation.$error }">
-                                    <label class="form__label">Affiliation</label>
-                                    <input class="form__input" v-model="$v.author.affiliation.$model"/>
-                                </div>
-                                <div class="error" v-if="!$v.author.affiliation.required">Affiliation is required</div>
-                                <div class="error" v-if="!$v.author.affiliation.minLength">Affiliation Name must have at least
-                                    {{$v.author.affiliation.$params.minLength.min}} letters.
-                                </div>
-                            </div>
-
-                        </div>
 
 
 
@@ -135,16 +110,7 @@
                 lastname: {
                     required,
                     minLength: minLength(4)
-                },
-                email: {
-                    required,
-                    minLength: minLength(4),
-                    email,
-                },
-                affiliation: {
-                    required,
-                    minLength: minLength(4)
-                },
+                }
             },
         },
         methods: {

@@ -3,18 +3,27 @@
         <div class="col-lg-12 margin-tb">
             <div class="card card-mini">
                 <div class="card-header">
-                    <h1 class="m0 text-dark card-title text-xl">
+                    <h1 class="m0 text-dark card-title text-xl" v-show="this.source==='new'">
                         Create New User
                     </h1>
+
+                    <h1 class="m0 text-dark card-title text-xl" v-show="this.source==='edit' && !this.profile">
+                        Edit User
+                    </h1>
+
+                    <h1 class="m0 text-dark card-title text-xl" v-show="this.profile">
+                        Edit Profile
+                    </h1>
+
                     <div class="card-action">
-                        <a :href="route('authors.index')">
+                        <a :href="route('users.index')" v-show="!this.profile">
                             <i class="fas fa-arrow-circle-left fa-3x fa-fw" aria-hidden="true"></i>
                         </a>
                     </div>
                 </div>
                 <div class="card-body">
 
-                    <form @submit.prevent="submit">
+                    <form @submit.prevent="submit" method="post">
 
                         <div class="row" v-if="!profile">
                             <div class="col-md-12 col-xs-12">
@@ -60,7 +69,8 @@
                             <div class="col-md-6 col-xs-12">
                                 <div class="form-group" :class="{ 'form-group--error': $v.user.email.$error }">
                                     <label class="form__label">Email</label>
-                                    <input class="form__input" v-model="$v.user.email.$model" :disabled="source === 'edit'"/>
+                                    <input class="form__input" v-model="$v.user.email.$model"
+                                           :disabled="source === 'edit'"/>
                                 </div>
                                 <div class="error" v-if="!$v.user.email.required">Email is required</div>
                                 <div class="error" v-if="!$v.user.email.minLength">Email must have at least
@@ -83,8 +93,9 @@
 
                         </div>
 
-                        <div class="row"  v-if="active_role === 'researcher' || active_role==='user'">
-                            <div class="col-md-6 col-xs-12" >
+                        <div class="row"
+                             v-if="active_role === 'researcher' || active_role==='user' || active_role==='supervisor'">
+                            <div class="col-md-6 col-xs-12">
                                 <div class="form-group" :class="{ 'form-group--error': $v.user.title.$error }">
                                     <label class="form__label">Title</label>
                                     <select name="role" v-model="user.title"
@@ -108,7 +119,8 @@
                             </div>
                         </div>
 
-                        <div class="row" v-if="active_role === 'researcher' || active_role==='user'">
+                        <div class="row"
+                             v-if="active_role === 'researcher' || active_role==='user' || active_role==='supervisor'">
                             <div class="col-md-6 col-xs-12">
                                 <div class="form-group" :class="{ 'form-group--error': $v.user.country.$error }">
                                     <label class="form__label">Country</label>
@@ -137,7 +149,8 @@
 
                         </div>
 
-                        <div class="row" v-if="active_role === 'researcher' || active_role==='user'">
+                        <div class="row"
+                             v-if="active_role === 'researcher' || active_role==='user' || active_role==='supervisor'">
                             <div class="col-md-6 col-xs-12">
                                 <div class="form-group" :class="{ 'form-group--error': $v.user.affiliation.$error }">
                                     <label class="form__label">Affiliation</label>
@@ -164,6 +177,27 @@
 
                         </div>
 
+                        <div class="row"
+                             v-if="(active_role === 'researcher' || active_role==='user') && this.profile">
+                            <div class="col-md-12 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form__label">Curriculum Vitae</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <a id="lfm_pdf" data-input="lfm_pdf_input" data-preview="lfm_pdf_preview"
+                                               class="btn btn-secondary" v-on:click="openFileManager($event)">
+                                                <i class="fa fa-picture-o"></i> Choose
+                                            </a>
+                                        </div>
+                                        <input type="text" class="form__input form-control" id="lfm_pdf_input"
+                                               ref="curriculumvitae"
+                                               v-model="user.curriculumvitae"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
 
                         <div class="row padding">
                             <div class="col-md-12 col-xs-12 center">
@@ -178,11 +212,13 @@
                                         correctly.</p>
                                     <p class="typo__p" v-if="submitStatus === 'PENDING'">Sending...</p>
 
+                                    <p class="typo__p" v-if="submitStatus === 'SAVED'">Data Saved!</p>
+
                                 </div>
                             </div>
                         </div>
 
-                        <input type="hidden" v-model="user.role" />
+                        <input type="hidden" v-model="user.role"/>
                     </form>
                 </div>
             </div>
@@ -200,8 +236,6 @@
         mounted() {
             this.json_countries = JSON.parse(this.countries)
             this.json_roles = JSON.parse(this.roles);
-
-
 
 
             if (this.item) {
@@ -231,7 +265,8 @@
                     city: '',
                     affiliation: '',
                     disciplinary: '',
-                    role: ''
+                    role: '',
+                    curriculumvitae: ''
                 },
                 titles: [
                     {id: '', name: 'Choose Title'},
@@ -288,7 +323,52 @@
                     required
                 }
             };
-            const supervisor_validate = {};
+            const supervisor_validate = {
+                user: {
+                    name: {
+                        required,
+                        minLength: minLength(4)
+                    },
+                    surname: {
+                        required,
+                        minLength: minLength(4)
+                    },
+                    email: {
+                        required,
+                        minLength: minLength(4),
+                        email,
+                    },
+                    password: {
+                        required,
+                        minLength: minLength(8)
+                    },
+                    title: {
+                        required
+                    },
+                    gender: {
+                        required
+                    },
+                    country: {
+                        required
+                    },
+                    city: {
+                        required,
+                        minLength: minLength(3),
+                    },
+                    affiliation: {
+                        required,
+                        minLength: minLength(4),
+                    },
+                    disciplinary: {
+                        required,
+                        minLength: minLength(4),
+                    }
+
+                },
+                key: {
+                    required
+                }
+            };
             const researcher_validate = {};
             const user_validate = {
                 user: {
@@ -318,7 +398,7 @@
                     country: {
                         required
                     },
-                    city:{
+                    city: {
                         required,
                         minLength: minLength(3),
                     },
@@ -340,6 +420,7 @@
             if (this.active_role === 'superadministrator' || this.active_role === 'administrator') {
                 return admin_validate
             } else if (this.active_role === 'supervisor') {
+
                 return supervisor_validate;
             } else if (this.active_role === 'researcher') {
                 return user_validate
@@ -349,6 +430,8 @@
         },
         methods: {
             submit() {
+
+
                 console.log('submit!')
                 this.$v.$touch()
                 console.log(this.key);
@@ -357,6 +440,8 @@
                     this.submitStatus = 'ERROR'
                 } else {
                     console.log(this.user);
+                    console.log(this.source);
+                    console.log(this.role);
 
                     if (this.source === 'new') {
                         this.$http
@@ -366,39 +451,94 @@
                                 if (response.status === 200) {
                                     window.location.href = route('users.index', {type: this.active_role})
                                 }
-
-
                             })
                             .catch(error => {
                                 alert(error.message)
                             });
-                    } else {
-
-                        this.user.new_password = this.password !== this.user.password;
-                        console.log(this.user);
-                        this.$http
-                            .patch("/admin/users/" + this.user.id, this.user)
-                            .then(response => {
-
-
-
-                                if (response.status === 200) {
-                                    window.location.href = route('users.index')
-                                }
-
-
-                            })
-                            .catch(error => {
-                                alert(error.message)
-                            });
-
                     }
+
+                    if (this.source === 'edit') {
+
+                        /**
+                         *
+                         * If Edit Profile
+                         */
+
+                        if (this.profile) {
+
+
+                            this.user.new_password = this.password !== this.user.password;
+                            if (this.$refs.curriculumvitae) {
+                                this.user.curriculumvitae = this.$refs.curriculumvitae.value;
+                            }
+                            console.log(this.user);
+
+                            let url = '';
+                            let json_role = this.role;
+
+                            console.log(this.role);
+
+                            console.log(json_role);
+
+                            if (this.json_role.name === 'superadministrator' || this.json_role.name === 'administrator') {
+
+                                url = '/admin/users/'
+                            } else {
+                                url = '/profile/'
+                            }
+
+                            this.$http
+                                .patch(url + this.user.id, this.user)
+                                .then(response => {
+
+                                    console.log(this.user.curriculumvitae);
+
+
+                                    if (response.status === 200) {
+                                        this.submitStatus = 'SAVED';
+                                        return
+                                    }
+
+                                })
+                                .catch(error => {
+                                    alert(error.message)
+                                });
+                        }
+
+                        /**
+                         *
+                         * If Edit User
+                         *
+                         */
+
+                        else {
+
+                            this.user.new_password = this.password !== this.user.password;
+                            console.log(this.user);
+                            this.$http
+                                .patch("/admin/users/" + this.user.id, this.user)
+                                .then(response => {
+
+
+                                    if (response.status === 200) {
+                                        window.location.href = route('users.index', {type: this.active_role})
+                                    }
+
+
+                                })
+                                .catch(error => {
+                                    alert(error.message)
+                                });
+
+                        }
+                    }
+
 
 // do your submit logic here
                     this.submitStatus = 'PENDING'
-                    setTimeout(() => {
-                        this.submitStatus = 'OK'
-                    }, 500)
+                    /*     setTimeout(() => {
+                             this.submitStatus = 'OK'
+                         }, 500)*/
                 }
             },
 
@@ -413,8 +553,34 @@
                 }
 
                 console.log(this.active_role);
-            }
+            },
+
+            openFileManager(e) {
+
+                e.preventDefault();
+                window.open(`/laravel-filemanager` + '?type=file', 'FileManager', 'width=900,height=600');
+                //window.open(`/laravel-filemanager`, 'targetWindow', 'width=900,height=600')
+                var self = this
+                let curriculumvitae = '';
+                window.SetUrl = function (items) {
+                    console.log('B');
+                    console.log('C')
+                    console.log(items);
+                    var input = document.getElementById('lfm_pdf_input');
+                    input.value = items[0].url
+                    //self.form.main_image = items[0].url
+                }
+
+
+                console.log(this.user);
+
+                return false;
+
+            },
+
         }
+
+
     }
 </script>
 <style scoped>

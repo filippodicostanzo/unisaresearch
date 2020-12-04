@@ -1,20 +1,20 @@
 <template>
-    <div class="row">
-        <div class="input-group">
-            <span class="input-group-btn">
-                <a id="lfm_pdf" data-input="lfm_pdf_input" data-preview="lfm_pdf_preview"
-                   class="btn btn-secondary">
-                    <i class="fa fa-picture-o"></i> Choose
-                </a>
-            </span>
-            <input type="text" name="cover" class="file-src" id="lfm_pdf_input"/>
-        </div>
+     <div class="row">
+         <!--   <div class="input-group">
+                <span class="input-group-btn">
+                    <a id="lfm_pdf" data-input="lfm_pdf_input" data-preview="lfm_pdf_preview"
+                       class="btn btn-secondary">
+                        <i class="fa fa-picture-o"></i> Choose
+                    </a>
+                </span>
+                <input type="text" name="cover" class="file-src" id="lfm_pdf_input"/>
+            </div>
 
-        <a id="lfm_" data-input="lfm_pdf_input" data-preview="lfm_pdf_preview"
-           class="btn btn-secondary" v-on:click="openFileManager($event)">
-            <i class="fa fa-picture-o"></i> Choose
-        </a>
-
+            <a id="lfm_" data-input="lfm_pdf_input" data-preview="lfm_pdf_preview"
+               class="btn btn-secondary" v-on:click="openFileManager($event)">
+                <i class="fa fa-picture-o"></i> Choose
+            </a>
+    -->
 
         <div class="col-lg-12 margin-tb">
 
@@ -35,8 +35,9 @@
                             <thead>
                             <tr>
                                 <th>Id</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Template</th>
                                 <th class="text-right">Options</th>
                             </tr>
                             </thead>
@@ -46,7 +47,8 @@
                             <tr v-for="(item,k) in renderedPaginate" :key="k">
 
                                 <td>{{item.id}}</td>
-                                <td>{{item.name}}</td>
+                                <td>{{item.title}}</td>
+                                <td>{{item.category}}</td>
                                 <td> {{item.template}}</td>
                                 <td class="text-right">
                                     <a class="btn btn-default btn-xs" :href="route('posts.show', {id: item.id})">

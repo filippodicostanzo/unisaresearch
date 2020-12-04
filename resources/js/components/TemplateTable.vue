@@ -30,7 +30,7 @@
 
                                 <td>{{item.id}}</td>
                                 <td>{{item.name}}</td>
-                                <td>{{item.active}}</td>
+                                <td> <span v-if="item.active==1"><i class="fa fas fa-check"></i> </span> <span v-else><i class="fa fas fa-close"></i></span></td>
                                 <td class="text-right">
                                     <a class="btn btn-default btn-xs" :href="route('templates.show', {id: item.id})">
                                         <i class="fas fa-eye fa-1x fa-lg" aria-hidden="true"></i>
@@ -73,7 +73,7 @@
             return {
                 rendered: {},
                 pages: 0,
-                perpage: 4,
+                perpage: 20,
                 page: 1,
                 renderedPaginate: []
             }

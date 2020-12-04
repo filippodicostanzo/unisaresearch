@@ -84,7 +84,8 @@ class AuthorController extends Controller
      */
     public function show(Author $author)
     {
-        //
+            $item = $author;
+            return view('authors.show', ['item' => $item]);
     }
 
     /**
@@ -111,8 +112,6 @@ class AuthorController extends Controller
         $this->validate($request, [
             'firstname' => 'required',
             'lastname' => 'required',
-            'email' => 'required',
-            'affiliation' => 'required',
         ]);
 
         $data = $request->all();

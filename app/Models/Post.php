@@ -8,4 +8,48 @@ use Illuminate\Database\Eloquent\Model;
 class Post extends Model
 {
     use HasFactory;
+
+    protected $table = 'posts';
+
+    protected $primaryKey = 'id';
+
+    protected $fillable=[
+        'id',
+        'title',
+        'authors',
+        'template',
+        'category',
+        'language',
+        'created',
+        'edit',
+        'state',
+        'supervisor',
+        'tags',
+        'abstract',
+        'intro',
+        'ending',
+        'biography',
+        'field_1',
+        'field_2',
+        'field_3',
+        'field_4',
+        'field_5',
+        'field_6',
+        'field_7',
+        'field_8',
+        'field_9',
+        'latest_modify',
+    ];
+
+    public function category_fk()
+    {
+        return $this->belongsTo('App\Models\Category', 'category', 'id');
+    }
+
+    public function template_fk()
+    {
+        return $this->belongsTo('App\Models\Template', 'template', 'id');
+    }
+
+
 }

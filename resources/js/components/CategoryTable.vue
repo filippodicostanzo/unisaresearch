@@ -8,7 +8,7 @@
                         {{this.title}}
                     </h1>
                     <div class="card-action">
-                        <a href="'categories/create'">
+                        <a href="categories/create">
                             <i class="fa fa-plus-circle fa-3x fa-fw" aria-hidden="true"></i>
                         </a>
                     </div>
@@ -75,7 +75,7 @@
                 currentPath:'',
                 rendered: {},
                 pages: 0,
-                perpage: 4,
+                perpage: 20,
                 page: 1,
                 renderedPaginate: []
             }

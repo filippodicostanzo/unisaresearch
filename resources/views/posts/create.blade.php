@@ -1,69 +1,184 @@
 @extends('adminlte::page')
 
-@section('title', 'AdminLTE')
-
 @section('content_header')
 @stop
 
+@php
+    use App\Models\Author;
+    use App\Models\Category;
+    use App\Models\Template;
+    use Illuminate\Support\Facades\Auth;
+
+    $authors = Author::where('user_id', Auth::id())->get();
+    $user = Auth::id();
+    $categories = Category::orderBy('id')->get();
+    $template = Template::where('active', 1)->first();
+    $fields=json_decode($template->fields);
+
+@endphp
+
 @section('content')
-    <div class="container">
+    <div class="container post-form">
         <div class="row">
-            <div class="col-md-7 offset-3 mt-4">
-                <div class="card-body">
-                    {!! Form::open(array('route' => 'posts.store','method'=>'POST', 'enctype' => 'multipart/form-data')) !!}
+            <div class="col-lg-12 margin-tb">
+                <div class="card card-mini">
+                    <div class="card-header">
+                        <h1 class="m0 text-dark card-title text-xl">
+                            Create New {{$title}}
+                        </h1>
+                        <div class="card-action">
+                            <a href="{{ route('posts.index') }}">
+                                <i class="fas fa-arrow-circle-left fa-3x fa-fw" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <input type="hidden" id="count_fields" value="{{count($fields)}}">
+                        {!! Form::open(array('route' => 'posts.store','method'=>'POST', 'enctype' => 'multipart/form-data', 'id'=>'regForm')) !!}
                         @csrf
+                        <!-- One "tab" for each step in the form: -->
+                        <div class="tab">
+                            <div class="form-group">
+                                <label>Title:</label>
+                                {!! Form::text('title', null, array('placeholder' => 'Title','class' => 'form-control',  'oninput'=>"this.className = ''")) !!}
+                            </div>
 
-                    <h1>Register:</h1>
+                            <div class="form-group row">
+                                <div class="col-12"><label>Authors</label></div>
+                                @foreach ($authors as $item)
+                                    <div class="item col-md-6 col-xs-6 mb-3">
+                                        <div class="form-check">
+                                            <input type="checkbox" id="{{$item->id}}"
+                                                   name="authors[]" value="{{$item->id}}">
+                                            <label class="form-check-label"
+                                                   for="exampleCheck1">{{$item->firstname}} {{$item->lastname}}</label>
+                                        </div>
+                                    </div>
+                                @endforeach
+                                <div class="col-12">
+                                    <div id="author_error"></div>
+                                </div>
+                            </div>
 
-                    <!-- One "tab" for each step in the form: -->
-                    <div class="tab">Name:
-                        <p><input placeholder="First name..." oninput="this.className = ''"></p>
-                        <p><input placeholder="Last name..." oninput="this.className = ''"></p>
-                        <div class="form-group">
-                            <textarea name="editor1" id="editor1" rows="10" cols="80" class="form-control"></textarea>
+                            <div class="form-group">
+                                <div class="col-12"><label>Category</label></div>
+                                <select id="items-selected" name="category" class="form-control">
+                                    @foreach($categories as $item)
+                                        <option value="{{$item->id}}" data-type="{{$item->id}}">{{$item->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-12"><label>Language</label></div>
+                                <select id="items-selected" name="language" class="form-control">
+                                    <option value="en" data-type="en">English</option>
+                                    <option value="it" data-type="it">Italian</option>
+                                </select>
+                            </div>
+
+
                         </div>
-                    </div>
 
-                    <div class="tab">Contact Info:
-                        <p><input placeholder="E-mail..." oninput="this.className = ''"></p>
-                        <p><input placeholder="Phone..." oninput="this.className = ''"></p>
-                    </div>
 
-                    <div class="tab">Birthday:
-                        <p><input placeholder="dd" oninput="this.className = ''"></p>
-                        <p><input placeholder="mm" oninput="this.className = ''"></p>
-                        <p><input placeholder="yyyy" oninput="this.className = ''"></p>
-                    </div>
+                        <div class="tab">
+                            <div class="form-group">
+                                <label>Abstract</label>
+                                <textarea name="abstract" id="abstract" rows="10" cols="80"
+                                          class="form-control"></textarea>
+                            </div>
 
-                    <div class="tab">Login Info:
-                        <p><input placeholder="Username..." oninput="this.className = ''"></p>
-                        <p><input placeholder="Password..." oninput="this.className = ''"></p>
-                    </div>
-
-                    <div style="overflow:auto;">
-                        <div style="float:right;">
-                            <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
-                            <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+                            <div class="form-group">
+                                <label>Intro</label>
+                                <textarea name="intro" id="intro" rows="10" cols="80"
+                                          class="form-control"></textarea>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Circles which indicates the steps of the form: -->
-                    <div style="text-align:center;margin-top:40px;">
-                        <span class="step"></span>
-                        <span class="step"></span>
-                        <span class="step"></span>
-                        <span class="step"></span>
-                    </div>
+                        <div class="tab">
+                            @foreach($fields as $key => $value)
+                                <div class="form-group">
+                                    <label>{{$value->name}}</label>
 
-                    <button type="submit" class="btn btn-primary btn-lg btn-block">
-                        <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
-                    </button>
-                    {!! Form::close() !!}
+                                    <textarea name="field_{{$key+1}}" id="field_{{$key+1}}" rows="10" cols="80"
+                                              class="form-control"></textarea>
+                                </div>
+                            @endforeach
+
+                        </div>
+
+                        <div class="tab">
+                            <div class="form-group">
+                                <label>Ending</label>
+                                <textarea name="ending" id="ending" rows="10" cols="80"
+                                          class="form-control"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Biography</label>
+                                <textarea name="biography" id="biography" rows="10" cols="80"
+                                          class="form-control"></textarea>
+                            </div>
+                        </div>
+
+
+                        <div class="tab">
+                            <div class="form-group">
+                                <label>
+                                    Tags:
+                                </label>
+                        {!! Form::text('tags', null, array('placeholder' => 'Tag separated by comma','class' => 'form-control',  'oninput'=>"this.className = ''")) !!}
+                            </div>
+                            <div class="form-group imageUpload">
+                                <label for="image">PDF Document</label>
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <a id="document" data-input="thumbnail" data-preview="cover_preview"
+                                           class="btn btn-secondary">
+                                            <i class="fa fa-picture-o"></i> Choose
+                                        </a>
+                                        </span>
+                                    {!! Form::text('document', null, array('placeholder' => 'Image','class' => 'form-control file-src','id' => 'thumbnail')) !!}
+
+                                </div>
+
+                            </div>
+                        <!--<button type="submit" class="btn btn-primary btn-lg btn-block">
+                            <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
+                        </button> -->
+                        </div>
+
+                        <div style="display: none" id="loader"><h3>Loading...</h3></div>
+                        <div style="overflow:auto;">
+                            <div style="float:right;">
+                                <button type="button" id="prevBtn" onclick="nextPrev(-1)" class="btn btn-primary">
+                                    Previous
+                                </button>
+                                <button type="button" id="nextBtn" onclick="nextPrev(1)" class="btn btn-primary">Next
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Circles which indicates the steps of the form: -->
+                        <div style="text-align:center;margin-top:40px;">
+                            <span class="step"></span>
+                            <span class="step"></span>
+                            <span class="step"></span>
+                            <span class="step"></span>
+                            <span class="step"></span>
+                        </div>
+
+                        {{ Form::hidden('template', $template['id']) }}
+                        {{ Form::hidden('created', $user) }}
+                        {{ Form::hidden('edit', $user) }}
+
+
+                        {!! Form::close() !!}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
 @stop
 
 @push('js')
@@ -72,7 +187,10 @@
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
             crossorigin="anonymous"></script>
 
-    <script src="../ckeditor/ckeditor.js"></script>
+    <script src="../../ckeditor/ckeditor.js"></script>
+
+    <script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
+
     <script>
 
         var options = {
@@ -84,7 +202,17 @@
 
         $(document).ready(function () {
 
-            CKEDITOR.replace( 'editor1', options );
+            var fields = $('#count_fields').val();
+            console.log(fields);
+
+            var txt = document.getElementsByTagName("textarea");
+
+            for (var i = 0; i < txt.length; i++) {
+                var id = txt[i].getAttribute('id');
+                CKEDITOR.replace(id, options);
+            }
+
+            $('#document').filemanager('file', '', false);
         });
 
         var currentTab = 0; // Current tab is set to be the first tab (0)
@@ -120,6 +248,11 @@
             currentTab = currentTab + n;
             // if you have reached the end of the form... :
             if (currentTab >= x.length) {
+
+                document.getElementById('loader').style.display = "block";
+                document.getElementById("prevBtn").style.display = "none";
+                document.getElementById("nextBtn").style.display = "none";
+
                 //...the form gets submitted:
                 document.getElementById("regForm").submit();
                 return false;
@@ -130,9 +263,21 @@
 
         function validateForm() {
             // This function deals with validation of the form fields
-            var x, y, i, valid = true;
+            var x, y, i, z, k, valid = true;
             x = document.getElementsByClassName("tab");
             y = x[currentTab].getElementsByTagName("input");
+            z = x[currentTab].getElementsByTagName("textarea");
+
+
+            var checkbox = document.querySelector('input[name="authors[]"]:checked');
+            if (!checkbox) {
+                document.getElementById('author_error').innerHTML = '<p class="text-danger">Please select an author</p>'
+                valid = false;
+            } else {
+                document.getElementById('author_error').innerHTML = '';
+                valid = true;
+            }
+
             // A loop that checks every input field in the current tab:
             for (i = 0; i < y.length; i++) {
                 // If a field is empty...
@@ -141,6 +286,19 @@
                     y[i].className += " invalid";
                     // and set the current valid status to false:
                     valid = false;
+                }
+
+            }
+
+            for (i = 0; i < z.length; i++) {
+                var id = z[i].getAttribute('id');
+
+                if (CKEDITOR.instances[id].getData() === "") {
+                    z[i].className += " invalid";
+                    // and set the current valid status to false:
+                    valid = false;
+                } else {
+                    z[i].classList.remove('invalid');
                 }
             }
             // If the valid status is true, mark the step as finished and valid:
@@ -159,8 +317,8 @@
             //... and adds the "active" class to the current step:
             x[n].className += " active";
         }
-        </script>
+    </script>
 
-    @endpush
+@endpush
 
 

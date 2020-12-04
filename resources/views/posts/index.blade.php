@@ -5,7 +5,7 @@
 @section('content')
     <div class="notification">
         @if(session()->has('message'))
-            <div class="alert alert-success">n
+            <div class="alert alert-success">
                 {{session()->get('message')}}
             </div>
         @endif

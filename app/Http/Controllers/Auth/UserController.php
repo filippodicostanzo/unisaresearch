@@ -7,8 +7,10 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Monarobase\CountryList\CountryListFacade;
+use function PHPUnit\Framework\isEmpty;
 
 class UserController extends Controller
 {
@@ -112,6 +114,23 @@ class UserController extends Controller
 
 
     /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Author  $author
+     * @return \Illuminate\Http\Response
+     */
+    public function show(User $user)
+    {
+        $item = $user;
+        $roles = Role::all()->sortBy('name');
+        $role = $user->getRoles();
+        $role_id = Role::where('name', $role)->first();
+
+        return view('admin.users.show', ['item' => $item, 'role'=>$role[0]]);
+    }
+
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param \App\Models\Author $author
@@ -131,6 +150,14 @@ class UserController extends Controller
     }
 
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Category  $category
+     * @return \Illuminate\Http\Response
+     */
+
     public function update(Request $request, User $user)
     {
         $this->validate($request, [
@@ -139,6 +166,8 @@ class UserController extends Controller
             'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', 'string', 'min:8'],
         ]);
+
+
 
         $data = $request->all();
 
@@ -152,8 +181,23 @@ class UserController extends Controller
 
         unset($data['new_password']);
 
-        $res = User::find($user->id)->update($data);
-        $message = $res ? 'The Category ' . $user->name . ' è stato modificato' : 'Il Documento ' . $user->name . ' non è stata modificato';
+
+        if (isset($user->id)) {
+
+            DB::table('role_user')
+                ->where('user_id',$user->id)
+                ->update([
+                    'role_id' => $data['role'],
+                ]);
+
+            $res = User::find($user->id)->update($data);
+        }
+        else {
+            $res = User::find($request->id)->update($data);
+        }
+
+
+        $message = $res ? 'User ' . $user->name . ' has been saved' : 'User ' . $user->name . ' was not saved';
         session()->flash('message', $message);
     }
 

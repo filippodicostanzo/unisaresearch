@@ -82,7 +82,8 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        $item = $category;
+        return view('admin.categories.show', ['item' => $item]);
     }
 
     /**
@@ -124,6 +125,6 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+
     }
 }
