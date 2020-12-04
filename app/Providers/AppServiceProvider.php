@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Author;
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\Status;
 use App\Models\Template;
 use App\Models\User;
 use Illuminate\Events\Dispatcher;
@@ -54,17 +56,24 @@ class AppServiceProvider extends ServiceProvider
                     'label_color' => 'success',
                 ],
                 [
+                    'text' => 'statuses',
+                    'url' => 'admin/statuses',
+                    'icon' => 'fas fa-fw fa-eye',
+                    'label' => Status::count(),
+                    'label_color' => 'success',
+                ],
+                [
                     'text' => 'authors',
                     'url' => 'admin/authors',
                     'icon' => 'fas fa-fw fa-user',
-                     'label' => Category::count(),
+                     'label' => Author::count(),
                     'label_color' => 'success',
                 ],
                 [
                     'text' => 'posts',
                     'url' => 'admin/posts',
                     'icon' => 'fas fa-fw fa-file',
-                  //  'label' => Category::count(),
+                    'label' => Post::count(),
                     'label_color' => 'success',
                 ],
             ];

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\ProfileController;
+use App\Http\Controllers\Auth\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use UniSharp\LaravelFilemanager\Lfm;
@@ -55,14 +56,17 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
     Route::resource('authors', 'AuthorController');
     Route::resource('users', 'UserController');
     Route::resource('posts', 'PostController');
+    Route::resource('statuses', 'StatusController');
 
     Route::get('/profile', [ProfileController::class, 'edit']);
+    Route::patch('/profile/{id}', [UserController::class, 'update'])->middleware('verified');
 
 });
 
 Route::group(['namespace' => 'Auth', 'middleware' => ['role:user']], function () {
 
     Route::get('/profile', [ProfileController::class, 'edit'])->middleware('verified');
+    Route::patch('/profile/{id}', [UserController::class, 'update'])->middleware('verified');
 
     /*    Route::get('/profile', function () {
         return view('profile.index');
