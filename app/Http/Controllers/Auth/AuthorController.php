@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use App\Models\Author;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class AuthorController extends Controller
@@ -30,6 +30,7 @@ class AuthorController extends Controller
 
         $this->title = 'authors';
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -40,7 +41,11 @@ class AuthorController extends Controller
         if ($this->user->hasRole('superadministrator|administrator')) {
             $items = Author::orderBy('id', 'ASC')->get();
             return view('authors.index', ['items' => $items, 'title' => $this->title]);
+        } else {
+            $items = Author::where('user_id',$this->user->id)->orderBy('id', 'ASC')->get();
+            return view('authors.index', ['items' => $items, 'title' => $this->title]);
         }
+
     }
 
     /**
@@ -56,7 +61,7 @@ class AuthorController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -64,47 +69,61 @@ class AuthorController extends Controller
         $this->validate($request, [
             'firstname' => 'required',
             'lastname' => 'required',
-            'email' => 'required',
-            'affiliation' => 'required',
         ]);
 
         $author = new Author($request->all());
         $author['user_id'] = Auth::id();
 
         $res = $author->save();
-        $message = $res ? 'The Author ' . $author->name . ' has been saved' : 'The Category ' . $author->name . ' was not saved';
+        $message = $res ? 'The Author ' . $author->name . ' has been saved' : 'The Author ' . $author->name . ' was not saved';
         session()->flash('message', $message);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Author  $author
+     * @param \App\Models\Author $author
      * @return \Illuminate\Http\Response
      */
     public function show(Author $author)
     {
-            $item = $author;
-            return view('authors.show', ['item' => $item]);
+        $item = $author;
+        return view('authors.show', ['item' => $item]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Author  $author
+     * @param \App\Models\Author $author
      * @return \Illuminate\Http\Response
      */
     public function edit(Author $author)
     {
         $item = $author;
-        return view('authors.edit', ['item' => $item, 'title' => $this->title]);
+
+        if ($this->user->hasRole('superadministrator|administrator')) {
+            return view('authors.edit', ['title' => $this->title, 'item' => $item]);
+        }
+
+        else {
+            if($item->user_id ===Auth::id()) {
+                return view('authors.edit', ['item' => $item, 'title' => $this->title]);
+            }
+            else {
+                abort(403);
+            }
+        }
+
+
+
+
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Author  $author
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Author $author
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Author $author)
@@ -123,7 +142,7 @@ class AuthorController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Author  $author
+     * @param \App\Models\Author $author
      * @return \Illuminate\Http\Response
      */
     public function destroy(Author $author)

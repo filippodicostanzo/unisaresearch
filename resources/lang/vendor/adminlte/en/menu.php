@@ -27,4 +27,7 @@ return [
     'administrators'                => 'Administrators',
     'supervisors'                   => 'Supervisors',
     'researchers'                   => 'Researchers',
+    'posts_settings'                => 'POSTS SETTINGS',
+    'my_authors'                    => 'My Authors',
+    'my_posts'                      => 'My Posts',
 ];

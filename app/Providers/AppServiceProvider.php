@@ -9,6 +9,7 @@ use App\Models\Status;
 use App\Models\Template;
 use App\Models\User;
 use Illuminate\Events\Dispatcher;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
 
@@ -32,8 +33,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(Dispatcher $events)
     {
         if (config('fdc.app_public') == true) {
-            $this->app->bind('path.public', function() {
-                return base_path().'/';
+            $this->app->bind('path.public', function () {
+                return base_path() . '/';
             });
         }
 
@@ -66,7 +67,7 @@ class AppServiceProvider extends ServiceProvider
                     'text' => 'authors',
                     'url' => 'admin/authors',
                     'icon' => 'fas fa-fw fa-user',
-                     'label' => Author::count(),
+                    'label' => Author::count(),
                     'label_color' => 'success',
                 ],
                 [
@@ -84,9 +85,9 @@ class AppServiceProvider extends ServiceProvider
         $events->listen(BuildingMenu::class, function (BuildingMenu $event) {
 
             $administrators = User::whereRoleIs('superadministrator')->orwhereRoleIs('administrator')->get();
-            $supervisors  = User::whereRoleIs('supervisor')->get();
+            $supervisors = User::whereRoleIs('supervisor')->get();
             $researchers = User::whereRoleIs('researcher')->get();
-            $users  = User::whereRoleIs('user')->get();
+            $users = User::whereRoleIs('user')->get();
 
             $array = [
                 [
@@ -120,6 +121,36 @@ class AppServiceProvider extends ServiceProvider
             ];
             $event->menu->addAfter('users_settings', ...$array);
         });
+
+        $events->listen(BuildingMenu::class, function (BuildingMenu $event) {
+
+            if (Auth::user()->hasRole('supervisor')) {
+                $postcount = Post::where('supervisor', Auth::id())->count();
+            } else {
+                $postcount = Post::where('created', Auth::id())->count();
+            }
+
+            $array = [
+
+                [
+                    'text' => 'my_authors',
+                    'url' => 'admin/authors',
+                    'icon' => 'fas fa-fw fa-user',
+                    'label' => Author::where('user_id', Auth::id())->count(),
+                    'label_color' => 'success',
+                    'role' => 'researcher'
+                ],
+                [
+                    'text' => 'my_posts',
+                    'url' => 'admin/posts',
+                    'icon' => 'fas fa-fw fa-file',
+                    'label' => $postcount,
+                    'label_color' => 'success',
+                ],
+            ];
+            $event->menu->addAfter('posts_settings', ...$array);
+        });
+
 
     }
 }

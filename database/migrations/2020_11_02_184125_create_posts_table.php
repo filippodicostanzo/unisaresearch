@@ -25,6 +25,7 @@ class CreatePostsTable extends Migration
             $table->string('state');
             $table->bigInteger('supervisor')->unsigned()->nullable();
             $table->longText('tag');
+            $table->longText('pdf');
             $table->longText('abstract');
             $table->longText('intro');
             $table->longText('ending');

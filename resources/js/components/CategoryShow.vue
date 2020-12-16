@@ -38,6 +38,7 @@
         },
         mounted() {
             this.rendered = JSON.parse(this.item);
+
             console.log(this.rendered);
         },
         methods: {},

@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use App\Models\Author;
 use App\Models\Post;
 use Carbon\Carbon;
-use Carbon\Traits\Date;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
 
 class PostController extends Controller
 {
@@ -33,6 +32,7 @@ class PostController extends Controller
 
         $this->title = 'posts';
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -48,19 +48,49 @@ class PostController extends Controller
                 $postauthor = [];
                 $authors = explode(',', $item['authors']);
                 foreach ($authors as $author) {
-                    array_push($postauthor, Author::where('id',$author)->first());
+                    array_push($postauthor, Author::where('id', $author)->first());
                 }
-                $item['json_authors'] = json_encode($postauthor,true);
+                $item['json_authors'] = json_encode($postauthor, true);
                 $item['category'] = $item->category_fk->name;
                 $item['template'] = $item->template_fk->name;
 
             }
 
             return view('posts.index', ['items' => $items, 'title' => $this->title]);
-        }
+        } else if ($this->user->hasRole('supervisor')) {
+            $items = Post::where('supervisor', $this->user->id)->orderBy('id', 'ASC')->get();
 
-        else {
+            foreach ($items as $item) {
 
+                $postauthor = [];
+                $authors = explode(',', $item['authors']);
+                foreach ($authors as $author) {
+                    array_push($postauthor, Author::where('id', $author)->first());
+                }
+                $item['json_authors'] = json_encode($postauthor, true);
+                $item['category'] = $item->category_fk->name;
+                $item['template'] = $item->template_fk->name;
+
+            }
+
+            return view('posts.index', ['items' => $items, 'title' => $this->title]);
+        } else {
+            $items = Post::where('created', $this->user->id)->orderBy('id', 'ASC')->get();
+
+            foreach ($items as $item) {
+
+                $postauthor = [];
+                $authors = explode(',', $item['authors']);
+                foreach ($authors as $author) {
+                    array_push($postauthor, Author::where('id', $author)->first());
+                }
+                $item['json_authors'] = json_encode($postauthor, true);
+                $item['category'] = $item->category_fk->name;
+                $item['template'] = $item->template_fk->name;
+
+            }
+
+            return view('posts.index', ['items' => $items, 'title' => $this->title]);
         }
     }
 
@@ -77,7 +107,7 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -94,7 +124,7 @@ class PostController extends Controller
 
 
         $post['authors'] = $authors;
-        $post['state'] = 'create';
+        $post['state'] = 1;
         $post['latest_modify'] = Carbon::now();
 
         $res = $post->save();
@@ -106,18 +136,20 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Post  $post
+     * @param \App\Models\Post $post
      * @return \Illuminate\Http\Response
      */
     public function show(Post $post)
     {
+
         $item = $post;
+
         $postauthor = [];
         $authors = explode(',', $item['authors']);
         foreach ($authors as $author) {
-            array_push($postauthor, Author::where('id',$author)->first());
+            array_push($postauthor, Author::where('id', $author)->first());
         }
-        $item['json_authors'] = json_encode($postauthor,true);
+        $item['json_authors'] = json_encode($postauthor, true);
         $item['category'] = $post->category_fk->name;
         $item['template'] = $post->template_fk->name;
         $item['template_fields'] = $post->template_fk->fields;
@@ -128,20 +160,37 @@ class PostController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Post  $post
+     * @param \App\Models\Post $post
      * @return \Illuminate\Http\Response
      */
     public function edit(Post $post)
     {
         $item = $post;
-        return view('posts.edit', ['title' => $this->title, 'item'=>$item]);
+
+        if ($this->user->hasRole('superadministrator|administrator')) {
+            return view('posts.edit', ['title' => $this->title, 'item' => $item]);
+        } else {
+            if ($item->created === Auth::id()) {
+
+                return view('posts.edit', ['title' => $this->title, 'item' => $item]);
+            }
+
+            if ($item->supervisor === Auth::id()) {
+                return view('posts.edit', ['title' => $this->title, 'item' => $item]);
+            } else {
+
+                abort(403);
+            }
+        }
+
+
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Post  $post
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Post $post
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Post $post)
@@ -154,7 +203,6 @@ class PostController extends Controller
 
         $data = $request->all();
         $data['authors'] = $authors;
-        $data['state'] = 'create';
         $data['latest_modify'] = Carbon::now();
 
         $res = Post::find($post->id)->update($data);
@@ -166,11 +214,29 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Post  $post
+     * @param \App\Models\Post $post
      * @return \Illuminate\Http\Response
      */
     public function destroy(Post $post)
     {
         //
+    }
+
+
+    public function single($request)
+    {
+        $item = Post::where('id', $request)->first();
+
+        $postauthor = [];
+        $authors = explode(',', $item['authors']);
+        foreach ($authors as $author) {
+            array_push($postauthor, Author::where('id', $author)->first());
+        }
+        $item['json_authors'] = json_encode($postauthor, true);
+        $item['category'] = $item->category_fk->name;
+        $item['template'] = $item->template_fk->name;
+        $item['template_fields'] = $item->template_fk->fields;
+
+        return view('posts.show', ['item' => $item]);
     }
 }

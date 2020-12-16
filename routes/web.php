@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\PostController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -37,12 +38,26 @@ Route::get('/home', function () {
 })->middleware('verified');
 
 
-Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => '', 'middleware' => ['role:user|superadministrator']], function () {
+
+Route::group(['namespace' => 'Auth'], function () {
+
+    Route::get('/posts/{id}', [PostController::class, 'single'])->middleware('verified')->name('posts.single');
+    Route::get('/posts', [PostController::class, 'index'])->middleware('verified');
+
+});
+
+/**
+ *
+ * USER GUEST
+ *
+ */
+
+Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => '', 'middleware' => ['role:user']], function () {
     Route::get('/guest', function () {
         return view('guest.index');
     })->middleware('verified');
 
-    Route::resource('posts', 'PostController');
+    //Route::resource('posts', 'PostController');
 });
 
 Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', 'middleware' => ['role:superadministrator']], function () {
@@ -63,7 +78,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
 
 });
 
-Route::group(['namespace' => 'Auth', 'middleware' => ['role:user']], function () {
+Route::group(['namespace' => 'Auth', 'middleware' => ['role:user|supervisor|researcher']], function () {
 
     Route::get('/profile', [ProfileController::class, 'edit'])->middleware('verified');
     Route::patch('/profile/{id}', [UserController::class, 'update'])->middleware('verified');
@@ -71,6 +86,32 @@ Route::group(['namespace' => 'Auth', 'middleware' => ['role:user']], function ()
     /*    Route::get('/profile', function () {
         return view('profile.index');
     })->middleware('verified');*/
+});
+
+
+
+
+/**
+ *
+ * RESEARCHER
+ *
+ */
+
+Route::group(['namespace' => 'App\Http\Controllers\Auth','prefix' => 'admin', 'middleware' => ['role:researcher|superadministrator|administrator']], function () {
+
+
+    Route::resource('authors', 'AuthorController');
+
+    /*    Route::get('/profile', function () {
+        return view('profile.index');
+    })->middleware('verified');*/
+});
+
+
+Route::group(['namespace' => 'App\Http\Controllers\Auth','prefix' => 'admin', 'middleware' => ['role:researcher|superadministrator|administrator|supervisor']], function () {
+
+    Route::resource('posts', 'PostController');
+
 });
 
 Auth::routes(['verify' => true]);

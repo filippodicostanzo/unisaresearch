@@ -247,12 +247,26 @@ return [
             'url'         => 'admin/',
             'icon'        => 'fas fa-fw fa-home',
             'label_color' => 'success',
-            'role'        => 'superadministrator|administrator'
+            'role' => 'superadministrator|administrator',
         ],
+
+        [
+            'text'        => 'dashboard',
+            'url'         => '/home',
+            'icon'        => 'fas fa-fw fa-home',
+            'label_color' => 'success',
+            'role' => 'researcher|user|supervisor',
+        ],
+
+
 
         ['header' => 'admin_settings', 'role' => 'superadministrator|administrator', 'key' => 'admin_settings'],
 
         ['header' => 'users_settings', 'role' => 'superadministrator|administrator', 'key'=>'users_settings' ],
+
+        ['header'=>'posts_settings', 'role'=>'user|researcher|supervisor', 'key'=>'posts_settings'],
+
+
 
         ['header' => 'account_settings'],
         [

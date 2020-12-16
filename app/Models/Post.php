@@ -25,6 +25,7 @@ class Post extends Model
         'state',
         'supervisor',
         'tags',
+        'pdf',
         'abstract',
         'intro',
         'ending',
@@ -49,6 +50,11 @@ class Post extends Model
     public function template_fk()
     {
         return $this->belongsTo('App\Models\Template', 'template', 'id');
+    }
+
+    public function state_fk()
+    {
+        return $this->belongsTo('App\Models\Status', 'state', 'id');
     }
 
 

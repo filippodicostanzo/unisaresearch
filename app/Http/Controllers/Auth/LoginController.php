@@ -41,14 +41,20 @@ class LoginController extends Controller
 
 
     public function redirectTo() {
+
+
         $user = Auth::user();
 
         if ($user->hasRole('user')) {
 
-            return '/guest';
+            return '/home';
         }
 
         if ($user->hasRole('researcher')) {
+            return '/home';
+        }
+
+        if ($user->hasRole('supervisor')) {
             return '/home';
         }
 

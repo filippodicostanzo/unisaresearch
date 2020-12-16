@@ -45,6 +45,9 @@
 
                             <div class="form-group row">
                                 <div class="col-12"><label>Authors</label></div>
+                                @if(count($authors)==0)
+                                <div>You can add an author from the appropriate section</div>
+                                @endif
                                 @foreach ($authors as $item)
                                     <div class="item col-md-6 col-xs-6 mb-3">
                                         <div class="form-check">
@@ -138,7 +141,7 @@
                                             <i class="fa fa-picture-o"></i> Choose
                                         </a>
                                         </span>
-                                    {!! Form::text('document', null, array('placeholder' => 'Image','class' => 'form-control file-src','id' => 'thumbnail')) !!}
+                                    {!! Form::text('pdf', null, array('placeholder' => 'PDF','class' => 'form-control file-src','id' => 'thumbnail')) !!}
 
                                 </div>
 

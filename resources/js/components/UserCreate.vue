@@ -476,6 +476,7 @@
                             let url = '';
                             let json_role = this.role;
 
+
                             console.log(this.role);
 
                             console.log(json_role);
@@ -512,7 +513,7 @@
                          */
 
                         else {
-
+                            this.user.role = this.key;
                             this.user.new_password = this.password !== this.user.password;
                             console.log(this.user);
                             this.$http

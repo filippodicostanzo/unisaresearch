@@ -6,15 +6,25 @@
 @php
     use App\Models\Author;
     use App\Models\Category;
-    use App\Models\Template;
-    use Illuminate\Support\Facades\Auth;
+    use App\Models\Status;use App\Models\Template;
+    use App\Models\User;use Illuminate\Support\Facades\Auth;
 
+    $usx = Auth::user();
+
+    if ($usx->hasRole('superadministrator|administrator|supervisor')){
+    $authors = Author::orderBy('id')->get();
+    }
+
+    else {
     $authors = Author::where('user_id', Auth::id())->get();
+    }
     $user = Auth::id();
     $categories = Category::orderBy('id')->get();
     $template = Template::where('active', 1)->first();
     $fields=json_decode($template->fields);
     $aut = explode(",", $item->authors);
+    $statuses = Status::orderBy('id')->get();
+    $supervisors = User::whereRoleIs('supervisor')->get();
 
 
 
@@ -38,8 +48,8 @@
                     <div class="card-body">
                         <input type="hidden" id="count_fields" value="{{count($fields)}}">
                     {!! Form::model($item, ['method' => 'PATCH','route' => ['posts.update', $item->id], 'enctype' => 'multipart/form-data', 'id'=>'regForm'] ) !!}
-                        @csrf
-                        <!-- One "tab" for each step in the form: -->
+                    @csrf
+                    <!-- One "tab" for each step in the form: -->
                         <div class="tab">
                             <div class="form-group">
                                 <label>Title:</label>
@@ -53,7 +63,8 @@
                                     <div class="item col-md-6 col-xs-6 mb-3">
                                         <div class="form-check">
                                             <input type="checkbox" id="{{$author->id}}"
-                                                   name="authors[]" value="{{$author->id}}" {{ in_array($author->id, $aut) ? 'checked' : ''}}>
+                                                   name="authors[]"
+                                                   value="{{$author->id}}" {{ in_array($author->id, $aut) ? 'checked' : ''}}>
                                             <label class="form-check-label"
                                                    for="exampleCheck1">{{$author->firstname}} {{$author->lastname}}</label>
                                         </div>
@@ -67,14 +78,14 @@
 
                             <div class="form-group">
 
-
-
-
                                 <div class="col-12"><label>Category</label></div>
 
                                 <select id="items-selected" name="category" class="form-control">
                                     @foreach($categories as $category)
-                                        <option value="{{$category->id}}" data-type="{{$category->id}}" {{$item->category == $category->id ? 'selected="selected"' : ''}}>{{$category->name}}</option>
+                                        <option value="{{$category->id}}"
+                                                data-type="{{$category->id}}" {{$item->category == $category->id ? 'selected="selected"' : ''}}>
+                                            {{$category->name}}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -82,10 +93,51 @@
                             <div class="form-group">
                                 <div class="col-12"><label>Language</label></div>
                                 <select id="items-selected" name="language" class="form-control">
-                                    <option value="en" data-type="en" {{ $item->language == 'en' ? 'selected="selected"' : '' }}>English</option>
-                                    <option value="it" data-type="it"{{ $item->language == 'it' ? 'selected="selected"' : '' }}>Italian</option>
+                                    <option value="en"
+                                            data-type="en" {{ $item->language == 'en' ? 'selected="selected"' : '' }}>
+                                        English
+                                    </option>
+                                    <option value="it"
+                                            data-type="it"{{ $item->language == 'it' ? 'selected="selected"' : '' }}>
+                                        Italian
+                                    </option>
                                 </select>
                             </div>
+
+                            @role('superadministrator|administrator|supervisor')
+                            <div class="form-group">
+
+                                <div class="col-12"><label>Status</label></div>
+
+                                <select id="statuses-selected" name="state" class="form-control">
+                                    <option value="" data-type="">Choose</option>
+                                    @foreach($statuses as $status)
+                                        <option value="{{$status->id}}"
+                                                data-type="{{$status->id}}" {{$item->state == $status->id ? 'selected="selected"' : ''}}>
+                                            {{$status->name}}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @endrole
+
+                            @role('superadministrator|administrator')
+                            <div class="form-group">
+
+                                <div class="col-12"><label>Supervisor</label></div>
+
+                                <select id="supervisors-selected" name="supervisor" class="form-control">
+                                    <option value="" data-type="">Choose</option>
+                                    @foreach($supervisors as $supervisor)
+
+                                        <option value="{{$supervisor->id}}"
+                                                data-type="{{$supervisor->id}}" {{$item->supervisor == $supervisor->id ? 'selected="selected"' : ''}}>
+                                            {{$supervisor->name}} {{$supervisor->surname}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            @endrole
 
 
                         </div>
@@ -133,7 +185,7 @@
                                 <label>
                                     Tags:
                                 </label>
-                        {!! Form::text('tags', null, array('placeholder' => 'Tag separated by comma','class' => 'form-control',  'oninput'=>"this.className = ''")) !!}
+                                {!! Form::text('tags', null, array('placeholder' => 'Tag separated by comma','class' => 'form-control',  'oninput'=>"this.className = ''")) !!}
                             </div>
                             <div class="form-group imageUpload">
                                 <label for="image">PDF Document</label>
@@ -144,14 +196,14 @@
                                             <i class="fa fa-picture-o"></i> Choose
                                         </a>
                                         </span>
-                                    {!! Form::text('document', null, array('placeholder' => 'Image','class' => 'form-control file-src','id' => 'thumbnail')) !!}
+                                    {!! Form::text('pdf', null, array('placeholder' => 'PDF','class' => 'form-control file-src','id' => 'thumbnail')) !!}
 
                                 </div>
 
                             </div>
-                        <!--<button type="submit" class="btn btn-primary btn-lg btn-block">
-                            <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
-                        </button> -->
+                            <!--<button type="submit" class="btn btn-primary btn-lg btn-block">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
+                            </button> -->
                         </div>
 
                         <div style="display: none" id="loader"><h3>Loading...</h3></div>
