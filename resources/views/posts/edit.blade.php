@@ -19,12 +19,15 @@
     $authors = Author::where('user_id', Auth::id())->get();
     }
     $user = Auth::id();
+    $mainaut = User::where('id', $item->created)->first();
     $categories = Category::orderBy('id')->get();
     $template = Template::where('active', 1)->first();
     $fields=json_decode($template->fields);
     $aut = explode(",", $item->authors);
+    $sup = explode(",", $item->supervisors);
     $statuses = Status::orderBy('id')->get();
     $supervisors = User::whereRoleIs('supervisor')->get();
+
 
 
 
@@ -58,7 +61,15 @@
 
                             <div class="form-group row">
                                 <div class="col-12"><label>Authors</label></div>
+                                <div class="item col-md-6 col-xs-6 mb-3">
+                                    <div class="form-check">
+                                        <input type="checkbox" checked disabled>
+                                        <label class="form-check-label"
+                                               for="exampleCheck1">{{$mainaut->name}} {{$mainaut->surname}}</label>
+                                    </div>
+                                </div>
                                 @foreach ($authors as $author)
+
 
                                     <div class="item col-md-6 col-xs-6 mb-3">
                                         <div class="form-check">
@@ -126,15 +137,20 @@
 
                                 <div class="col-12"><label>Supervisor</label></div>
 
-                                <select id="supervisors-selected" name="supervisor" class="form-control">
-                                    <option value="" data-type="">Choose</option>
-                                    @foreach($supervisors as $supervisor)
+                                @foreach ($supervisors as $supervisor)
 
-                                        <option value="{{$supervisor->id}}"
-                                                data-type="{{$supervisor->id}}" {{$item->supervisor == $supervisor->id ? 'selected="selected"' : ''}}>
-                                            {{$supervisor->name}} {{$supervisor->surname}}</option>
-                                    @endforeach
-                                </select>
+                                    <div class="item col-md-6 col-xs-6 mb-3">
+                                        <div class="form-check">
+                                            <input type="checkbox" id="{{$supervisor->id}}"
+                                                   name="authors[]"
+                                                   value="{{$supervisor->id}}" {{ in_array($supervisor->id, $sup) ? 'checked' : ''}}>
+                                            <label class="form-check-label"
+                                                   for="exampleCheck1">{{$supervisor->name}} {{$supervisor->surname}}</label>
+                                        </div>
+                                    </div>
+
+                                @endforeach
+
                             </div>
 
                             @endrole

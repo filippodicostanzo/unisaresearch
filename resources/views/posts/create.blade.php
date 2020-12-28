@@ -10,8 +10,10 @@
     use Illuminate\Support\Facades\Auth;
 
     $authors = Author::where('user_id', Auth::id())->get();
+    $usr = Auth::user();
     $user = Auth::id();
     $categories = Category::orderBy('id')->get();
+    $templates = Template::where('active',1)->orderBy('id')->get();
     $template = Template::where('active', 1)->first();
     $fields=json_decode($template->fields);
 
@@ -34,10 +36,21 @@
                     </div>
                     <div class="card-body">
                         <input type="hidden" id="count_fields" value="{{count($fields)}}">
-                        {!! Form::open(array('route' => 'posts.store','method'=>'POST', 'enctype' => 'multipart/form-data', 'id'=>'regForm')) !!}
-                        @csrf
-                        <!-- One "tab" for each step in the form: -->
+                    {!! Form::open(array('route' => 'posts.store','method'=>'POST', 'enctype' => 'multipart/form-data', 'id'=>'regForm')) !!}
+                    @csrf
+                    <!-- One "tab" for each step in the form: -->
                         <div class="tab">
+
+                            <div class="form-group">
+                                <div class="col-12"><label>Template</label></div>
+                                <select id="template-selected" name="template" class="form-control">
+                                    <option value="" data-type="">Choose</option>
+                                    @foreach($templates as $item)
+                                        <option value="{{$item->id}}" data-type="{{$item->id}}">{{$item->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
                             <div class="form-group">
                                 <label>Title:</label>
                                 {!! Form::text('title', null, array('placeholder' => 'Title','class' => 'form-control',  'oninput'=>"this.className = ''")) !!}
@@ -45,9 +58,17 @@
 
                             <div class="form-group row">
                                 <div class="col-12"><label>Authors</label></div>
+
                                 @if(count($authors)==0)
-                                <div>You can add an author from the appropriate section</div>
+                                    <div>You can add an author from the appropriate section</div>
                                 @endif
+                                <div class="item col-md-6 col-xs-6 mb-3">
+                                    <div class="form-check">
+                                        <input type="checkbox" checked disabled>
+                                        <label class="form-check-label"
+                                               for="exampleCheck1">{{$usr->name}} {{$usr->surname}}</label>
+                                    </div>
+                                </div>
                                 @foreach ($authors as $item)
                                     <div class="item col-md-6 col-xs-6 mb-3">
                                         <div class="form-check">
@@ -72,18 +93,9 @@
                                 </select>
                             </div>
 
-                            <div class="form-group">
-                                <div class="col-12"><label>Language</label></div>
-                                <select id="items-selected" name="language" class="form-control">
-                                    <option value="en" data-type="en">English</option>
-                                    <option value="it" data-type="it">Italian</option>
-                                </select>
-                            </div>
-
-
                         </div>
 
-
+<!--
                         <div class="tab">
                             <div class="form-group">
                                 <label>Abstract</label>
@@ -97,19 +109,20 @@
                                           class="form-control"></textarea>
                             </div>
                         </div>
-
-                        <div class="tab">
-                            @foreach($fields as $key => $value)
+-->
+                        <div class="tab" id="textarea-section">
+                          <!--  @foreach($fields as $key => $value)
                                 <div class="form-group">
                                     <label>{{$value->name}}</label>
 
                                     <textarea name="field_{{$key+1}}" id="field_{{$key+1}}" rows="10" cols="80"
                                               class="form-control"></textarea>
                                 </div>
-                            @endforeach
+                            @endforeach -->
 
                         </div>
 
+                        <!--
                         <div class="tab">
                             <div class="form-group">
                                 <label>Ending</label>
@@ -123,14 +136,14 @@
                                           class="form-control"></textarea>
                             </div>
                         </div>
-
+-->
 
                         <div class="tab">
                             <div class="form-group">
                                 <label>
                                     Tags:
                                 </label>
-                        {!! Form::text('tags', null, array('placeholder' => 'Tag separated by comma','class' => 'form-control',  'oninput'=>"this.className = ''")) !!}
+                                {!! Form::text('tags', null, array('placeholder' => 'Tag separated by comma','class' => 'form-control',  'oninput'=>"this.className = ''")) !!}
                             </div>
                             <div class="form-group imageUpload">
                                 <label for="image">PDF Document</label>
@@ -146,9 +159,9 @@
                                 </div>
 
                             </div>
-                        <!--<button type="submit" class="btn btn-primary btn-lg btn-block">
-                            <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
-                        </button> -->
+                            <!--<button type="submit" class="btn btn-primary btn-lg btn-block">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
+                            </button> -->
                         </div>
 
                         <div style="display: none" id="loader"><h3>Loading...</h3></div>
@@ -167,11 +180,9 @@
                             <span class="step"></span>
                             <span class="step"></span>
                             <span class="step"></span>
-                            <span class="step"></span>
-                            <span class="step"></span>
                         </div>
 
-                        {{ Form::hidden('template', $template['id']) }}
+                        {{ Form::hidden('template', null, array('id'=>'template')) }}
                         {{ Form::hidden('created', $user) }}
                         {{ Form::hidden('edit', $user) }}
 
@@ -204,6 +215,35 @@
         };
 
         $(document).ready(function () {
+
+
+            $('#template-selected').change(function () {
+                console.log($(this).val());
+
+                $('#template').val($(this).val());
+
+
+                $.getJSON("/templates/" + $(this).val(), function (jsonData) {
+
+                    $('#textarea-section').empty();
+
+
+                    let fields = JSON.parse(jsonData.fields);
+
+                    fields.forEach((value, key) => {
+
+                        $('#textarea-section').append('<div class="form-group"> <label>' + value.name + '</label> <textarea name="field_' + parseInt(key+1) + '" id="field_' + parseInt(key+1) + '" rows="10" cols="80" form="regForm"></textarea></div>');
+                        CKEDITOR.replace('field_'+parseInt(key+1), options);
+                    })
+
+                })
+
+
+             //   $('#textarea-section').append('<textarea name="field_21" id="field_21" rows="10" cols="80" class="form-control"></textarea>')
+
+
+
+            });
 
             var fields = $('#count_fields').val();
             console.log(fields);
@@ -271,7 +311,17 @@
             y = x[currentTab].getElementsByTagName("input");
             z = x[currentTab].getElementsByTagName("textarea");
 
+            var template = document.getElementById("template-selected");
+            console.log(template.value);
 
+            if (!template.value) {
+                template.className += ' invalid'
+                valid = false;
+            } else {
+                template.classList.remove('invalid');
+                valid = true;
+            }
+            /*
             var checkbox = document.querySelector('input[name="authors[]"]:checked');
             if (!checkbox) {
                 document.getElementById('author_error').innerHTML = '<p class="text-danger">Please select an author</p>'
@@ -280,6 +330,7 @@
                 document.getElementById('author_error').innerHTML = '';
                 valid = true;
             }
+            */
 
             // A loop that checks every input field in the current tab:
             for (i = 0; i < y.length; i++) {

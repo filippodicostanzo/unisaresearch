@@ -17,6 +17,7 @@ class Author extends Model
         'id',
         'firstname',
         'lastname',
+        'email',
         'user_id'
     ];
 

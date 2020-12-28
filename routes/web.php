@@ -22,6 +22,9 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+
+Route::get('templates/{id}', [\App\Http\Controllers\Auth\TemplateController::class, 'jsonTemplate']);
+
 Route::get('send-mail', function () {
 
     $details = [

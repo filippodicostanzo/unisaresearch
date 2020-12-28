@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Template;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class TemplateController extends Controller
 {
@@ -70,10 +71,6 @@ class TemplateController extends Controller
 
         $template->fields = json_encode($request->fields);
 
-        if ($template->active) {
-            Template::where('active', '=', 1)->update(['active' => 0]);
-        }
-
         $res = $template->save();
         $message = $res ? 'Template ' . $template->name . ' has been saved' : 'Template ' . $template->name . ' was note saved';
         session()->flash('message', $message);
@@ -117,10 +114,6 @@ class TemplateController extends Controller
 
         $data = $request->except(['fields']);
 
-        if ($request->active) {
-            Template::where('active', '=', 1)->update(['active' => 0]);
-        }
-
         $res = Template::find($template->id)->update($data);
         $message = $res ? 'Template ' . $data['name'] . ' has been saved' : 'Template ' . $data['name'] . ' was note saved';
         session()->flash('message', $message);
@@ -137,5 +130,12 @@ class TemplateController extends Controller
         $res = $template->delete();
         $message = $res ? 'Il Video ' . $template->name . ' è stato cancellato' : 'La Gallery ' . $template->name . ' non è stato cancellato';
         session()->flash('message', $message);
+    }
+
+    public function jsonTemplate(Request $request) {
+        if($request->ajax()){
+            $template = DB::table('templates')->where('id',$request['id'])->first();
+            return response()->json($template);
+        }
     }
 }

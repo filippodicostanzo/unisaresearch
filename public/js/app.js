@@ -1977,6 +1977,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AuthorCreate",
@@ -2006,7 +2015,8 @@ __webpack_require__.r(__webpack_exports__);
         filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token=',
         filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
         filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
-      }
+      },
+      errors: null
     };
   },
   validations: {
@@ -2016,6 +2026,10 @@ __webpack_require__.r(__webpack_exports__);
         minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["minLength"])(4)
       },
       lastname: {
+        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"],
+        minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["minLength"])(4)
+      },
+      email: {
         required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"],
         minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["minLength"])(4)
       }
@@ -2035,26 +2049,31 @@ __webpack_require__.r(__webpack_exports__);
 
         if (this.source === 'new') {
           this.$http.post("/admin/authors", this.author).then(function (response) {
-            if (response.status === 200) {
-              window.location.href = route('authors.index');
+            if (response.status === 200) {//    window.location.href = route('authors.index')
             }
           })["catch"](function (error) {
-            alert(error.message);
+            _this.errors = error.response.data.errors;
           });
         } else {
           this.$http.patch("/admin/authors/" + this.author.id, this.author).then(function (response) {
-            if (response.status === 200) {
-              window.location.href = route('authors.index');
+            if (response.status === 200) {//   window.location.href = route('authors.index')
             }
           })["catch"](function (error) {
-            alert(error.message);
+            _this.errors = error.response.data.errors;
           });
         } // do your submit logic here
 
 
         this.submitStatus = 'PENDING';
         setTimeout(function () {
-          _this.submitStatus = 'OK';
+          console.log('AAAABBBCCC');
+          console.log(_this.errors);
+
+          if (_this.errors) {
+            _this.submitStatus = 'ERROR';
+          } else {
+            _this.submitStatus = 'OK';
+          }
         }, 500);
       }
     }
@@ -2072,8 +2091,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
 //
 //
 //
@@ -59584,7 +59601,7 @@ var render = function() {
             },
             [
               _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col-md-6 col-xs-12" }, [
+                _c("div", { staticClass: "col-md-4 col-xs-12" }, [
                   _c(
                     "div",
                     {
@@ -59644,7 +59661,7 @@ var render = function() {
                     : _vm._e()
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "col-md-6 col-xs-12" }, [
+                _c("div", { staticClass: "col-md-4 col-xs-12" }, [
                   _c(
                     "div",
                     {
@@ -59702,6 +59719,62 @@ var render = function() {
                         )
                       ])
                     : _vm._e()
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-4 col-xs-12" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: { "form-group--error": _vm.$v.author.email.$error }
+                    },
+                    [
+                      _c("label", { staticClass: "form__label" }, [
+                        _vm._v("Email")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.$v.author.email.$model,
+                            expression: "$v.author.email.$model"
+                          }
+                        ],
+                        staticClass: "form__input",
+                        domProps: { value: _vm.$v.author.email.$model },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.$v.author.email,
+                              "$model",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ]
+                  ),
+                  _vm._v(" "),
+                  !_vm.$v.author.email.required
+                    ? _c("div", { staticClass: "error" }, [
+                        _vm._v("Email is required")
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  !_vm.$v.author.email.minLength
+                    ? _c("div", { staticClass: "error" }, [
+                        _vm._v(
+                          "Email must have at least\n                                " +
+                            _vm._s(_vm.$v.author.email.$params.minLength.min) +
+                            " letters.\n                            "
+                        )
+                      ])
+                    : _vm._e()
                 ])
               ]),
               _vm._v(" "),
@@ -59729,7 +59802,7 @@ var render = function() {
                     _vm.submitStatus === "OK"
                       ? _c("p", { staticClass: "typo__p" }, [
                           _vm._v(
-                            "Thanks for your submission! Waiting for Redirect"
+                            "Thanks for your submission! Waiting\n                                    for Redirect"
                           )
                         ])
                       : _vm._e(),
@@ -59737,7 +59810,7 @@ var render = function() {
                     _vm.submitStatus === "ERROR"
                       ? _c("p", { staticClass: "typo__p" }, [
                           _vm._v(
-                            "Please fill the form\n                                    correctly."
+                            "ERROR! the author is already present in the database"
                           )
                         ])
                       : _vm._e(),

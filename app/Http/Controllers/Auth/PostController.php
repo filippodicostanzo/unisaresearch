@@ -127,6 +127,7 @@ class PostController extends Controller
         $post['state'] = 1;
         $post['latest_modify'] = Carbon::now();
 
+
         $res = $post->save();
         $message = $res ? 'The Post ' . $post->title . ' has been saved' : 'The Post ' . $post->title . ' was not saved';
         session()->flash('message', $message);
