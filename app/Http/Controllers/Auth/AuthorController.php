@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Author;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
 class AuthorController extends Controller
 {
@@ -42,7 +45,7 @@ class AuthorController extends Controller
             $items = Author::orderBy('id', 'ASC')->get();
             return view('authors.index', ['items' => $items, 'title' => $this->title]);
         } else {
-            $items = Author::where('user_id',$this->user->id)->orderBy('id', 'ASC')->get();
+            $items = Author::where('user_id', $this->user->id)->orderBy('id', 'ASC')->get();
             return view('authors.index', ['items' => $items, 'title' => $this->title]);
         }
 
@@ -62,21 +65,46 @@ class AuthorController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
+        /*
+                $validator = Validator::make($request->all(), [
+                    'firstname' => 'required',
+                    'lastname' => 'required',
+                    'email' => 'required|unique:authors'
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->json([
+                        'errors' => "Password does't match",
+                    ], 422);
+        //            return response()->json(['isValid'=>false,'errors'=>$validator->messages()]);
+                }
+                else {
+
+
+        */
+
         $this->validate($request, [
             'firstname' => 'required',
             'lastname' => 'required',
+            'email' => 'required|unique:authors'
         ]);
 
         $author = new Author($request->all());
         $author['user_id'] = Auth::id();
 
         $res = $author->save();
+
+        if ($res) {
+            Mail::to($author->email)->send(new \App\Mail\AddAuthorEmail($author));
+        }
+
         $message = $res ? 'The Author ' . $author->name . ' has been saved' : 'The Author ' . $author->name . ' was not saved';
         session()->flash('message', $message);
+        //}
     }
 
     /**
@@ -101,20 +129,16 @@ class AuthorController extends Controller
     {
         $item = $author;
 
+
         if ($this->user->hasRole('superadministrator|administrator')) {
             return view('authors.edit', ['title' => $this->title, 'item' => $item]);
-        }
-
-        else {
-            if($item->user_id ===Auth::id()) {
+        } else {
+            if ($item->user_id === Auth::id()) {
                 return view('authors.edit', ['item' => $item, 'title' => $this->title]);
-            }
-            else {
+            } else {
                 abort(403);
             }
         }
-
-
 
 
     }
@@ -131,7 +155,9 @@ class AuthorController extends Controller
         $this->validate($request, [
             'firstname' => 'required',
             'lastname' => 'required',
+            'email' => 'required|unique:authors'
         ]);
+
 
         $data = $request->all();
         $res = Author::find($author->id)->update($data);

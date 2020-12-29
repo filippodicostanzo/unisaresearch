@@ -101,19 +101,6 @@
                                 </select>
                             </div>
 
-                            <div class="form-group">
-                                <div class="col-12"><label>Language</label></div>
-                                <select id="items-selected" name="language" class="form-control">
-                                    <option value="en"
-                                            data-type="en" {{ $item->language == 'en' ? 'selected="selected"' : '' }}>
-                                        English
-                                    </option>
-                                    <option value="it"
-                                            data-type="it"{{ $item->language == 'it' ? 'selected="selected"' : '' }}>
-                                        Italian
-                                    </option>
-                                </select>
-                            </div>
 
                             @role('superadministrator|administrator|supervisor')
                             <div class="form-group">
@@ -133,9 +120,9 @@
                             @endrole
 
                             @role('superadministrator|administrator')
-                            <div class="form-group">
+                            <div class="form-group row">
 
-                                <div class="col-12"><label>Supervisor</label></div>
+                                <div class="col-12"><label>Supervisors</label></div>
 
                                 @foreach ($supervisors as $supervisor)
 

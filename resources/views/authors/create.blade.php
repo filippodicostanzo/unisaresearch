@@ -4,5 +4,4 @@
 
 @section('content')
     <author-create></author-create>
-
 @endsection

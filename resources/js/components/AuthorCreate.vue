@@ -16,7 +16,7 @@
 
                     <form @submit.prevent="submit">
                         <div class="row">
-                            <div class="col-md-6 col-xs-12">
+                            <div class="col-md-4 col-xs-12">
                                 <div class="form-group" :class="{ 'form-group--error': $v.author.firstname.$error }">
                                     <label class="form__label">First Name</label>
                                     <input class="form__input" v-model="$v.author.firstname.$model"/>
@@ -27,7 +27,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6 col-xs-12">
+                            <div class="col-md-4 col-xs-12">
                                 <div class="form-group" :class="{ 'form-group--error': $v.author.lastname.$error }">
                                     <label class="form__label">Last Name</label>
                                     <input class="form__input" v-model="$v.author.lastname.$model"/>
@@ -38,9 +38,18 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-4 col-xs-12">
+                                <div class="form-group" :class="{ 'form-group--error': $v.author.email.$error }">
+                                    <label class="form__label">Email</label>
+                                    <input class="form__input" v-model="$v.author.email.$model"/>
+                                </div>
+                                <div class="error" v-if="!$v.author.email.required">Email is required</div>
+                                <div class="error" v-if="!$v.author.email.minLength">Email must have at least
+                                    {{$v.author.email.$params.minLength.min}} letters.
+                                </div>
+                            </div>
+
                         </div>
-
-
 
 
                         <div class="row padding">
@@ -50,9 +59,9 @@
                                             :disabled="submitStatus === 'PENDING'"><i
                                         class="fa fa-floppy-o" aria-hidden="true"></i> Submit!
                                     </button>
-                                    <p class="typo__p" v-if="submitStatus === 'OK'">Thanks for your submission! Waiting for Redirect</p>
-                                    <p class="typo__p" v-if="submitStatus === 'ERROR'">Please fill the form
-                                        correctly.</p>
+                                    <p class="typo__p" v-if="submitStatus === 'OK'">Thanks for your submission! Waiting
+                                        for Redirect</p>
+                                    <p class="typo__p" v-if="submitStatus === 'ERROR'">ERROR! the author is already present in the database</p>
                                     <p class="typo__p" v-if="submitStatus === 'PENDING'">Sending...</p>
 
                                 </div>
@@ -88,7 +97,7 @@
                     firstname: '',
                     lastname: '',
                     email: '',
-                    affiliation:''
+                    affiliation: ''
                 },
                 source: '',
                 submitStatus: null,
@@ -97,7 +106,8 @@
                     filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token=',
                     filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
                     filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
-                }
+                },
+                errors: null
 
             }
         },
@@ -108,6 +118,10 @@
                     minLength: minLength(4)
                 },
                 lastname: {
+                    required,
+                    minLength: minLength(4)
+                },
+                email: {
                     required,
                     minLength: minLength(4)
                 }
@@ -126,25 +140,25 @@
                         this.$http
                             .post("/admin/authors", this.author)
                             .then(response => {
-
                                 if (response.status === 200) {
-                                    window.location.href = route('authors.index')
+                                    //    window.location.href = route('authors.index')
                                 }
                             })
                             .catch(error => {
-                                alert(error.message)
+                                this.errors = error.response.data.errors;
                             });
                     } else {
                         this.$http
                             .patch("/admin/authors/" + this.author.id, this.author)
                             .then(response => {
-
                                 if (response.status === 200) {
-                                    window.location.href = route('authors.index')
-                                }
+
+                                     //   window.location.href = route('authors.index')
+                                    }
+
                             })
                             .catch(error => {
-                                alert(error.message)
+                                this.errors = error.response.data.errors;
                             });
 
                     }
@@ -152,7 +166,13 @@
 // do your submit logic here
                     this.submitStatus = 'PENDING'
                     setTimeout(() => {
-                        this.submitStatus = 'OK'
+                        console.log('AAAABBBCCC');
+                        console.log(this.errors);
+                        if (this.errors) {
+                            this.submitStatus = 'ERROR'
+                        } else {
+                            this.submitStatus = 'OK'
+                        }
                     }, 500)
                 }
             }

@@ -7,7 +7,6 @@
                     <h1 class="m0 text-dark card-title text-xl">
                         {{this.rendered.firstname}} {{this.rendered.lastname}}
                     </h1>
-
                     <div class="card-action">
                         <a :href="route('authors.index')">
                             <i class="fa fa-arrow-circle-left fa-3x fa-fw" aria-hidden="true"></i>
@@ -15,7 +14,6 @@
                     </div>
 
                 </div>
-
                 <div class="card-body no-padding">
                     <div class="row">
                         <div class="col-md-6 col-sm-12"><span class="text-bold">First Name</span>  {{this.rendered.firstname}}</div>
