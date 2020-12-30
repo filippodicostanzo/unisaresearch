@@ -116,6 +116,7 @@ class PostController extends Controller
 
         $post = new Post($request->all());
 
+        $authors_array = $request->input('authors');
         $authors = $request->input('authors');
 
         if ($authors != null) {
@@ -128,7 +129,9 @@ class PostController extends Controller
         $post['latest_modify'] = Carbon::now();
 
 
+
         $res = $post->save();
+        $post->authors()->sync($authors_array);
         $message = $res ? 'The Post ' . $post->title . ' has been saved' : 'The Post ' . $post->title . ' was not saved';
         session()->flash('message', $message);
         return redirect()->route('posts.index');
@@ -240,4 +243,50 @@ class PostController extends Controller
 
         return view('posts.show', ['item' => $item]);
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param \App\Models\Post $post
+     * @return \Illuminate\Http\Response
+     */
+    public function link(Post $post)
+    {
+
+        $item = $post;
+
+        if ($this->user->hasRole('superadministrator|administrator')) {
+            return view('posts.link', ['title' => $this->title, 'item' => $item]);
+        }
+
+    }
+
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Post $post
+     * @return \Illuminate\Http\Response
+     */
+    public function updatelink(Request $request, Post $post)
+    {
+
+        dd($request);
+        $authors = $request->input('authors');
+
+        if ($authors != null) {
+            $authors = implode(',', $authors);
+        }
+
+        $data = $request->all();
+        $data['authors'] = $authors;
+        $data['latest_modify'] = Carbon::now();
+
+        $res = Post::find($post->id)->update($data);
+        $message = $res ? 'The Post ' . $data['title'] . ' has been saved' : 'The Post ' . $data['title'] . ' was not saved';
+        session()->flash('message', $message);
+        return redirect()->route('posts.index');
+    }
+
 }

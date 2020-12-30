@@ -53,4 +53,10 @@ class Post extends Model
     }
 
 
+    public function authors()
+    {
+        return $this->belongsToMany('App\Models\Author');
+    }
+
+
 }

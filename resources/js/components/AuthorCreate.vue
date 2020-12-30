@@ -61,7 +61,8 @@
                                     </button>
                                     <p class="typo__p" v-if="submitStatus === 'OK'">Thanks for your submission! Waiting
                                         for Redirect</p>
-                                    <p class="typo__p" v-if="submitStatus === 'ERROR'">ERROR! the author is already present in the database</p>
+                                    <p class="typo__p" v-if="submitStatus === 'ERROR'">ERROR! the author is already
+                                        present in the database</p>
                                     <p class="typo__p" v-if="submitStatus === 'PENDING'">Sending...</p>
 
                                 </div>
@@ -141,7 +142,7 @@
                             .post("/admin/authors", this.author)
                             .then(response => {
                                 if (response.status === 200) {
-                                    //    window.location.href = route('authors.index')
+                                    window.location.href = route('authors.index')
                                 }
                             })
                             .catch(error => {
@@ -153,8 +154,8 @@
                             .then(response => {
                                 if (response.status === 200) {
 
-                                     //   window.location.href = route('authors.index')
-                                    }
+                                    window.location.href = route('authors.index')
+                                }
 
                             })
                             .catch(error => {

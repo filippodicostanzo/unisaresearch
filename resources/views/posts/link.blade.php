@@ -50,7 +50,7 @@
                     </div>
                     <div class="card-body">
                         <input type="hidden" id="count_fields" value="{{count($fields)}}">
-                    {!! Form::model($item, ['method' => 'PATCH','route' => ['posts.update', $item->id], 'enctype' => 'multipart/form-data', 'id'=>'regForm'] ) !!}
+                    {!! Form::model($item, ['method' => 'PATCH','route' => ['posts.link', $item->id], 'enctype' => 'multipart/form-data', 'id'=>'regForm'] ) !!}
                     @csrf
                     <!-- One "tab" for each step in the form: -->
                         <div class="tab">
@@ -120,9 +120,9 @@
                             @endrole
 
                             @role('superadministrator|administrator')
-                            <div class="form-group">
+                            <div class="form-group row">
 
-                                <div class="col-12"><label>Supervisor</label></div>
+                                <div class="col-12"><label>Supervisors</label></div>
 
                                 @foreach ($supervisors as $supervisor)
 
@@ -381,5 +381,4 @@
     </script>
 
 @endpush
-
 

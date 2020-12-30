@@ -54,6 +54,14 @@
                                     <a class="btn btn-default btn-xs" :href="route('posts.show', {id: item.id})">
                                         <i class="fas fa-eye fa-1x fa-lg" aria-hidden="true"></i>
                                     </a>
+
+                                    <!--
+                                    <a class="btn btn-default btn-xs"
+                                       :href="route('posts.link', {id: item.id})">
+                                        <i class="fas fa-link fa-1x fa-lg" aria-hidden="true"></i>
+                                    </a>
+                                    -->
+
                                     <a class="btn btn-default btn-xs"
                                        :href="route('posts.edit', {id: item.id})">
                                         <i class="fas fa-pencil-alt fa-1x fa-lg" aria-hidden="true"></i>
