@@ -1,0 +1,191 @@
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Models\Author;
+use App\Models\Post;
+use App\Models\Review;
+use App\Models\User;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
+class ReviewController extends Controller
+{
+
+    /**
+     * Create a constrcut of class
+     *
+     * @return void
+     */
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware(function ($request, $next) {
+            $this->user = Auth::user(); // returns user
+            return $next($request);
+        });
+
+        $this->title = 'reviews';
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+
+
+        $items = DB::table('posts')
+            ->leftJoin('templates', 'posts.template', '=', 'templates.id')
+            ->leftJoin('categories', 'posts.category', '=', 'categories.id')
+            ->select('posts.id', 'posts.title', 'posts.supervisors', 'templates.name as template', 'categories.name as category')
+            ->orderBy('posts.id', 'ASC')
+            ->get();
+
+
+
+        foreach ($items as $item) {
+            $posts = [];
+
+            $supervisors = explode(',', $item->supervisors);
+
+            if (in_array($this->user->id, $supervisors)) {
+                array_push($posts, $item);
+            } else {
+
+            }
+
+            return view('reviews.index', ['items' => $posts, 'title' => $this->title]);
+
+        }
+
+
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create(Request $request)
+    {
+        if ($request['id'] != null) {
+
+
+            $item = Post::with('state_fk', 'category_fk', 'template_fk', 'authors')->first();
+
+            $authors = $item->authors;
+            $array_authors=[];
+            $authors=explode(',',$authors);
+
+
+            foreach ($authors as $author) {
+              $aut = Author::where('id','=', $author)->first();
+              array_push($array_authors, $aut);
+            }
+
+
+
+
+
+
+            //dd($item->state_fk->name);
+
+            /*
+
+            $item = DB::table('posts')
+                ->leftJoin('templates', 'posts.template', '=', 'templates.id')
+                ->leftJoin('categories', 'posts.category', '=', 'categories.id')
+                ->select('posts.id', 'posts.title', 'posts.supervisors', 'templates.name as template', 'categories.name as category')
+                ->where('posts.id', '=', $request['id'])
+                ->first();
+
+            */
+
+            $supervisors = explode(',', $item->supervisors);
+
+            if (in_array($this->user->id, $supervisors)) {
+
+                return view('reviews.create', ['item' => $item, 'title' => $this->title]);
+
+            } else {
+                abort(403);
+            }
+
+        }
+
+
+        abort(403);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+
+
+
+        $review = new Review($request->all());
+        $review['supervisor'] = Auth::id();
+
+        $res = $review->save();
+
+        $message = $res ? 'The Author has been saved' : 'The Author was not saved';
+        session()->flash('message', $message);
+
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param \App\Models\Review $review
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Review $review)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param \App\Models\Review $review
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Review $review)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Review $review
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Review $review)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param \App\Models\Review $review
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Review $review)
+    {
+        //
+    }
+}

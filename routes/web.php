@@ -75,6 +75,10 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
     Route::resource('users', 'UserController');
     Route::resource('posts', 'PostController');
     Route::resource('statuses', 'StatusController');
+    Route::resource('reviews', 'ReviewController');
+
+    Route::get('/posts/{post}/link', [PostController::class, 'link']);
+    Route::patch('/posts/{post}/link',[PostController::class, 'updatelink'])->name('posts.link');
 
     Route::get('/profile', [ProfileController::class, 'edit']);
     Route::patch('/profile/{id}', [UserController::class, 'update'])->middleware('verified');
@@ -116,6 +120,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth','prefix' => 'admin', 'm
     Route::resource('posts', 'PostController');
 
 });
+
+
 
 Auth::routes(['verify' => true]);
 
