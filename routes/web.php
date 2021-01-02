@@ -36,6 +36,8 @@ Route::get('send-mail', function () {
     dd("Email is Sent.");
 });
 
+Route::get('/authors/search',[\App\Http\Controllers\Auth\AuthorController::class, 'search']);
+
 Route::get('/home', function () {
     return view('home');
 })->middleware('verified');

@@ -7,6 +7,7 @@ use App\Models\Author;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
@@ -175,4 +176,41 @@ class AuthorController extends Controller
     {
         //
     }
+
+    /**
+     * Search Authors
+     *
+     * @param \App\Models\Author $request
+     * @return \Illuminate\Http\Response
+     */
+
+    public function search(Request $request)
+    {
+
+
+        if ($request->ajax()) {
+            $output = "";
+            $authors = DB::table('authors')->where('email', '=', $request->search)->get();
+
+            if (count($authors)>0) {
+                foreach ($authors as $key => $author) {
+
+                    $output .= '<div class="item col-md-6 col-xs-6 mb-3">
+                                        <div class="form-check">
+                                            <input type="checkbox" id="' . $author->id . '"
+                                                   name="authors[]" value="' . $author->id . '">
+                                            <label class="form-check-label"
+                                                   for="exampleCheck1">' . $author->firstname . ' ' . $author->lastname . '</label>
+                                        </div>
+                                    </div>';
+                }
+            } else {
+                $output .= '<div class="alert alert-danger" role="alert">The author is not present</div>';
+            }
+
+            return Response($output);
+        }
+
+    }
+
 }

@@ -62,6 +62,9 @@
                                 @if(count($authors)==0)
                                     <div>You can add an author from the appropriate section</div>
                                 @endif
+
+
+
                                 <div class="item col-md-6 col-xs-6 mb-3">
                                     <div class="form-check">
                                         <input type="checkbox" checked disabled>
@@ -82,6 +85,31 @@
                                 <div class="col-12">
                                     <div id="author_error"></div>
                                 </div>
+
+
+                                <div class="col-12">
+                                    <p class="small">If the author is already present and has not been entered by you
+                                        try to search via email  <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample"
+                                                                    role="button" aria-expanded="false" aria-controls="collapseExample">
+                                            +
+                                        </a></p>
+                                </div>
+
+                                <div class="col-12">
+
+                                    <div class="collapse" id="collapseExample">
+                                        <div class="card card-body">
+                                            <input type="text" class="form-controller" id="search"
+                                                   placeholder="Search By Email and press Enter" name="search">
+
+                                        </div>
+
+                                        <div class="authors-checkbox row"></div>
+
+
+                                    </div>
+                                </div>
+
                             </div>
 
                             <div class="form-group">
@@ -95,25 +123,25 @@
 
                         </div>
 
-<!--
-                        <div class="tab">
-                            <div class="form-group">
-                                <label>Abstract</label>
-                                <textarea name="abstract" id="abstract" rows="10" cols="80"
-                                          class="form-control"></textarea>
-                            </div>
+                        <!--
+                                                <div class="tab">
+                                                    <div class="form-group">
+                                                        <label>Abstract</label>
+                                                        <textarea name="abstract" id="abstract" rows="10" cols="80"
+                                                                  class="form-control"></textarea>
+                                                    </div>
 
-                            <div class="form-group">
-                                <label>Intro</label>
-                                <textarea name="intro" id="intro" rows="10" cols="80"
-                                          class="form-control"></textarea>
-                            </div>
-                        </div>
--->
+                                                    <div class="form-group">
+                                                        <label>Intro</label>
+                                                        <textarea name="intro" id="intro" rows="10" cols="80"
+                                                                  class="form-control"></textarea>
+                                                    </div>
+                                                </div>
+                        -->
                         <div class="tab" id="textarea-section">
-                          <!--  @foreach($fields as $key => $value)
-                                <div class="form-group">
-                                    <label>{{$value->name}}</label>
+                        <!--  @foreach($fields as $key => $value)
+                            <div class="form-group">
+                                <label>{{$value->name}}</label>
 
                                     <textarea name="field_{{$key+1}}" id="field_{{$key+1}}" rows="10" cols="80"
                                               class="form-control"></textarea>
@@ -214,7 +242,31 @@
             filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
         };
 
+        $.ajaxSetup({headers: {'csrftoken': '{{ csrf_token() }}'}});
+
         $(document).ready(function () {
+
+            $('#search').on('keyup', function (e) {
+
+
+                var code = e.key; // recommended to use e.key, it's normalized across devices and languages
+
+                if (code === "Enter") {
+
+                    e.preventDefault();
+
+                    $value = $(this).val();
+
+                    $.ajax({
+                        type: 'get',
+                        url: '{{\Illuminate\Support\Facades\URL::to('authors/search')}}',
+                        data: {'search': $value},
+                        success: function (data) {
+                            $('.authors-checkbox').html(data);
+                        }
+                    });
+                }
+            });
 
 
             $('#template-selected').change(function () {
@@ -232,15 +284,14 @@
 
                     fields.forEach((value, key) => {
 
-                        $('#textarea-section').append('<div class="form-group"> <label>' + value.name + '</label> <textarea name="field_' + parseInt(key+1) + '" id="field_' + parseInt(key+1) + '" rows="10" cols="80" form="regForm"></textarea></div>');
-                        CKEDITOR.replace('field_'+parseInt(key+1), options);
+                        $('#textarea-section').append('<div class="form-group"> <label>' + value.name + '</label> <textarea name="field_' + parseInt(key + 1) + '" id="field_' + parseInt(key + 1) + '" rows="10" cols="80" form="regForm"></textarea></div>');
+                        CKEDITOR.replace('field_' + parseInt(key + 1), options);
                     })
 
                 })
 
 
-             //   $('#textarea-section').append('<textarea name="field_21" id="field_21" rows="10" cols="80" class="form-control"></textarea>')
-
+                //   $('#textarea-section').append('<textarea name="field_21" id="field_21" rows="10" cols="80" class="form-control"></textarea>')
 
 
             });
