@@ -22,7 +22,7 @@ class Post extends Model
         'created',
         'edit',
         'state',
-        'supervisor',
+        'supervisors',
         'tags',
         'pdf',
         'field_1',
@@ -52,10 +52,18 @@ class Post extends Model
         return $this->belongsTo('App\Models\Status', 'state', 'id');
     }
 
-
     public function authors()
     {
         return $this->belongsToMany('App\Models\Author');
+    }
+
+    public function user_fk() {
+        return $this->belongsTo('App\Models\User', 'created', 'id');
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany('App\Models\User');
     }
 
 

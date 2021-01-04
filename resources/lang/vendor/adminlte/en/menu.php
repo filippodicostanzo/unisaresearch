@@ -30,4 +30,5 @@ return [
     'posts_settings'                => 'POSTS SETTINGS',
     'my_authors'                    => 'My Authors',
     'my_posts'                      => 'My Posts',
+    'my_papers'                      => 'My Papers',
 ];

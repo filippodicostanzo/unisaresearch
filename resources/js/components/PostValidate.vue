@@ -40,10 +40,10 @@
         <div class="row">
             <div class="col-lg-12 margin-tb">
 
-                <div class="card">
+                <div class="card" v-for="review in json_reviews">
                     <div class="card-header">
                         <h1 class="m0 text-dark card-title text-xl">
-                            Review
+                            Review by {{review.user_fk.name}} {{review.user_fk.surname}}
                         </h1>
                     </div>
 
@@ -57,15 +57,15 @@
                                 </div>
                                 <div class="col-md-6 col-sm-12">
                                     <fieldset class="rating">
-                                        <input type="radio" id="f1_star5" v-model="review.field_1" value="5"/><label
+                                        <input type="radio" id="f1_star5" v-model="review.field_1" value="5" disabled /><label
                                         class="full" for="f1_star5" title="Awesome - 5 stars"></label>
-                                        <input type="radio" id="f1_star4" v-model="review.field_1" value="4"/><label
+                                        <input type="radio" id="f1_star4" v-model="review.field_1" value="4" disabled/><label
                                         class="full" for="f1_star4" title="Pretty good - 4 stars"></label>
-                                        <input type="radio" id="f1_star3" v-model="review.field_1" value="3"/><label
+                                        <input type="radio" id="f1_star3" v-model="review.field_1" value="3" disabled/><label
                                         class="full" for="f1_star3" title="Meh - 3 stars"></label>
-                                        <input type="radio" id="f1_star2" v-model="review.field_1" value="2"/><label
+                                        <input type="radio" id="f1_star2" v-model="review.field_1" value="2" disabled/><label
                                         class="full" for="f1_star2" title="Kinda bad - 2 stars"></label>
-                                        <input type="radio" id="f1_star1" v-model="review.field_1" value="1"/><label
+                                        <input type="radio" id="f1_star1" v-model="review.field_1" value="1" disabled/><label
                                         class="full" for="f1_star1" title="Sucks big time - 1 star"></label>
                                     </fieldset>
                                 </div>
@@ -79,15 +79,15 @@
                                 </div>
                                 <div class="col-md-6 col-sm-12">
                                     <fieldset class="rating">
-                                        <input type="radio" id="f2_star5" v-model="review.field_2" value="5"/><label
+                                        <input type="radio" id="f2_star5" v-model="review.field_2" value="5" disabled/><label
                                         class="full" for="f2_star5" title="Awesome - 5 stars"></label>
-                                        <input type="radio" id="f2_star4" v-model="review.field_2" value="4"/><label
+                                        <input type="radio" id="f2_star4" v-model="review.field_2" value="4" disabled/><label
                                         class="full" for="f2_star4" title="Pretty good - 4 stars"></label>
-                                        <input type="radio" id="f2_star3" v-model="review.field_2" value="3"/><label
+                                        <input type="radio" id="f2_star3" v-model="review.field_2" value="3" disabled/><label
                                         class="full" for="f2_star3" title="Meh - 3 stars"></label>
-                                        <input type="radio" id="f2_star2" v-model="review.field_2" value="2"/><label
+                                        <input type="radio" id="f2_star2" v-model="review.field_2" value="2" disabled/><label
                                         class="full" for="f2_star2" title="Kinda bad - 2 stars"></label>
-                                        <input type="radio" id="f2_star1" v-model="review.field_2" value="1"/><label
+                                        <input type="radio" id="f2_star1" v-model="review.field_2" value="1" disabled/><label
                                         class="full" for="f2_star1" title="Sucks big time - 1 star"></label>
 
                                     </fieldset>
@@ -100,15 +100,15 @@
                                 </div>
                                 <div class="col-md-6 col-sm-12">
                                     <fieldset class="rating">
-                                        <input type="radio" id="f3_star5" v-model="review.field_3" value="5"/><label
+                                        <input type="radio" id="f3_star5" v-model="review.field_3" value="5" disabled/><label
                                         class="full" for="f3_star5" title="Awesome - 5 stars"></label>
-                                        <input type="radio" id="f3_star4" v-model="review.field_3" value="4"/><label
+                                        <input type="radio" id="f3_star4" v-model="review.field_3" value="4" disabled/><label
                                         class="full" for="f3_star4" title="Pretty good - 4 stars"></label>
-                                        <input type="radio" id="f3_star3" v-model="review.field_3" value="3"/><label
+                                        <input type="radio" id="f3_star3" v-model="review.field_3" value="3" disabled/><label
                                         class="full" for="f3_star3" title="Meh - 3 stars"></label>
-                                        <input type="radio" id="f3_star2" v-model="review.field_3" value="2"/><label
+                                        <input type="radio" id="f3_star2" v-model="review.field_3" value="2" disabled/><label
                                         class="full" for="f3_star2" title="Kinda bad - 2 stars"></label>
-                                        <input type="radio" id="f3_star1" v-model="review.field_3" value="1"/><label
+                                        <input type="radio" id="f3_star1" v-model="review.field_3" value="1" disabled/><label
                                         class="full" for="f3_star1" title="Sucks big time - 1 star"></label>
 
                                     </fieldset>
@@ -118,8 +118,8 @@
                             <div class="row pt-3">
                                 <div class="col-md-12 col-xs-12 center">
                                     <div class="form-group">
-                                        <label class="form__label">Write a Review:</label>
-                                        <ckeditor v-model="review.review" :config="editorConfig"></ckeditor>
+                                        <label class="form__label">Review:</label>
+                                        <div v-html="review.review"></div>
                                     </div>
                                 </div>
                             </div>
@@ -151,8 +151,8 @@
 
 <script>
     export default {
-        name: "ReviewCreate.vue",
-        props: ['item', 'oldreview', 'title'],
+        name: "PostValidate.vue",
+        props: ['item', 'reviews', 'title'],
         data: () => {
             return {
                 rendered: {
@@ -166,6 +166,7 @@
                     field_3: 0,
                     review: ''
                 },
+                json_reviews: [],
                 nameFields: [],
                 fields: [],
                 submitStatus: null,
@@ -180,15 +181,9 @@
 
         mounted() {
 
+            this.json_reviews = JSON.parse(this.reviews);
+            console.log(this.json_reviews);
             this.rendered = JSON.parse(this.item);
-            console.log(this.oldreview);
-            console.log(this.rendered);
-
-
-            if (this.oldreview!=='null') {
-                this.review = JSON.parse(this.oldreview);
-            }
-
 
             this.nameFields = JSON.parse(this.rendered.template_fk.fields);
 
@@ -205,7 +200,7 @@
                     .post("/admin/reviews", this.review)
                     .then(response => {
                         if (response.status === 200) {
-                            window.location.href = route('reviews.index')
+                            window.location.href = route('posts.index')
                         }
                     })
                     .catch(error => {

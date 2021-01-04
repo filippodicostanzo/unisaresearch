@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Author;
 use App\Models\Post;
+use App\Models\Review;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
@@ -58,20 +60,11 @@ class PostController extends Controller
 
             return view('posts.index', ['items' => $items, 'title' => $this->title]);
         } else if ($this->user->hasRole('supervisor')) {
-            $items = Post::where('supervisor', $this->user->id)->orderBy('id', 'ASC')->get();
-
-            foreach ($items as $item) {
-
-                $postauthor = [];
-                $authors = explode(',', $item['authors']);
-                foreach ($authors as $author) {
-                    array_push($postauthor, Author::where('id', $author)->first());
-                }
-                $item['json_authors'] = json_encode($postauthor, true);
-                $item['category'] = $item->category_fk->name;
-                $item['template'] = $item->template_fk->name;
-
-            }
+            $items= Post::whereHas('users', function($q) {
+                $q->where('users.id', Auth::id());
+            })
+                ->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')
+                ->get();
 
             return view('posts.index', ['items' => $items, 'title' => $this->title]);
         } else {
@@ -127,7 +120,6 @@ class PostController extends Controller
         $post['authors'] = $authors;
         $post['state'] = 1;
         $post['latest_modify'] = Carbon::now();
-
 
 
         $res = $post->save();
@@ -199,11 +191,15 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
+
         $authors = $request->input('authors');
+
 
         if ($authors != null) {
             $authors = implode(',', $authors);
         }
+
+
 
         $data = $request->all();
         $data['authors'] = $authors;
@@ -255,8 +251,10 @@ class PostController extends Controller
 
         $item = $post;
 
+        $itm = Post::with('state_fk', 'category_fk', 'template_fk', 'authors', 'user_fk')->where('id',$post->id)->first();
+
         if ($this->user->hasRole('superadministrator|administrator')) {
-            return view('posts.link', ['title' => $this->title, 'item' => $item]);
+            return view('posts.link', ['title' => $this->title, 'item' => $itm]);
         }
 
     }
@@ -272,21 +270,81 @@ class PostController extends Controller
     public function updatelink(Request $request, Post $post)
     {
 
-        dd($request);
-        $authors = $request->input('authors');
+        $supervisors = $request->input('supervisors');
+        $supervisors_array = $request->input('supervisors');
 
-        if ($authors != null) {
-            $authors = implode(',', $authors);
+
+        if ($supervisors != null) {
+            $supervisors = implode(',', $supervisors);
         }
 
+
         $data = $request->all();
-        $data['authors'] = $authors;
+        $data['supervisors'] = $supervisors;
         $data['latest_modify'] = Carbon::now();
 
+
         $res = Post::find($post->id)->update($data);
-        $message = $res ? 'The Post ' . $data['title'] . ' has been saved' : 'The Post ' . $data['title'] . ' was not saved';
+
+        $post->users()->sync($supervisors_array);
+        $message = $res ? 'The Post ' . $post->title. ' has been saved' : 'The Post ' . $post->title . ' was not saved';
         session()->flash('message', $message);
         return redirect()->route('posts.index');
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param \App\Models\Post $post
+     * @return \Illuminate\Http\Response
+     */
+    public function valid(Post $post)
+    {
+
+        $item = $post;
+        $reviews  = Review::where('post', $item->id)->with('user_fk')->get();
+
+        $itm = Post::with('state_fk', 'category_fk', 'template_fk', 'authors', 'user_fk')->where('id',$post->id)->first();
+
+        if ($this->user->hasRole('superadministrator|administrator')) {
+            return view('posts.valid', ['title' => $this->title, 'item' => $itm, 'reviews'=>$reviews]);
+        }
+
+    }
+
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Post $post
+     * @return \Illuminate\Http\Response
+     */
+    public function validupdate(Request $request, Post $post)
+    {
+
+        $supervisors = $request->input('supervisors');
+        $supervisors_array = $request->input('supervisors');
+
+
+        if ($supervisors != null) {
+            $supervisors = implode(',', $supervisors);
+        }
+
+
+        $data = $request->all();
+        $data['supervisors'] = $supervisors;
+        $data['latest_modify'] = Carbon::now();
+
+
+        $res = Post::find($post->id)->update($data);
+
+        $post->users()->sync($supervisors_array);
+        $message = $res ? 'The Post ' . $post->title. ' has been saved' : 'The Post ' . $post->title . ' was not saved';
+        session()->flash('message', $message);
+        return redirect()->route('posts.index');
+    }
+
+
 
 }

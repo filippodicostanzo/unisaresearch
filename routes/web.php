@@ -82,10 +82,18 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
     Route::get('/posts/{post}/link', [PostController::class, 'link']);
     Route::patch('/posts/{post}/link',[PostController::class, 'updatelink'])->name('posts.link');
 
+    Route::get('/posts/{post}/validate', [PostController::class, 'valid']);
+    Route::patch('/posts/{post}/validate',[PostController::class, 'validupdate'])->name('posts.valid');
+
     Route::get('/profile', [ProfileController::class, 'edit']);
     Route::patch('/profile/{id}', [UserController::class, 'update'])->middleware('verified');
 
 });
+
+Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', 'middleware' => ['role:superadministrator|supervisor']], function () {
+    Route::resource('reviews', 'ReviewController');
+});
+
 
 Route::group(['namespace' => 'Auth', 'middleware' => ['role:user|supervisor|researcher']], function () {
 

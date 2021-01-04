@@ -82,6 +82,7 @@
             }
         },
         mounted() {
+
             this.rendered = JSON.parse(this.items);
             this.pages = this.rendered.length;
             this.paginateData(this.page - 1, this.perpage)

@@ -51,6 +51,7 @@ import StatusCreate from "./components/StatusCreate";
 import StatusShow from "./components/StatusShow";
 import ReviewTable from "./components/ReviewTable";
 import ReviewCreate from "./components/ReviewCreate";
+import PostValidate from "./components/PostValidate";
 
 window.route = route;
 window.Ziggy = Ziggy;
@@ -89,6 +90,7 @@ const app = new Vue({
         'author-show': AuthorShow,
         'post-table': PostTable,
         'post-show': PostShow,
+        'post-validate': PostValidate,
         'review-table': ReviewTable,
         'review-create': ReviewCreate,
         'status-table': StatusTable,

@@ -3,5 +3,5 @@
 @section ('title_prefix', 'Author - ')
 
 @section('content')
-    <review-create item="{{json_encode($item)}}"></review-create>
+    <review-create item="{{json_encode($item)}}" oldreview="{{$oldreview}}"></review-create>
 @endsection

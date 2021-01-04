@@ -39,33 +39,19 @@ class ReviewController extends Controller
     public function index()
     {
 
-
-        $items = DB::table('posts')
-            ->leftJoin('templates', 'posts.template', '=', 'templates.id')
-            ->leftJoin('categories', 'posts.category', '=', 'categories.id')
-            ->select('posts.id', 'posts.title', 'posts.supervisors', 'templates.name as template', 'categories.name as category')
-            ->orderBy('posts.id', 'ASC')
+        $posts = Post::whereHas('users', function($q) {
+            $q->where('users.id', Auth::id());
+        })
+            ->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')
             ->get();
 
 
-
-        foreach ($items as $item) {
-            $posts = [];
-
-            $supervisors = explode(',', $item->supervisors);
-
-            if (in_array($this->user->id, $supervisors)) {
-                array_push($posts, $item);
-            } else {
-
-            }
 
             return view('reviews.index', ['items' => $posts, 'title' => $this->title]);
 
         }
 
 
-    }
 
     /**
      * Show the form for creating a new resource.
@@ -77,7 +63,7 @@ class ReviewController extends Controller
         if ($request['id'] != null) {
 
 
-            $item = Post::with('state_fk', 'category_fk', 'template_fk', 'authors')->first();
+            $item = Post::where('id',$request['id'])->with('state_fk', 'category_fk', 'template_fk', 'authors')->first();
 
             $authors = $item->authors;
             $array_authors=[];
@@ -109,9 +95,14 @@ class ReviewController extends Controller
 
             $supervisors = explode(',', $item->supervisors);
 
+
             if (in_array($this->user->id, $supervisors)) {
 
-                return view('reviews.create', ['item' => $item, 'title' => $this->title]);
+
+                $review = Review::where('post',$request['id'])->first();
+
+
+                return view('reviews.create', ['item' => $item, 'oldreview'=>$review]);
 
             } else {
                 abort(403);
@@ -134,10 +125,21 @@ class ReviewController extends Controller
 
 
 
+
         $review = new Review($request->all());
+
         $review['supervisor'] = Auth::id();
 
-        $res = $review->save();
+        $check = Review::where('post',$review['post'])->where('supervisor',  $review['supervisor'])->first();
+
+        if ($check) {
+            $data = $request->all();
+            $data['supervisor'] = Auth::id();
+            $res = Review::find($check->id)->update($data);
+        }
+        else {
+            $res = $review->save();
+        }
 
         $message = $res ? 'The Author has been saved' : 'The Author was not saved';
         session()->flash('message', $message);

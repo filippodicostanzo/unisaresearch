@@ -2337,10 +2337,15 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {
+    console.log(this.data);
     this.posts = JSON.parse(this.data);
-    this.posts.forEach(function (post) {
-      post.json_authors = JSON.parse(post.json_authors);
-    });
+    console.log(this.posts);
+    /*
+                this.posts.forEach((post) => {
+                    post.json_authors = JSON.parse(post.json_authors)
+                })
+    */
+
     this.pages = this.posts.length;
     this.paginateData(this.page - 1, this.perpage);
     console.log(this.posts);
@@ -2954,6 +2959,11 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_pagination_2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-pagination-2 */ "./node_modules/vue-pagination-2/compiled/main.js");
 /* harmony import */ var vue_pagination_2__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_pagination_2__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/esm/index.js");
+//
+//
+//
+//
 //
 //
 //
@@ -3045,22 +3055,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PostTable",
   components: {
     'vue-pagination': vue_pagination_2__WEBPACK_IMPORTED_MODULE_0___default.a
   },
-  props: ['title', 'items'],
+  props: ['title', 'items', 'role'],
   data: function data() {
     return {
       rendered: {},
       pages: 0,
       perpage: 4,
       page: 1,
-      renderedPaginate: []
+      renderedPaginate: [],
+      format: date_fns__WEBPACK_IMPORTED_MODULE_1__["format"]
     };
   },
   mounted: function mounted() {
+    this.json_role = JSON.parse(this.role);
     this.rendered = JSON.parse(this.items);
     this.pages = this.rendered.length;
     this.paginateData(this.page - 1, this.perpage); //jquery('#cover').filemanager('image', '', false);
@@ -3112,6 +3125,258 @@ __webpack_require__.r(__webpack_exports__);
     },
     paginateData: function paginateData(start, end) {
       this.renderedPaginate = this.rendered.slice(start, end);
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PostValidate.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/PostValidate.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "PostValidate.vue",
+  props: ['item', 'reviews', 'title'],
+  data: function data() {
+    return {
+      rendered: {
+        template_fk: {},
+        category_fk: {}
+      },
+      review: {
+        post: 0,
+        field_1: 0,
+        field_2: 0,
+        field_3: 0,
+        review: ''
+      },
+      json_reviews: [],
+      nameFields: [],
+      fields: [],
+      submitStatus: null,
+      editorConfig: {
+        filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
+        filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token=',
+        filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
+        filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
+      }
+    };
+  },
+  mounted: function mounted() {
+    this.json_reviews = JSON.parse(this.reviews);
+    console.log(this.json_reviews);
+    this.rendered = JSON.parse(this.item);
+    this.nameFields = JSON.parse(this.rendered.template_fk.fields);
+    this.createFields();
+  },
+  methods: {
+    submit: function submit() {
+      var _this = this;
+
+      this.review.post = this.rendered.id;
+      console.log(this.rendered);
+      console.log(this.review);
+      this.$http.post("/admin/reviews", this.review).then(function (response) {
+        if (response.status === 200) {
+          window.location.href = route('posts.index');
+        }
+      })["catch"](function (error) {
+        _this.errors = error.response.data.errors;
+      });
+    },
+    createFields: function createFields() {
+      if (this.rendered.fields_1 !== '') {
+        this.fields.push(this.rendered.field_1);
+      }
+
+      if (this.rendered.fields_2 !== '') {
+        this.fields.push(this.rendered.field_2);
+      }
+
+      if (this.rendered.fields_3 !== '') {
+        this.fields.push(this.rendered.field_3);
+      }
+
+      if (this.rendered.fields_4 !== '') {
+        this.fields.push(this.rendered.field_4);
+      }
+
+      if (this.rendered.fields_5 !== '') {
+        this.fields.push(this.rendered.field_5);
+      }
+
+      if (this.rendered.fields_6 !== '') {
+        this.fields.push(this.rendered.field_6);
+      }
+
+      if (this.rendered.fields_7 !== '') {
+        this.fields.push(this.rendered.field_7);
+      }
+
+      if (this.rendered.fields_8 !== '') {
+        this.fields.push(this.rendered.field_8);
+      }
+
+      if (this.rendered.fields_9 !== '') {
+        this.fields.push(this.rendered.field_9);
+      }
     }
   }
 });
@@ -3280,7 +3545,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ReviewCreate.vue",
-  props: ['item'],
+  props: ['item', 'oldreview', 'title'],
   data: function data() {
     return {
       rendered: {
@@ -3307,9 +3572,14 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     this.rendered = JSON.parse(this.item);
+    console.log(this.oldreview);
     console.log(this.rendered);
+
+    if (this.oldreview !== 'null') {
+      this.review = JSON.parse(this.oldreview);
+    }
+
     this.nameFields = JSON.parse(this.rendered.template_fk.fields);
-    console.log(this.nameFields);
     this.createFields();
   },
   methods: {
@@ -3317,9 +3587,11 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.review.post = this.rendered.id;
+      console.log(this.rendered);
       console.log(this.review);
       this.$http.post("/admin/reviews", this.review).then(function (response) {
-        if (response.status === 200) {//window.location.href = route('authors.index')
+        if (response.status === 200) {
+          window.location.href = route('reviews.index');
         }
       })["catch"](function (error) {
         _this.errors = error.response.data.errors;
@@ -3378,13 +3650,6 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_pagination_2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-pagination-2 */ "./node_modules/vue-pagination-2/compiled/main.js");
 /* harmony import */ var vue_pagination_2__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_pagination_2__WEBPACK_IMPORTED_MODULE_0__);
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -9629,6 +9894,25 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 // module
 exports.push([module.i, "\n.post-status[data-v-102965c3]{\n    color: white;\n    padding: 3px;\n}\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PostValidate.vue?vue&type=style&index=0&id=3603e27e&scoped=true&lang=css&":
+/*!******************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/PostValidate.vue?vue&type=style&index=0&id=3603e27e&scoped=true&lang=css& ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.rating[data-v-3603e27e] {\n    border: none;\n    float: left;\n}\n.rating > input[data-v-3603e27e] {\n    display: none;\n}\n.rating > label[data-v-3603e27e]:before {\n    margin: 5px;\n    font-size: 1.25em;\n    font-family: \"Font Awesome 5 Free\";\n    display: inline-block;\n    content: \"\\F005\";\n}\n.rating > label[data-v-3603e27e] {\n    color: #ddd;\n    float: right;\n}\n\n/***** CSS Magic to Highlight Stars on Hover *****/\n.rating > input:checked ~ label[data-v-3603e27e], \n.rating:not(:checked) > label[data-v-3603e27e]:hover, \n.rating:not(:checked) > label:hover ~ label[data-v-3603e27e] {\n    color: #FFD700;\n}\n\n/* hover previous stars in list */\n.rating > input:checked + label[data-v-3603e27e]:hover, \n.rating > input:checked ~ label[data-v-3603e27e]:hover,\n.rating > label:hover ~ input:checked ~ label[data-v-3603e27e], \n.rating > input:checked ~ label:hover ~ label[data-v-3603e27e] {\n    color: #FFED85;\n}\n\n", ""]);
 
 // exports
 
@@ -59350,6 +59634,36 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PostValidate.vue?vue&type=style&index=0&id=3603e27e&scoped=true&lang=css&":
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/PostValidate.vue?vue&type=style&index=0&id=3603e27e&scoped=true&lang=css& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./PostValidate.vue?vue&type=style&index=0&id=3603e27e&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PostValidate.vue?vue&type=style&index=0&id=3603e27e&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReviewCreate.vue?vue&type=style&index=0&id=491dbc5f&scoped=true&lang=css&":
 /*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReviewCreate.vue?vue&type=style&index=0&id=491dbc5f&scoped=true&lang=css& ***!
@@ -60566,7 +60880,7 @@ var render = function() {
                   _vm._v(" "),
                   _c(
                     "td",
-                    _vm._l(item.json_authors, function(author, index) {
+                    _vm._l(item.authors, function(author, index) {
                       return _c("span", [
                         _vm._v(
                           _vm._s(author.firstname) +
@@ -60574,7 +60888,7 @@ var render = function() {
                             _vm._s(author.lastname) +
                             " "
                         ),
-                        index + 1 != item.json_authors.length
+                        index + 1 != item.authors.length
                           ? _c("span", [_vm._v(" - ")])
                           : _vm._e()
                       ])
@@ -60596,9 +60910,9 @@ var render = function() {
                       "span",
                       {
                         staticClass: "post-status",
-                        style: "background-color:" + item.color
+                        style: "background-color:" + item.state_fk.color
                       },
-                      [_vm._v(_vm._s(item.state))]
+                      [_vm._v(_vm._s(item.state_fk.name))]
                     )
                   ]),
                   _vm._v(" "),
@@ -61464,9 +61778,9 @@ var render = function() {
         _c("div", { staticClass: "card-header" }, [
           _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
             _vm._v(
-              "\n                    " +
+              "\n                     " +
                 _vm._s(this.title) +
-                "\n                "
+                "\n                 "
             )
           ]),
           _vm._v(" "),
@@ -61496,9 +61810,21 @@ var render = function() {
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(item.title))]),
                       _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(item.category))]),
+                      _c("td", [_vm._v(_vm._s(item.category_fk.name))]),
                       _vm._v(" "),
-                      _c("td", [_vm._v(" " + _vm._s(item.template))]),
+                      _c("td", [_vm._v(_vm._s(item.template_fk.name))]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _vm._v(
+                          " " +
+                            _vm._s(
+                              _vm.format(
+                                new Date(item.created_at),
+                                "dd/MM/yyyy"
+                              )
+                            )
+                        )
+                      ]),
                       _vm._v(" "),
                       _c("td", { staticClass: "text-right" }, [
                         _c(
@@ -61517,39 +61843,80 @@ var render = function() {
                           ]
                         ),
                         _vm._v(" "),
-                        _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-default btn-xs",
-                            attrs: {
-                              href: _vm.route("posts.edit", { id: item.id })
-                            }
-                          },
-                          [
-                            _c("i", {
-                              staticClass: "fas fa-pencil-alt fa-1x fa-lg",
-                              attrs: { "aria-hidden": "true" }
-                            })
-                          ]
-                        ),
+                        _vm.json_role.name === "supervisor"
+                          ? _c(
+                              "a",
+                              {
+                                staticClass: "btn btn-default btn-xs",
+                                attrs: { href: "reviews/create?id=" + item.id }
+                              },
+                              [
+                                _c("i", {
+                                  staticClass: "fas fa-pencil-alt fa-1x fa-lg",
+                                  attrs: { "aria-hidden": "true" }
+                                })
+                              ]
+                            )
+                          : _vm._e(),
                         _vm._v(" "),
-                        _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-danger btn-xs",
-                            on: {
-                              click: function($event) {
-                                return _vm.deleteItem(item.id, $event)
-                              }
-                            }
-                          },
-                          [
-                            _c("i", {
-                              staticClass: "fas fa-minus-circle fa-1x fa-lg",
-                              attrs: { "aria-hidden": "true" }
-                            })
-                          ]
-                        )
+                        _vm.json_role.name === "superadministrator" ||
+                        _vm.json_role.name === "administrator"
+                          ? _c(
+                              "a",
+                              {
+                                staticClass: "btn btn-default btn-xs",
+                                attrs: {
+                                  href: _vm.route("posts.link", { id: item.id })
+                                }
+                              },
+                              [
+                                _c("i", {
+                                  staticClass: "fas fa-link fa-1x fa-lg",
+                                  attrs: { "aria-hidden": "true" }
+                                })
+                              ]
+                            )
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.json_role.name === "researcher"
+                          ? _c(
+                              "a",
+                              {
+                                staticClass: "btn btn-default btn-xs",
+                                attrs: {
+                                  href: _vm.route("posts.edit", { id: item.id })
+                                }
+                              },
+                              [
+                                _c("i", {
+                                  staticClass: "fas fa-pencil-alt fa-1x fa-lg",
+                                  attrs: { "aria-hidden": "true" }
+                                })
+                              ]
+                            )
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.json_role.name === "superadministrator" ||
+                        _vm.json_role.name === "administrator"
+                          ? _c(
+                              "a",
+                              {
+                                staticClass: "btn btn-danger btn-xs",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.deleteItem(item.id, $event)
+                                  }
+                                }
+                              },
+                              [
+                                _c("i", {
+                                  staticClass:
+                                    "fas fa-minus-circle fa-1x fa-lg",
+                                  attrs: { "aria-hidden": "true" }
+                                })
+                              ]
+                            )
+                          : _vm._e()
                       ])
                     ])
                   }),
@@ -61595,7 +61962,716 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Template")]),
         _vm._v(" "),
+        _c("th", [_vm._v("Created")]),
+        _vm._v(" "),
         _c("th", { staticClass: "text-right" }, [_vm._v("Options")])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PostValidate.vue?vue&type=template&id=3603e27e&scoped=true&":
+/*!***************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/PostValidate.vue?vue&type=template&id=3603e27e&scoped=true& ***!
+  \***************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-lg-12 margin-tb" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
+              _vm._v(
+                "\n                        " +
+                  _vm._s(this.rendered.title) +
+                  "\n                    "
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "card-body no-padding" },
+            [
+              _c("div", { staticClass: "row pt-3" }, [
+                _c("div", { staticClass: "col-md-6 col-sm-12" }, [
+                  _c("span", { staticClass: "text-bold" }, [
+                    _vm._v("Template:")
+                  ]),
+                  _vm._v(
+                    "\n                            " +
+                      _vm._s(this.rendered.template_fk.name) +
+                      "\n                        "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-6 col-sm-12" }, [
+                  _c("span", { staticClass: "text-bold" }, [
+                    _vm._v("Category:")
+                  ]),
+                  _vm._v(
+                    "\n                            " +
+                      _vm._s(this.rendered.category_fk.name) +
+                      "\n                        "
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.nameFields, function(field, index) {
+                return _c("div", { staticClass: "row pt-3" }, [
+                  _c("div", { staticClass: "col-md-12 col-sm-12" }, [
+                    _c("span", { staticClass: "text-bold" }, [
+                      _vm._v(_vm._s(field.name) + ":")
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-12 col-sm-12" }, [
+                    _c("div", {
+                      domProps: { innerHTML: _vm._s("" + _vm.fields[index]) }
+                    })
+                  ])
+                ])
+              }),
+              _vm._v(" "),
+              _c("div", { staticClass: "row pt-3" }, [
+                _c("div", { staticClass: "col-md-6 col-sm-12" }, [
+                  _c("span", { staticClass: "text-bold" }, [_vm._v("Tags: ")]),
+                  _vm._v(_vm._s(_vm.rendered.tags))
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: true,
+                        expression: "true"
+                      }
+                    ],
+                    staticClass: "col-md-6 col-sm-12"
+                  },
+                  [
+                    _c("span", { staticClass: "text-bold" }, [
+                      _vm._v("Download PDF:")
+                    ]),
+                    _c(
+                      "a",
+                      {
+                        staticClass: "btn button",
+                        attrs: { href: _vm.rendered.pdf, target: "_blank" }
+                      },
+                      [_vm._v("Download")]
+                    )
+                  ]
+                )
+              ])
+            ],
+            2
+          )
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c(
+        "div",
+        { staticClass: "col-lg-12 margin-tb" },
+        _vm._l(_vm.json_reviews, function(review) {
+          return _c("div", { staticClass: "card" }, [
+            _c("div", { staticClass: "card-header" }, [
+              _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
+                _vm._v(
+                  "\n                        Review by " +
+                    _vm._s(review.user_fk.name) +
+                    " " +
+                    _vm._s(review.user_fk.surname) +
+                    "\n                    "
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-body no-padding" }, [
+              _c(
+                "form",
+                {
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.submit($event)
+                    }
+                  }
+                },
+                [
+                  _c("div", { staticClass: "row pt-3" }, [
+                    _vm._m(0, true),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-md-6 col-sm-12" }, [
+                      _c("fieldset", { staticClass: "rating" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: review.field_1,
+                              expression: "review.field_1"
+                            }
+                          ],
+                          attrs: {
+                            type: "radio",
+                            id: "f1_star5",
+                            value: "5",
+                            disabled: ""
+                          },
+                          domProps: { checked: _vm._q(review.field_1, "5") },
+                          on: {
+                            change: function($event) {
+                              return _vm.$set(review, "field_1", "5")
+                            }
+                          }
+                        }),
+                        _c("label", {
+                          staticClass: "full",
+                          attrs: { for: "f1_star5", title: "Awesome - 5 stars" }
+                        }),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: review.field_1,
+                              expression: "review.field_1"
+                            }
+                          ],
+                          attrs: {
+                            type: "radio",
+                            id: "f1_star4",
+                            value: "4",
+                            disabled: ""
+                          },
+                          domProps: { checked: _vm._q(review.field_1, "4") },
+                          on: {
+                            change: function($event) {
+                              return _vm.$set(review, "field_1", "4")
+                            }
+                          }
+                        }),
+                        _c("label", {
+                          staticClass: "full",
+                          attrs: {
+                            for: "f1_star4",
+                            title: "Pretty good - 4 stars"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: review.field_1,
+                              expression: "review.field_1"
+                            }
+                          ],
+                          attrs: {
+                            type: "radio",
+                            id: "f1_star3",
+                            value: "3",
+                            disabled: ""
+                          },
+                          domProps: { checked: _vm._q(review.field_1, "3") },
+                          on: {
+                            change: function($event) {
+                              return _vm.$set(review, "field_1", "3")
+                            }
+                          }
+                        }),
+                        _c("label", {
+                          staticClass: "full",
+                          attrs: { for: "f1_star3", title: "Meh - 3 stars" }
+                        }),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: review.field_1,
+                              expression: "review.field_1"
+                            }
+                          ],
+                          attrs: {
+                            type: "radio",
+                            id: "f1_star2",
+                            value: "2",
+                            disabled: ""
+                          },
+                          domProps: { checked: _vm._q(review.field_1, "2") },
+                          on: {
+                            change: function($event) {
+                              return _vm.$set(review, "field_1", "2")
+                            }
+                          }
+                        }),
+                        _c("label", {
+                          staticClass: "full",
+                          attrs: {
+                            for: "f1_star2",
+                            title: "Kinda bad - 2 stars"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: review.field_1,
+                              expression: "review.field_1"
+                            }
+                          ],
+                          attrs: {
+                            type: "radio",
+                            id: "f1_star1",
+                            value: "1",
+                            disabled: ""
+                          },
+                          domProps: { checked: _vm._q(review.field_1, "1") },
+                          on: {
+                            change: function($event) {
+                              return _vm.$set(review, "field_1", "1")
+                            }
+                          }
+                        }),
+                        _c("label", {
+                          staticClass: "full",
+                          attrs: {
+                            for: "f1_star1",
+                            title: "Sucks big time - 1 star"
+                          }
+                        })
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "row pt-3" }, [
+                    _vm._m(1, true),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-md-6 col-sm-12" }, [
+                      _c("fieldset", { staticClass: "rating" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: review.field_2,
+                              expression: "review.field_2"
+                            }
+                          ],
+                          attrs: {
+                            type: "radio",
+                            id: "f2_star5",
+                            value: "5",
+                            disabled: ""
+                          },
+                          domProps: { checked: _vm._q(review.field_2, "5") },
+                          on: {
+                            change: function($event) {
+                              return _vm.$set(review, "field_2", "5")
+                            }
+                          }
+                        }),
+                        _c("label", {
+                          staticClass: "full",
+                          attrs: { for: "f2_star5", title: "Awesome - 5 stars" }
+                        }),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: review.field_2,
+                              expression: "review.field_2"
+                            }
+                          ],
+                          attrs: {
+                            type: "radio",
+                            id: "f2_star4",
+                            value: "4",
+                            disabled: ""
+                          },
+                          domProps: { checked: _vm._q(review.field_2, "4") },
+                          on: {
+                            change: function($event) {
+                              return _vm.$set(review, "field_2", "4")
+                            }
+                          }
+                        }),
+                        _c("label", {
+                          staticClass: "full",
+                          attrs: {
+                            for: "f2_star4",
+                            title: "Pretty good - 4 stars"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: review.field_2,
+                              expression: "review.field_2"
+                            }
+                          ],
+                          attrs: {
+                            type: "radio",
+                            id: "f2_star3",
+                            value: "3",
+                            disabled: ""
+                          },
+                          domProps: { checked: _vm._q(review.field_2, "3") },
+                          on: {
+                            change: function($event) {
+                              return _vm.$set(review, "field_2", "3")
+                            }
+                          }
+                        }),
+                        _c("label", {
+                          staticClass: "full",
+                          attrs: { for: "f2_star3", title: "Meh - 3 stars" }
+                        }),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: review.field_2,
+                              expression: "review.field_2"
+                            }
+                          ],
+                          attrs: {
+                            type: "radio",
+                            id: "f2_star2",
+                            value: "2",
+                            disabled: ""
+                          },
+                          domProps: { checked: _vm._q(review.field_2, "2") },
+                          on: {
+                            change: function($event) {
+                              return _vm.$set(review, "field_2", "2")
+                            }
+                          }
+                        }),
+                        _c("label", {
+                          staticClass: "full",
+                          attrs: {
+                            for: "f2_star2",
+                            title: "Kinda bad - 2 stars"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: review.field_2,
+                              expression: "review.field_2"
+                            }
+                          ],
+                          attrs: {
+                            type: "radio",
+                            id: "f2_star1",
+                            value: "1",
+                            disabled: ""
+                          },
+                          domProps: { checked: _vm._q(review.field_2, "1") },
+                          on: {
+                            change: function($event) {
+                              return _vm.$set(review, "field_2", "1")
+                            }
+                          }
+                        }),
+                        _c("label", {
+                          staticClass: "full",
+                          attrs: {
+                            for: "f2_star1",
+                            title: "Sucks big time - 1 star"
+                          }
+                        })
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "row pt-3" }, [
+                    _vm._m(2, true),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-md-6 col-sm-12" }, [
+                      _c("fieldset", { staticClass: "rating" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: review.field_3,
+                              expression: "review.field_3"
+                            }
+                          ],
+                          attrs: {
+                            type: "radio",
+                            id: "f3_star5",
+                            value: "5",
+                            disabled: ""
+                          },
+                          domProps: { checked: _vm._q(review.field_3, "5") },
+                          on: {
+                            change: function($event) {
+                              return _vm.$set(review, "field_3", "5")
+                            }
+                          }
+                        }),
+                        _c("label", {
+                          staticClass: "full",
+                          attrs: { for: "f3_star5", title: "Awesome - 5 stars" }
+                        }),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: review.field_3,
+                              expression: "review.field_3"
+                            }
+                          ],
+                          attrs: {
+                            type: "radio",
+                            id: "f3_star4",
+                            value: "4",
+                            disabled: ""
+                          },
+                          domProps: { checked: _vm._q(review.field_3, "4") },
+                          on: {
+                            change: function($event) {
+                              return _vm.$set(review, "field_3", "4")
+                            }
+                          }
+                        }),
+                        _c("label", {
+                          staticClass: "full",
+                          attrs: {
+                            for: "f3_star4",
+                            title: "Pretty good - 4 stars"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: review.field_3,
+                              expression: "review.field_3"
+                            }
+                          ],
+                          attrs: {
+                            type: "radio",
+                            id: "f3_star3",
+                            value: "3",
+                            disabled: ""
+                          },
+                          domProps: { checked: _vm._q(review.field_3, "3") },
+                          on: {
+                            change: function($event) {
+                              return _vm.$set(review, "field_3", "3")
+                            }
+                          }
+                        }),
+                        _c("label", {
+                          staticClass: "full",
+                          attrs: { for: "f3_star3", title: "Meh - 3 stars" }
+                        }),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: review.field_3,
+                              expression: "review.field_3"
+                            }
+                          ],
+                          attrs: {
+                            type: "radio",
+                            id: "f3_star2",
+                            value: "2",
+                            disabled: ""
+                          },
+                          domProps: { checked: _vm._q(review.field_3, "2") },
+                          on: {
+                            change: function($event) {
+                              return _vm.$set(review, "field_3", "2")
+                            }
+                          }
+                        }),
+                        _c("label", {
+                          staticClass: "full",
+                          attrs: {
+                            for: "f3_star2",
+                            title: "Kinda bad - 2 stars"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: review.field_3,
+                              expression: "review.field_3"
+                            }
+                          ],
+                          attrs: {
+                            type: "radio",
+                            id: "f3_star1",
+                            value: "1",
+                            disabled: ""
+                          },
+                          domProps: { checked: _vm._q(review.field_3, "1") },
+                          on: {
+                            change: function($event) {
+                              return _vm.$set(review, "field_3", "1")
+                            }
+                          }
+                        }),
+                        _c("label", {
+                          staticClass: "full",
+                          attrs: {
+                            for: "f3_star1",
+                            title: "Sucks big time - 1 star"
+                          }
+                        })
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "row pt-3" }, [
+                    _c("div", { staticClass: "col-md-12 col-xs-12 center" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { staticClass: "form__label" }, [
+                          _vm._v("Review:")
+                        ]),
+                        _vm._v(" "),
+                        _c("div", {
+                          domProps: { innerHTML: _vm._s(review.review) }
+                        })
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "row pt-3" }, [
+                    _c("div", { staticClass: "col-md-12 col-xs-12 center" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "button btn-primary btn btn-block",
+                            attrs: {
+                              type: "submit",
+                              disabled: _vm.submitStatus === "PENDING"
+                            }
+                          },
+                          [
+                            _c("i", {
+                              staticClass: "fa fa-floppy-o",
+                              attrs: { "aria-hidden": "true" }
+                            }),
+                            _vm._v(
+                              " Submit!\n                                    "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _vm.submitStatus === "OK"
+                          ? _c("p", { staticClass: "typo__p" }, [
+                              _vm._v("Thanks for your submission!")
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.submitStatus === "ERROR"
+                          ? _c("p", { staticClass: "typo__p" }, [
+                              _vm._v(
+                                "Please fill the form\n                                        correctly."
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.submitStatus === "PENDING"
+                          ? _c("p", { staticClass: "typo__p" }, [
+                              _vm._v("Sending...")
+                            ])
+                          : _vm._e()
+                      ])
+                    ])
+                  ])
+                ]
+              )
+            ])
+          ])
+        }),
+        0
+      )
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-6 col-sm-12" }, [
+      _c("span", { staticClass: "text-bold" }, [
+        _vm._v(" General quality of the paper:")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-6 col-sm-12" }, [
+      _c("span", { staticClass: "text-bold" }, [
+        _vm._v(" General quality of the paper:")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-6 col-sm-12" }, [
+      _c("span", { staticClass: "text-bold" }, [
+        _vm._v(" Relevance of the paper:")
       ])
     ])
   }
@@ -61700,7 +62776,7 @@ var render = function() {
                   },
                   [
                     _c("span", { staticClass: "text-bold" }, [
-                      _vm._v("Donwload PDF:")
+                      _vm._v("Download PDF:")
                     ]),
                     _c(
                       "a",
@@ -62289,56 +63365,20 @@ var render = function() {
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(item.title))]),
                       _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(item.category))]),
+                      _c("td", [_vm._v(_vm._s(item.category_fk.name))]),
                       _vm._v(" "),
-                      _c("td", [_vm._v(" " + _vm._s(item.template))]),
+                      _c("td", [_vm._v(" " + _vm._s(item.template_fk.name))]),
                       _vm._v(" "),
                       _c("td", { staticClass: "text-right" }, [
                         _c(
                           "a",
                           {
                             staticClass: "btn btn-default btn-xs",
-                            attrs: {
-                              href: _vm.route("posts.show", { id: item.id })
-                            }
+                            attrs: { href: "reviews/create?id=" + item.id }
                           },
                           [
                             _c("i", {
                               staticClass: "fas fa-eye fa-1x fa-lg",
-                              attrs: { "aria-hidden": "true" }
-                            })
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-default btn-xs",
-                            attrs: {
-                              href: _vm.route("posts.edit", { id: item.id })
-                            }
-                          },
-                          [
-                            _c("i", {
-                              staticClass: "fas fa-pencil-alt fa-1x fa-lg",
-                              attrs: { "aria-hidden": "true" }
-                            })
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-danger btn-xs",
-                            on: {
-                              click: function($event) {
-                                return _vm.deleteItem(item.id, $event)
-                              }
-                            }
-                          },
-                          [
-                            _c("i", {
-                              staticClass: "fas fa-minus-circle fa-1x fa-lg",
                               attrs: { "aria-hidden": "true" }
                             })
                           ]
@@ -80543,6 +81583,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_StatusShow__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./components/StatusShow */ "./resources/js/components/StatusShow.vue");
 /* harmony import */ var _components_ReviewTable__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./components/ReviewTable */ "./resources/js/components/ReviewTable.vue");
 /* harmony import */ var _components_ReviewCreate__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./components/ReviewCreate */ "./resources/js/components/ReviewCreate.vue");
+/* harmony import */ var _components_PostValidate__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./components/PostValidate */ "./resources/js/components/PostValidate.vue");
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -80566,6 +81607,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
  */
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+
 
 
 
@@ -80628,6 +81670,7 @@ var app = new Vue({
     'author-show': _components_AuthorShow__WEBPACK_IMPORTED_MODULE_19__["default"],
     'post-table': _components_PostTable__WEBPACK_IMPORTED_MODULE_15__["default"],
     'post-show': _components_PostShow__WEBPACK_IMPORTED_MODULE_21__["default"],
+    'post-validate': _components_PostValidate__WEBPACK_IMPORTED_MODULE_27__["default"],
     'review-table': _components_ReviewTable__WEBPACK_IMPORTED_MODULE_25__["default"],
     'review-create': _components_ReviewCreate__WEBPACK_IMPORTED_MODULE_26__["default"],
     'status-table': _components_StatusTable__WEBPACK_IMPORTED_MODULE_22__["default"],
@@ -81450,6 +82493,93 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PostTable_vue_vue_type_template_id_72038a33_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PostTable_vue_vue_type_template_id_72038a33_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/PostValidate.vue":
+/*!**************************************************!*\
+  !*** ./resources/js/components/PostValidate.vue ***!
+  \**************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _PostValidate_vue_vue_type_template_id_3603e27e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PostValidate.vue?vue&type=template&id=3603e27e&scoped=true& */ "./resources/js/components/PostValidate.vue?vue&type=template&id=3603e27e&scoped=true&");
+/* harmony import */ var _PostValidate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PostValidate.vue?vue&type=script&lang=js& */ "./resources/js/components/PostValidate.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _PostValidate_vue_vue_type_style_index_0_id_3603e27e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PostValidate.vue?vue&type=style&index=0&id=3603e27e&scoped=true&lang=css& */ "./resources/js/components/PostValidate.vue?vue&type=style&index=0&id=3603e27e&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _PostValidate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _PostValidate_vue_vue_type_template_id_3603e27e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _PostValidate_vue_vue_type_template_id_3603e27e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "3603e27e",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/PostValidate.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/PostValidate.vue?vue&type=script&lang=js&":
+/*!***************************************************************************!*\
+  !*** ./resources/js/components/PostValidate.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PostValidate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./PostValidate.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PostValidate.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PostValidate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/PostValidate.vue?vue&type=style&index=0&id=3603e27e&scoped=true&lang=css&":
+/*!***********************************************************************************************************!*\
+  !*** ./resources/js/components/PostValidate.vue?vue&type=style&index=0&id=3603e27e&scoped=true&lang=css& ***!
+  \***********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PostValidate_vue_vue_type_style_index_0_id_3603e27e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./PostValidate.vue?vue&type=style&index=0&id=3603e27e&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PostValidate.vue?vue&type=style&index=0&id=3603e27e&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PostValidate_vue_vue_type_style_index_0_id_3603e27e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PostValidate_vue_vue_type_style_index_0_id_3603e27e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PostValidate_vue_vue_type_style_index_0_id_3603e27e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PostValidate_vue_vue_type_style_index_0_id_3603e27e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PostValidate_vue_vue_type_style_index_0_id_3603e27e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/PostValidate.vue?vue&type=template&id=3603e27e&scoped=true&":
+/*!*********************************************************************************************!*\
+  !*** ./resources/js/components/PostValidate.vue?vue&type=template&id=3603e27e&scoped=true& ***!
+  \*********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PostValidate_vue_vue_type_template_id_3603e27e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./PostValidate.vue?vue&type=template&id=3603e27e&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PostValidate.vue?vue&type=template&id=3603e27e&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PostValidate_vue_vue_type_template_id_3603e27e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PostValidate_vue_vue_type_template_id_3603e27e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -82650,6 +83780,46 @@ var Ziggy = {
     "statuses.destroy": {
       "uri": "admin\/statuses\/{status}",
       "methods": ["DELETE"],
+      "domain": null
+    },
+    "reviews.index": {
+      "uri": "admin\/reviews",
+      "methods": ["GET", "HEAD"],
+      "domain": null
+    },
+    "reviews.create": {
+      "uri": "admin\/reviews\/create",
+      "methods": ["GET", "HEAD"],
+      "domain": null
+    },
+    "reviews.store": {
+      "uri": "admin\/reviews",
+      "methods": ["POST"],
+      "domain": null
+    },
+    "reviews.show": {
+      "uri": "admin\/reviews\/{review}",
+      "methods": ["GET", "HEAD"],
+      "domain": null
+    },
+    "reviews.edit": {
+      "uri": "admin\/reviews\/{review}\/edit",
+      "methods": ["GET", "HEAD"],
+      "domain": null
+    },
+    "reviews.update": {
+      "uri": "admin\/reviews\/{review}",
+      "methods": ["PUT", "PATCH"],
+      "domain": null
+    },
+    "reviews.destroy": {
+      "uri": "admin\/reviews\/{review}",
+      "methods": ["DELETE"],
+      "domain": null
+    },
+    "posts.link": {
+      "uri": "admin\/posts\/{post}\/link",
+      "methods": ["PATCH"],
       "domain": null
     },
     "login": {

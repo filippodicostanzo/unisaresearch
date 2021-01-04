@@ -33,10 +33,10 @@
 
                                 <td>{{item.id}}</td>
                                 <td>{{item.title}}</td>
-                                <td>{{item.category}}</td>
-                                <td> {{item.template}}</td>
+                                <td>{{item.category_fk.name}}</td>
+                                <td> {{item.template_fk.name}}</td>
                                 <td class="text-right">
-                                    <a class="btn btn-default btn-xs" :href="route('posts.show', {id: item.id})">
+                                    <a class="btn btn-default btn-xs" :href="'reviews/create?id='+ item.id">
                                         <i class="fas fa-eye fa-1x fa-lg" aria-hidden="true"></i>
                                     </a>
 
@@ -47,13 +47,6 @@
                                     </a>
                                     -->
 
-                                    <a class="btn btn-default btn-xs"
-                                       :href="route('posts.edit', {id: item.id})">
-                                        <i class="fas fa-pencil-alt fa-1x fa-lg" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="btn btn-danger btn-xs" v-on:click="deleteItem(item.id, $event)">
-                                        <i class="fas fa-minus-circle fa-1x fa-lg" aria-hidden="true"></i>
-                                    </a>
                                 </td>
 
                             </tr>

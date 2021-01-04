@@ -3,6 +3,9 @@
 @section('title', 'AdminLTE')
 
 @php
+    use App\Models\Post;use Illuminate\Support\Facades\Auth;
+    use Illuminate\Support\Facades\DB;
+
     $items = \App\Models\Post::orderBy('id', 'DESC')->limit(20)->get();
 
                    foreach ($items as $item) {
@@ -18,6 +21,18 @@
                        $item['state'] = $item->state_fk->name;
 
                }
+
+$postresearcher =  \App\Models\Post::where('created', \Illuminate\Support\Facades\Auth::id())->orderBy('id', 'DESC')->limit(20)->get();
+//$postsupervisor = Post::with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->get();
+
+
+        $postsupervisor = Post::whereHas('users', function($q) {
+        $q->where('users.id', Auth::id());
+    })
+->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')
+    ->get();
+
+
 @endphp
 
 @section('content_header')
@@ -37,10 +52,18 @@
     </div>
     @endrole
 
-    @role('researcher|supervisor')
+    @role('supervisor')
     <div class="row mt-5">
         <div class="col-12">
-            <card-table data="{{$items}}" ></card-table>
+            <card-table data="{{$postsupervisor}}" ></card-table>
+        </div>
+    </div>
+    @endrole
+
+    @role('researcher')
+    <div class="row mt-5">
+        <div class="col-12">
+            <card-table data="{{$postresearcher}}" ></card-table>
         </div>
     </div>
     @endrole

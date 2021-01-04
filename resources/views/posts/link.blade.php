@@ -15,9 +15,14 @@
     $authors = Author::orderBy('id')->get();
     }
 
+
+
     else {
     $authors = Author::where('user_id', Auth::id())->get();
     }
+
+    $autx = $item->authors()->get();
+    $flx = json_decode($item->template_fk->fields);
     $user = Auth::id();
     $mainaut = User::where('id', $item->created)->first();
     $categories = Category::orderBy('id')->get();
@@ -31,6 +36,9 @@
 
 
 
+
+
+
 @endphp
 
 @section('content')
@@ -40,7 +48,7 @@
                 <div class="card card-mini">
                     <div class="card-header">
                         <h1 class="m0 text-dark card-title text-xl">
-                            Edit {{$title}}
+                            Link {{$title}}
                         </h1>
                         <div class="card-action">
                             <a href="{{ route('posts.index') }}">
@@ -56,49 +64,75 @@
                         <div class="tab">
                             <div class="form-group">
                                 <label>Title:</label>
-                                {!! Form::text('title', null, array('placeholder' => 'Title','class' => 'form-control',  'oninput'=>"this.className = ''")) !!}
+                                {{$item->title}}
                             </div>
 
                             <div class="form-group row">
-                                <div class="col-12"><label>Authors</label></div>
-                                <div class="item col-md-6 col-xs-6 mb-3">
-                                    <div class="form-check">
-                                        <input type="checkbox" checked disabled>
-                                        <label class="form-check-label"
-                                               for="exampleCheck1">{{$mainaut->name}} {{$mainaut->surname}}</label>
-                                    </div>
-                                </div>
-                                @foreach ($authors as $author)
+                                <div class="col-12"><label>Authors:</label>
 
-
-                                    <div class="item col-md-6 col-xs-6 mb-3">
-                                        <div class="form-check">
-                                            <input type="checkbox" id="{{$author->id}}"
-                                                   name="authors[]"
-                                                   value="{{$author->id}}" {{ in_array($author->id, $aut) ? 'checked' : ''}}>
-                                            <label class="form-check-label"
-                                                   for="exampleCheck1">{{$author->firstname}} {{$author->lastname}}</label>
-                                        </div>
-                                    </div>
-
-                                @endforeach
-                                <div class="col-12">
-                                    <div id="author_error"></div>
+                                    <span>{{$item->user_fk->name}} {{$item->user_fk->surname}}&nbsp; - &nbsp;</span>
+                                    @foreach($autx as $author)
+                                        <span>{{$author['firstname']}} {{$author['lastname']}} -  </span>
+                                    @endforeach
                                 </div>
                             </div>
 
                             <div class="form-group">
 
-                                <div class="col-12"><label>Category</label></div>
+                                <div class="col-12"><label>Category:</label>
 
-                                <select id="items-selected" name="category" class="form-control">
-                                    @foreach($categories as $category)
-                                        <option value="{{$category->id}}"
-                                                data-type="{{$category->id}}" {{$item->category == $category->id ? 'selected="selected"' : ''}}>
-                                            {{$category->name}}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                    {{$item->category_fk->name}}
+
+                                </div>
+
+                            </div>
+                            @foreach($flx as $key => $value)
+                                <div class="form-group">
+                                    <label>{{$value->name}}</label>
+                                    @if($key===0)
+                                        {!! $item->field_1!!}
+                                    @endif
+                                    @if($key===1)
+                                        {!! $item->field_2!!}
+                                    @endif
+                                    @if($key===2)
+                                        {!! $item->field_3!!}
+                                    @endif
+                                    @if($key===3)
+                                        {!! $item->field_4!!}
+                                    @endif
+                                    @if($key===4)
+                                        {!! $item->field_5!!}
+                                    @endif
+                                    @if($key===5)
+                                        {!! $item->field_6!!}
+                                    @endif
+                                    @if($key===6)
+                                        {!! $item->field_7!!}
+                                    @endif
+                                    @if($key===7)
+                                        {!! $item->field_8!!}
+                                    @endif
+                                    @if($key===8)
+                                        {!! $item->field_9!!}
+                                    @endif
+
+                                </div>
+                            @endforeach
+
+
+                            <div class="form-group">
+                                <label>
+                                    Tags:
+                                </label>
+                                {{$item->tags}}
+                            </div>
+                            <div class="form-group imageUpload">
+                                <label for="image">PDF Document</label>
+
+                                <a href="{{$item->pdf}}">Download</a>
+
+
                             </div>
 
 
@@ -129,7 +163,7 @@
                                     <div class="item col-md-6 col-xs-6 mb-3">
                                         <div class="form-check">
                                             <input type="checkbox" id="{{$supervisor->id}}"
-                                                   name="authors[]"
+                                                   name="supervisors[]"
                                                    value="{{$supervisor->id}}" {{ in_array($supervisor->id, $sup) ? 'checked' : ''}}>
                                             <label class="form-check-label"
                                                    for="exampleCheck1">{{$supervisor->name}} {{$supervisor->surname}}</label>
@@ -143,89 +177,15 @@
                             @endrole
 
 
-                        </div>
-
-
-                        <div class="tab">
-                            <div class="form-group">
-                                <label>Abstract</label>
-                                {!! Form::textarea('abstract', null, array('placeholder' => 'Abstract','class' => 'form-control', 'id' => 'abstract', 'rows'=>10, 'cols'=>80)) !!}
-                            </div>
-
-                            <div class="form-group">
-                                <label>Intro</label>
-                                {!! Form::textarea('intro', null, array('placeholder' => 'Intro','class' => 'form-control', 'id' => 'intro', 'rows'=>10, 'cols'=>80)) !!}
-                            </div>
-                        </div>
-
-                        <div class="tab">
-                            @foreach($fields as $key => $value)
-                                <div class="form-group">
-                                    <label>{{$value->name}}</label>
-
-                                    {!! Form::textarea('field_'.($key+1), null, array('placeholder' => 'Intro','class' => 'form-control', 'id' => 'field_'.($key+1), 'rows'=>10, 'cols'=>80)) !!}
-
-                                </div>
-                            @endforeach
-
-                        </div>
-
-                        <div class="tab">
-                            <div class="form-group">
-                                <label>Ending</label>
-                                {!! Form::textarea('ending', null, array('placeholder' => 'Ending','class' => 'form-control', 'id' => 'ending', 'rows'=>10, 'cols'=>80)) !!}
-                            </div>
-
-                            <div class="form-group">
-                                <label>Biography</label>
-                                {!! Form::textarea('biography', null, array('placeholder' => 'Biography','class' => 'form-control', 'id' => 'biography', 'rows'=>10, 'cols'=>80)) !!}
-                            </div>
-                        </div>
-
-
-                        <div class="tab">
-                            <div class="form-group">
-                                <label>
-                                    Tags:
-                                </label>
-                                {!! Form::text('tags', null, array('placeholder' => 'Tag separated by comma','class' => 'form-control',  'oninput'=>"this.className = ''")) !!}
-                            </div>
-                            <div class="form-group imageUpload">
-                                <label for="image">PDF Document</label>
-                                <div class="input-group">
-                                    <span class="input-group-btn">
-                                        <a id="document" data-input="thumbnail" data-preview="cover_preview"
-                                           class="btn btn-secondary">
-                                            <i class="fa fa-picture-o"></i> Choose
-                                        </a>
-                                        </span>
-                                    {!! Form::text('pdf', null, array('placeholder' => 'PDF','class' => 'form-control file-src','id' => 'thumbnail')) !!}
-
-                                </div>
-
-                            </div>
-                            <!--<button type="submit" class="btn btn-primary btn-lg btn-block">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">
                                 <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
-                            </button> -->
+                            </button>
+
                         </div>
 
-                        <div style="display: none" id="loader"><h3>Loading...</h3></div>
-                        <div style="overflow:auto;">
-                            <div style="float:right;">
-                                <button type="button" id="prevBtn" onclick="nextPrev(-1)" class="btn btn-primary">
-                                    Previous
-                                </button>
-                                <button type="button" id="nextBtn" onclick="nextPrev(1)" class="btn btn-primary">Next
-                                </button>
-                            </div>
-                        </div>
 
                         <!-- Circles which indicates the steps of the form: -->
                         <div style="text-align:center;margin-top:40px;">
-                            <span class="step"></span>
-                            <span class="step"></span>
-                            <span class="step"></span>
-                            <span class="step"></span>
                             <span class="step"></span>
                         </div>
 

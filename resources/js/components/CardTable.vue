@@ -20,9 +20,9 @@
                     <tr v-for="(item,k) in renderedPaginate" :key="k">
                         <th scope="row">{{item.id}}</th>
                         <td>{{item.title}}</td>
-                        <td><span v-for="(author, index) in item.json_authors ">{{author.firstname}} {{author.lastname}} <span v-if="index+1 != item.json_authors.length"> - </span></span></td>
+                        <td><span v-for="(author, index) in item.authors ">{{author.firstname}} {{author.lastname}} <span v-if="index+1 != item.authors.length"> - </span></span></td>
                         <td> {{ format(new Date(item.created_at), 'dd/MM/yyyy')  }}</td>
-                        <td><span :style="`background-color:${item.color}`" class="post-status">{{item.state}}</span></td>
+                        <td><span :style="`background-color:${item.state_fk.color}`" class="post-status">{{item.state_fk.name}}</span></td>
                         <td><a :href="route('posts.single', {id: item.id})">View</a></td>
                     </tr>
                     </tbody>
@@ -56,12 +56,14 @@
             }
         },
         mounted() {
+            console.log(this.data);
             this.posts = JSON.parse(this.data);
-
+            console.log(this.posts);
+/*
             this.posts.forEach((post) => {
                 post.json_authors = JSON.parse(post.json_authors)
             })
-
+*/
             this.pages = this.posts.length;
             this.paginateData(this.page - 1, this.perpage)
 

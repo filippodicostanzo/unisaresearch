@@ -1,20 +1,20 @@
 <template>
-     <div class="row">
-         <!--   <div class="input-group">
-                <span class="input-group-btn">
-                    <a id="lfm_pdf" data-input="lfm_pdf_input" data-preview="lfm_pdf_preview"
-                       class="btn btn-secondary">
-                        <i class="fa fa-picture-o"></i> Choose
-                    </a>
-                </span>
-                <input type="text" name="cover" class="file-src" id="lfm_pdf_input"/>
-            </div>
+    <div class="row">
+        <!--   <div class="input-group">
+               <span class="input-group-btn">
+                   <a id="lfm_pdf" data-input="lfm_pdf_input" data-preview="lfm_pdf_preview"
+                      class="btn btn-secondary">
+                       <i class="fa fa-picture-o"></i> Choose
+                   </a>
+               </span>
+               <input type="text" name="cover" class="file-src" id="lfm_pdf_input"/>
+           </div>
 
-            <a id="lfm_" data-input="lfm_pdf_input" data-preview="lfm_pdf_preview"
-               class="btn btn-secondary" v-on:click="openFileManager($event)">
-                <i class="fa fa-picture-o"></i> Choose
-            </a>
-    -->
+           <a id="lfm_" data-input="lfm_pdf_input" data-preview="lfm_pdf_preview"
+              class="btn btn-secondary" v-on:click="openFileManager($event)">
+               <i class="fa fa-picture-o"></i> Choose
+           </a>
+   -->
 
         <div class="col-lg-12 margin-tb">
 
@@ -38,6 +38,7 @@
                                 <th>Title</th>
                                 <th>Category</th>
                                 <th>Template</th>
+                                <th>Created</th>
                                 <th class="text-right">Options</th>
                             </tr>
                             </thead>
@@ -48,25 +49,28 @@
 
                                 <td>{{item.id}}</td>
                                 <td>{{item.title}}</td>
-                                <td>{{item.category}}</td>
-                                <td> {{item.template}}</td>
+                                <td>{{item.category_fk.name}}</td>
+                                <td>{{item.template_fk.name}}</td>
+                                <td> {{ format(new Date(item.created_at), 'dd/MM/yyyy')  }}</td>
                                 <td class="text-right">
                                     <a class="btn btn-default btn-xs" :href="route('posts.show', {id: item.id})">
                                         <i class="fas fa-eye fa-1x fa-lg" aria-hidden="true"></i>
                                     </a>
 
-                                    <!--
-                                    <a class="btn btn-default btn-xs"
-                                       :href="route('posts.link', {id: item.id})">
-                                        <i class="fas fa-link fa-1x fa-lg" aria-hidden="true"></i>
-                                    </a>
-                                    -->
-
-                                    <a class="btn btn-default btn-xs"
-                                       :href="route('posts.edit', {id: item.id})">
+                                    <a class="btn btn-default btn-xs" :href="'reviews/create?id='+ item.id" v-if="json_role.name==='supervisor'" >
                                         <i class="fas fa-pencil-alt fa-1x fa-lg" aria-hidden="true"></i>
                                     </a>
-                                    <a class="btn btn-danger btn-xs" v-on:click="deleteItem(item.id, $event)">
+
+                                    <a class="btn btn-default btn-xs"
+                                       :href="route('posts.link', {id: item.id})" v-if="json_role.name==='superadministrator' || json_role.name==='administrator'">
+                                        <i class="fas fa-link fa-1x fa-lg" aria-hidden="true"></i>
+                                    </a>
+
+                                    <a class="btn btn-default btn-xs"
+                                       :href="route('posts.edit', {id: item.id})" v-if="json_role.name==='researcher'">
+                                        <i class="fas fa-pencil-alt fa-1x fa-lg" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="btn btn-danger btn-xs" v-on:click="deleteItem(item.id, $event)" v-if="json_role.name==='superadministrator' || json_role.name==='administrator'">
                                         <i class="fas fa-minus-circle fa-1x fa-lg" aria-hidden="true"></i>
                                     </a>
                                 </td>
@@ -91,23 +95,27 @@
 <script>
 
     import Pagination from 'vue-pagination-2';
+    import {format} from 'date-fns';
 
     export default {
         name: "PostTable",
         components: {
             'vue-pagination': Pagination
         },
-        props: ['title', 'items'],
+        props: ['title', 'items', 'role'],
         data: () => {
             return {
                 rendered: {},
                 pages: 0,
                 perpage: 4,
                 page: 1,
-                renderedPaginate: []
+                renderedPaginate: [],
+                format,
             }
         },
         mounted() {
+
+            this.json_role = JSON.parse(this.role);
             this.rendered = JSON.parse(this.items);
             this.pages = this.rendered.length;
             this.paginateData(this.page - 1, this.perpage)
@@ -136,7 +144,7 @@
             openFileManager(e) {
 
                 e.preventDefault();
-               window.open(`/laravel-filemanager` + '?type=file', 'FileManager', 'width=900,height=600');
+                window.open(`/laravel-filemanager` + '?type=file', 'FileManager', 'width=900,height=600');
                 //window.open(`/laravel-filemanager`, 'targetWindow', 'width=900,height=600')
                 var self = this
                 window.SetUrl = function (items) {
@@ -144,7 +152,7 @@
                     console.log('C')
                     console.log(items);
                     var input = document.getElementById('lfm_pdf_input');
-                    input.value=items[0].url
+                    input.value = items[0].url
                     //self.form.main_image = items[0].url
 
 

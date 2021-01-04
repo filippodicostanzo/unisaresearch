@@ -125,7 +125,10 @@ class AppServiceProvider extends ServiceProvider
         $events->listen(BuildingMenu::class, function (BuildingMenu $event) {
 
             if (Auth::user()->hasRole('supervisor')) {
-                $postcount = Post::where('supervisor', Auth::id())->count();
+                $postcount = Post::whereHas('users', function($q) {
+                    $q->where('users.id', Auth::id());
+                })->count();
+
             } else {
                 $postcount = Post::where('created', Auth::id())->count();
             }
@@ -141,7 +144,7 @@ class AppServiceProvider extends ServiceProvider
                     'role' => 'researcher'
                 ],
                 [
-                    'text' => 'my_posts',
+                    'text' => 'my_papers',
                     'url' => 'admin/posts',
                     'icon' => 'fas fa-fw fa-file',
                     'label' => $postcount,

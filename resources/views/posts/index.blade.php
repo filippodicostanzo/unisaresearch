@@ -10,7 +10,14 @@
             </div>
         @endif
     </div>
-    <post-table title="{{$title}}" items="{{json_encode($items)}}"></post-table>
+    @php
+    use Illuminate\Support\Facades\Auth;
+        $user = Auth::user();
+        $roles = $user->roles()->first();
+
+    @endphp
+
+    <post-table title="{{$title}}" items="{{json_encode($items)}}" role="{{json_encode($roles)}}"></post-table>
 
 @stop
 @push('js')

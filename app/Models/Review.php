@@ -23,4 +23,8 @@ class Review extends Model
         'supervisor',
         ];
 
+    public function user_fk() {
+        return $this->belongsTo('App\Models\User', 'supervisor', 'id');
+    }
+
 }
