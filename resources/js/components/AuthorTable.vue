@@ -21,6 +21,7 @@
                                 <th>Id</th>
                                 <th>First Name</th>
                                 <th>Last Name</th>
+                                <th>Email</th>
                                 <th class="text-right">Options</th>
                             </tr>
                             </thead>
@@ -30,7 +31,8 @@
 
                                 <td>{{item.id}}</td>
                                 <td>{{item.firstname}}</td>
-                                <td> {{item.lastname}}</td>
+                                <td>{{item.lastname}}</td>
+                                <td>{{item.email}}</td>
                                 <td class="text-right">
                                     <a class="btn btn-default btn-xs" :href="route('authors.show', {id: item.id})">
                                         <i class="fas fa-eye fa-1x fa-lg" aria-hidden="true"></i>

@@ -21,6 +21,7 @@
                                 <th>Id</th>
                                 <th>First Name</th>
                                 <th>Last Name</th>
+                                <th>Email</th>
                                 <th>Role</th>
                                 <th class="text-right">Options</th>
                             </tr>
@@ -31,7 +32,8 @@
 
                                 <td>{{item.id}}</td>
                                 <td>{{item.name}}</td>
-                                <td> {{item.surname}}</td>
+                                <td>{{item.surname}}</td>
+                                <td>{{item.email}}</td>
                                 <td>{{item.role}}</td>
                                 <td class="text-right">
                                     <a class="btn btn-default btn-xs" :href="route('users.show', {id: item.id})">

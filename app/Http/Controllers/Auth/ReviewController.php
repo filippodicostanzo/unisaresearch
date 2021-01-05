@@ -99,7 +99,7 @@ class ReviewController extends Controller
             if (in_array($this->user->id, $supervisors)) {
 
 
-                $review = Review::where('post',$request['id'])->first();
+                $review = Review::where('post',$request['id'])->where('supervisor', Auth::id())->first();
 
 
                 return view('reviews.create', ['item' => $item, 'oldreview'=>$review]);

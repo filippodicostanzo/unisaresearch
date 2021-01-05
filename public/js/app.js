@@ -2211,6 +2211,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AuthorTable",
@@ -3047,13 +3049,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3291,9 +3286,74 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PostValidate.vue",
-  props: ['item', 'reviews', 'title'],
+  props: ['item', 'reviews', 'title', 'status'],
   data: function data() {
     return {
       rendered: {
@@ -3308,6 +3368,7 @@ __webpack_require__.r(__webpack_exports__);
         review: ''
       },
       json_reviews: [],
+      json_status: [],
       nameFields: [],
       fields: [],
       submitStatus: null,
@@ -3321,8 +3382,10 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     this.json_reviews = JSON.parse(this.reviews);
+    this.json_status = JSON.parse(this.status);
     console.log(this.json_reviews);
     this.rendered = JSON.parse(this.item);
+    console.log(this.rendered);
     this.nameFields = JSON.parse(this.rendered.template_fk.fields);
     this.createFields();
   },
@@ -3330,10 +3393,9 @@ __webpack_require__.r(__webpack_exports__);
     submit: function submit() {
       var _this = this;
 
-      this.review.post = this.rendered.id;
-      console.log(this.rendered);
-      console.log(this.review);
-      this.$http.post("/admin/reviews", this.review).then(function (response) {
+      //this.review.post = this.rendered.id;
+      console.log(this.rendered.state);
+      this.$http.patch("/admin/posts/" + this.rendered.id + '/validate', this.rendered).then(function (response) {
         if (response.status === 200) {
           window.location.href = route('posts.index');
         }
@@ -5182,6 +5244,8 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_pagination_2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-pagination-2 */ "./node_modules/vue-pagination-2/compiled/main.js");
 /* harmony import */ var vue_pagination_2__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_pagination_2__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
 //
 //
 //
@@ -9894,6 +9958,25 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 // module
 exports.push([module.i, "\n.post-status[data-v-102965c3]{\n    color: white;\n    padding: 3px;\n}\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PostTable.vue?vue&type=style&index=0&id=72038a33&scoped=true&lang=css&":
+/*!***************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/PostTable.vue?vue&type=style&index=0&id=72038a33&scoped=true&lang=css& ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.post-status[data-v-72038a33] {\n    padding: 5px 10px;\n    border-radius: 20px;\n}\n\n", ""]);
 
 // exports
 
@@ -59634,6 +59717,36 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PostTable.vue?vue&type=style&index=0&id=72038a33&scoped=true&lang=css&":
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/PostTable.vue?vue&type=style&index=0&id=72038a33&scoped=true&lang=css& ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./PostTable.vue?vue&type=style&index=0&id=72038a33&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PostTable.vue?vue&type=style&index=0&id=72038a33&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PostValidate.vue?vue&type=style&index=0&id=3603e27e&scoped=true&lang=css&":
 /*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/PostValidate.vue?vue&type=style&index=0&id=3603e27e&scoped=true&lang=css& ***!
@@ -60736,7 +60849,9 @@ var render = function() {
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(item.firstname))]),
                       _vm._v(" "),
-                      _c("td", [_vm._v(" " + _vm._s(item.lastname))]),
+                      _c("td", [_vm._v(_vm._s(item.lastname))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(item.email))]),
                       _vm._v(" "),
                       _c("td", { staticClass: "text-right" }, [
                         _c(
@@ -60830,6 +60945,8 @@ var staticRenderFns = [
         _c("th", [_vm._v("First Name")]),
         _vm._v(" "),
         _c("th", [_vm._v("Last Name")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Email")]),
         _vm._v(" "),
         _c("th", { staticClass: "text-right" }, [_vm._v("Options")])
       ])
@@ -61778,9 +61895,9 @@ var render = function() {
         _c("div", { staticClass: "card-header" }, [
           _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
             _vm._v(
-              "\n                     " +
+              "\n                    " +
                 _vm._s(this.title) +
-                "\n                 "
+                "\n                "
             )
           ]),
           _vm._v(" "),
@@ -61823,6 +61940,17 @@ var render = function() {
                                 "dd/MM/yyyy"
                               )
                             )
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _c(
+                          "span",
+                          {
+                            staticClass: "post-status",
+                            style: "background-color:" + item.state_fk.color
+                          },
+                          [_vm._v(_vm._s(item.state_fk.name))]
                         )
                       ]),
                       _vm._v(" "),
@@ -61872,6 +62000,28 @@ var render = function() {
                               [
                                 _c("i", {
                                   staticClass: "fas fa-link fa-1x fa-lg",
+                                  attrs: { "aria-hidden": "true" }
+                                })
+                              ]
+                            )
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.json_role.name === "superadministrator" ||
+                        _vm.json_role.name === "administrator"
+                          ? _c(
+                              "a",
+                              {
+                                staticClass: "btn btn-default btn-xs",
+                                attrs: {
+                                  href: _vm.route("posts.valid", {
+                                    id: item.id
+                                  })
+                                }
+                              },
+                              [
+                                _c("i", {
+                                  staticClass:
+                                    "fas fa-clipboard-check fa-1x fa-lg",
                                   attrs: { "aria-hidden": "true" }
                                 })
                               ]
@@ -61963,6 +62113,8 @@ var staticRenderFns = [
         _c("th", [_vm._v("Template")]),
         _vm._v(" "),
         _c("th", [_vm._v("Created")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Status")]),
         _vm._v(" "),
         _c("th", { staticClass: "text-right" }, [_vm._v("Options")])
       ])
@@ -62090,6 +62242,29 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-lg-12 margin-tb" }, [
+        _c("div", { staticClass: "card" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body no-padding" }, [
+            _c("div", { staticClass: "row pt-3" }, [
+              _c(
+                "div",
+                { staticClass: "col-12" },
+                _vm._l(_vm.rendered.users, function(user) {
+                  return _c("p", [
+                    _vm._v(" " + _vm._s(user.name) + " " + _vm._s(user.surname))
+                  ])
+                }),
+                0
+              )
+            ])
+          ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
       _c(
         "div",
         { staticClass: "col-lg-12 margin-tb" },
@@ -62108,543 +62283,601 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "card-body no-padding" }, [
-              _c(
-                "form",
-                {
-                  on: {
-                    submit: function($event) {
-                      $event.preventDefault()
-                      return _vm.submit($event)
-                    }
-                  }
-                },
-                [
-                  _c("div", { staticClass: "row pt-3" }, [
-                    _vm._m(0, true),
+              _c("div", { staticClass: "row pt-3" }, [
+                _vm._m(1, true),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-6 col-sm-12" }, [
+                  _c("fieldset", { staticClass: "rating" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: review.field_1,
+                          expression: "review.field_1"
+                        }
+                      ],
+                      attrs: {
+                        type: "radio",
+                        id: "f1_star5",
+                        value: "5",
+                        disabled: ""
+                      },
+                      domProps: { checked: _vm._q(review.field_1, "5") },
+                      on: {
+                        change: function($event) {
+                          return _vm.$set(review, "field_1", "5")
+                        }
+                      }
+                    }),
+                    _c("label", {
+                      staticClass: "full",
+                      attrs: { for: "f1_star5", title: "Awesome - 5 stars" }
+                    }),
                     _vm._v(" "),
-                    _c("div", { staticClass: "col-md-6 col-sm-12" }, [
-                      _c("fieldset", { staticClass: "rating" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: review.field_1,
-                              expression: "review.field_1"
-                            }
-                          ],
-                          attrs: {
-                            type: "radio",
-                            id: "f1_star5",
-                            value: "5",
-                            disabled: ""
-                          },
-                          domProps: { checked: _vm._q(review.field_1, "5") },
-                          on: {
-                            change: function($event) {
-                              return _vm.$set(review, "field_1", "5")
-                            }
-                          }
-                        }),
-                        _c("label", {
-                          staticClass: "full",
-                          attrs: { for: "f1_star5", title: "Awesome - 5 stars" }
-                        }),
-                        _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: review.field_1,
-                              expression: "review.field_1"
-                            }
-                          ],
-                          attrs: {
-                            type: "radio",
-                            id: "f1_star4",
-                            value: "4",
-                            disabled: ""
-                          },
-                          domProps: { checked: _vm._q(review.field_1, "4") },
-                          on: {
-                            change: function($event) {
-                              return _vm.$set(review, "field_1", "4")
-                            }
-                          }
-                        }),
-                        _c("label", {
-                          staticClass: "full",
-                          attrs: {
-                            for: "f1_star4",
-                            title: "Pretty good - 4 stars"
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: review.field_1,
-                              expression: "review.field_1"
-                            }
-                          ],
-                          attrs: {
-                            type: "radio",
-                            id: "f1_star3",
-                            value: "3",
-                            disabled: ""
-                          },
-                          domProps: { checked: _vm._q(review.field_1, "3") },
-                          on: {
-                            change: function($event) {
-                              return _vm.$set(review, "field_1", "3")
-                            }
-                          }
-                        }),
-                        _c("label", {
-                          staticClass: "full",
-                          attrs: { for: "f1_star3", title: "Meh - 3 stars" }
-                        }),
-                        _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: review.field_1,
-                              expression: "review.field_1"
-                            }
-                          ],
-                          attrs: {
-                            type: "radio",
-                            id: "f1_star2",
-                            value: "2",
-                            disabled: ""
-                          },
-                          domProps: { checked: _vm._q(review.field_1, "2") },
-                          on: {
-                            change: function($event) {
-                              return _vm.$set(review, "field_1", "2")
-                            }
-                          }
-                        }),
-                        _c("label", {
-                          staticClass: "full",
-                          attrs: {
-                            for: "f1_star2",
-                            title: "Kinda bad - 2 stars"
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: review.field_1,
-                              expression: "review.field_1"
-                            }
-                          ],
-                          attrs: {
-                            type: "radio",
-                            id: "f1_star1",
-                            value: "1",
-                            disabled: ""
-                          },
-                          domProps: { checked: _vm._q(review.field_1, "1") },
-                          on: {
-                            change: function($event) {
-                              return _vm.$set(review, "field_1", "1")
-                            }
-                          }
-                        }),
-                        _c("label", {
-                          staticClass: "full",
-                          attrs: {
-                            for: "f1_star1",
-                            title: "Sucks big time - 1 star"
-                          }
-                        })
-                      ])
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "row pt-3" }, [
-                    _vm._m(1, true),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: review.field_1,
+                          expression: "review.field_1"
+                        }
+                      ],
+                      attrs: {
+                        type: "radio",
+                        id: "f1_star4",
+                        value: "4",
+                        disabled: ""
+                      },
+                      domProps: { checked: _vm._q(review.field_1, "4") },
+                      on: {
+                        change: function($event) {
+                          return _vm.$set(review, "field_1", "4")
+                        }
+                      }
+                    }),
+                    _c("label", {
+                      staticClass: "full",
+                      attrs: { for: "f1_star4", title: "Pretty good - 4 stars" }
+                    }),
                     _vm._v(" "),
-                    _c("div", { staticClass: "col-md-6 col-sm-12" }, [
-                      _c("fieldset", { staticClass: "rating" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: review.field_2,
-                              expression: "review.field_2"
-                            }
-                          ],
-                          attrs: {
-                            type: "radio",
-                            id: "f2_star5",
-                            value: "5",
-                            disabled: ""
-                          },
-                          domProps: { checked: _vm._q(review.field_2, "5") },
-                          on: {
-                            change: function($event) {
-                              return _vm.$set(review, "field_2", "5")
-                            }
-                          }
-                        }),
-                        _c("label", {
-                          staticClass: "full",
-                          attrs: { for: "f2_star5", title: "Awesome - 5 stars" }
-                        }),
-                        _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: review.field_2,
-                              expression: "review.field_2"
-                            }
-                          ],
-                          attrs: {
-                            type: "radio",
-                            id: "f2_star4",
-                            value: "4",
-                            disabled: ""
-                          },
-                          domProps: { checked: _vm._q(review.field_2, "4") },
-                          on: {
-                            change: function($event) {
-                              return _vm.$set(review, "field_2", "4")
-                            }
-                          }
-                        }),
-                        _c("label", {
-                          staticClass: "full",
-                          attrs: {
-                            for: "f2_star4",
-                            title: "Pretty good - 4 stars"
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: review.field_2,
-                              expression: "review.field_2"
-                            }
-                          ],
-                          attrs: {
-                            type: "radio",
-                            id: "f2_star3",
-                            value: "3",
-                            disabled: ""
-                          },
-                          domProps: { checked: _vm._q(review.field_2, "3") },
-                          on: {
-                            change: function($event) {
-                              return _vm.$set(review, "field_2", "3")
-                            }
-                          }
-                        }),
-                        _c("label", {
-                          staticClass: "full",
-                          attrs: { for: "f2_star3", title: "Meh - 3 stars" }
-                        }),
-                        _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: review.field_2,
-                              expression: "review.field_2"
-                            }
-                          ],
-                          attrs: {
-                            type: "radio",
-                            id: "f2_star2",
-                            value: "2",
-                            disabled: ""
-                          },
-                          domProps: { checked: _vm._q(review.field_2, "2") },
-                          on: {
-                            change: function($event) {
-                              return _vm.$set(review, "field_2", "2")
-                            }
-                          }
-                        }),
-                        _c("label", {
-                          staticClass: "full",
-                          attrs: {
-                            for: "f2_star2",
-                            title: "Kinda bad - 2 stars"
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: review.field_2,
-                              expression: "review.field_2"
-                            }
-                          ],
-                          attrs: {
-                            type: "radio",
-                            id: "f2_star1",
-                            value: "1",
-                            disabled: ""
-                          },
-                          domProps: { checked: _vm._q(review.field_2, "1") },
-                          on: {
-                            change: function($event) {
-                              return _vm.$set(review, "field_2", "1")
-                            }
-                          }
-                        }),
-                        _c("label", {
-                          staticClass: "full",
-                          attrs: {
-                            for: "f2_star1",
-                            title: "Sucks big time - 1 star"
-                          }
-                        })
-                      ])
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "row pt-3" }, [
-                    _vm._m(2, true),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: review.field_1,
+                          expression: "review.field_1"
+                        }
+                      ],
+                      attrs: {
+                        type: "radio",
+                        id: "f1_star3",
+                        value: "3",
+                        disabled: ""
+                      },
+                      domProps: { checked: _vm._q(review.field_1, "3") },
+                      on: {
+                        change: function($event) {
+                          return _vm.$set(review, "field_1", "3")
+                        }
+                      }
+                    }),
+                    _c("label", {
+                      staticClass: "full",
+                      attrs: { for: "f1_star3", title: "Meh - 3 stars" }
+                    }),
                     _vm._v(" "),
-                    _c("div", { staticClass: "col-md-6 col-sm-12" }, [
-                      _c("fieldset", { staticClass: "rating" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: review.field_3,
-                              expression: "review.field_3"
-                            }
-                          ],
-                          attrs: {
-                            type: "radio",
-                            id: "f3_star5",
-                            value: "5",
-                            disabled: ""
-                          },
-                          domProps: { checked: _vm._q(review.field_3, "5") },
-                          on: {
-                            change: function($event) {
-                              return _vm.$set(review, "field_3", "5")
-                            }
-                          }
-                        }),
-                        _c("label", {
-                          staticClass: "full",
-                          attrs: { for: "f3_star5", title: "Awesome - 5 stars" }
-                        }),
-                        _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: review.field_3,
-                              expression: "review.field_3"
-                            }
-                          ],
-                          attrs: {
-                            type: "radio",
-                            id: "f3_star4",
-                            value: "4",
-                            disabled: ""
-                          },
-                          domProps: { checked: _vm._q(review.field_3, "4") },
-                          on: {
-                            change: function($event) {
-                              return _vm.$set(review, "field_3", "4")
-                            }
-                          }
-                        }),
-                        _c("label", {
-                          staticClass: "full",
-                          attrs: {
-                            for: "f3_star4",
-                            title: "Pretty good - 4 stars"
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: review.field_3,
-                              expression: "review.field_3"
-                            }
-                          ],
-                          attrs: {
-                            type: "radio",
-                            id: "f3_star3",
-                            value: "3",
-                            disabled: ""
-                          },
-                          domProps: { checked: _vm._q(review.field_3, "3") },
-                          on: {
-                            change: function($event) {
-                              return _vm.$set(review, "field_3", "3")
-                            }
-                          }
-                        }),
-                        _c("label", {
-                          staticClass: "full",
-                          attrs: { for: "f3_star3", title: "Meh - 3 stars" }
-                        }),
-                        _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: review.field_3,
-                              expression: "review.field_3"
-                            }
-                          ],
-                          attrs: {
-                            type: "radio",
-                            id: "f3_star2",
-                            value: "2",
-                            disabled: ""
-                          },
-                          domProps: { checked: _vm._q(review.field_3, "2") },
-                          on: {
-                            change: function($event) {
-                              return _vm.$set(review, "field_3", "2")
-                            }
-                          }
-                        }),
-                        _c("label", {
-                          staticClass: "full",
-                          attrs: {
-                            for: "f3_star2",
-                            title: "Kinda bad - 2 stars"
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: review.field_3,
-                              expression: "review.field_3"
-                            }
-                          ],
-                          attrs: {
-                            type: "radio",
-                            id: "f3_star1",
-                            value: "1",
-                            disabled: ""
-                          },
-                          domProps: { checked: _vm._q(review.field_3, "1") },
-                          on: {
-                            change: function($event) {
-                              return _vm.$set(review, "field_3", "1")
-                            }
-                          }
-                        }),
-                        _c("label", {
-                          staticClass: "full",
-                          attrs: {
-                            for: "f3_star1",
-                            title: "Sucks big time - 1 star"
-                          }
-                        })
-                      ])
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "row pt-3" }, [
-                    _c("div", { staticClass: "col-md-12 col-xs-12 center" }, [
-                      _c("div", { staticClass: "form-group" }, [
-                        _c("label", { staticClass: "form__label" }, [
-                          _vm._v("Review:")
-                        ]),
-                        _vm._v(" "),
-                        _c("div", {
-                          domProps: { innerHTML: _vm._s(review.review) }
-                        })
-                      ])
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "row pt-3" }, [
-                    _c("div", { staticClass: "col-md-12 col-xs-12 center" }, [
-                      _c("div", { staticClass: "form-group" }, [
-                        _c(
-                          "button",
-                          {
-                            staticClass: "button btn-primary btn btn-block",
-                            attrs: {
-                              type: "submit",
-                              disabled: _vm.submitStatus === "PENDING"
-                            }
-                          },
-                          [
-                            _c("i", {
-                              staticClass: "fa fa-floppy-o",
-                              attrs: { "aria-hidden": "true" }
-                            }),
-                            _vm._v(
-                              " Submit!\n                                    "
-                            )
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _vm.submitStatus === "OK"
-                          ? _c("p", { staticClass: "typo__p" }, [
-                              _vm._v("Thanks for your submission!")
-                            ])
-                          : _vm._e(),
-                        _vm._v(" "),
-                        _vm.submitStatus === "ERROR"
-                          ? _c("p", { staticClass: "typo__p" }, [
-                              _vm._v(
-                                "Please fill the form\n                                        correctly."
-                              )
-                            ])
-                          : _vm._e(),
-                        _vm._v(" "),
-                        _vm.submitStatus === "PENDING"
-                          ? _c("p", { staticClass: "typo__p" }, [
-                              _vm._v("Sending...")
-                            ])
-                          : _vm._e()
-                      ])
-                    ])
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: review.field_1,
+                          expression: "review.field_1"
+                        }
+                      ],
+                      attrs: {
+                        type: "radio",
+                        id: "f1_star2",
+                        value: "2",
+                        disabled: ""
+                      },
+                      domProps: { checked: _vm._q(review.field_1, "2") },
+                      on: {
+                        change: function($event) {
+                          return _vm.$set(review, "field_1", "2")
+                        }
+                      }
+                    }),
+                    _c("label", {
+                      staticClass: "full",
+                      attrs: { for: "f1_star2", title: "Kinda bad - 2 stars" }
+                    }),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: review.field_1,
+                          expression: "review.field_1"
+                        }
+                      ],
+                      attrs: {
+                        type: "radio",
+                        id: "f1_star1",
+                        value: "1",
+                        disabled: ""
+                      },
+                      domProps: { checked: _vm._q(review.field_1, "1") },
+                      on: {
+                        change: function($event) {
+                          return _vm.$set(review, "field_1", "1")
+                        }
+                      }
+                    }),
+                    _c("label", {
+                      staticClass: "full",
+                      attrs: {
+                        for: "f1_star1",
+                        title: "Sucks big time - 1 star"
+                      }
+                    })
                   ])
-                ]
-              )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row pt-3" }, [
+                _vm._m(2, true),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-6 col-sm-12" }, [
+                  _c("fieldset", { staticClass: "rating" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: review.field_2,
+                          expression: "review.field_2"
+                        }
+                      ],
+                      attrs: {
+                        type: "radio",
+                        id: "f2_star5",
+                        value: "5",
+                        disabled: ""
+                      },
+                      domProps: { checked: _vm._q(review.field_2, "5") },
+                      on: {
+                        change: function($event) {
+                          return _vm.$set(review, "field_2", "5")
+                        }
+                      }
+                    }),
+                    _c("label", {
+                      staticClass: "full",
+                      attrs: { for: "f2_star5", title: "Awesome - 5 stars" }
+                    }),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: review.field_2,
+                          expression: "review.field_2"
+                        }
+                      ],
+                      attrs: {
+                        type: "radio",
+                        id: "f2_star4",
+                        value: "4",
+                        disabled: ""
+                      },
+                      domProps: { checked: _vm._q(review.field_2, "4") },
+                      on: {
+                        change: function($event) {
+                          return _vm.$set(review, "field_2", "4")
+                        }
+                      }
+                    }),
+                    _c("label", {
+                      staticClass: "full",
+                      attrs: { for: "f2_star4", title: "Pretty good - 4 stars" }
+                    }),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: review.field_2,
+                          expression: "review.field_2"
+                        }
+                      ],
+                      attrs: {
+                        type: "radio",
+                        id: "f2_star3",
+                        value: "3",
+                        disabled: ""
+                      },
+                      domProps: { checked: _vm._q(review.field_2, "3") },
+                      on: {
+                        change: function($event) {
+                          return _vm.$set(review, "field_2", "3")
+                        }
+                      }
+                    }),
+                    _c("label", {
+                      staticClass: "full",
+                      attrs: { for: "f2_star3", title: "Meh - 3 stars" }
+                    }),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: review.field_2,
+                          expression: "review.field_2"
+                        }
+                      ],
+                      attrs: {
+                        type: "radio",
+                        id: "f2_star2",
+                        value: "2",
+                        disabled: ""
+                      },
+                      domProps: { checked: _vm._q(review.field_2, "2") },
+                      on: {
+                        change: function($event) {
+                          return _vm.$set(review, "field_2", "2")
+                        }
+                      }
+                    }),
+                    _c("label", {
+                      staticClass: "full",
+                      attrs: { for: "f2_star2", title: "Kinda bad - 2 stars" }
+                    }),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: review.field_2,
+                          expression: "review.field_2"
+                        }
+                      ],
+                      attrs: {
+                        type: "radio",
+                        id: "f2_star1",
+                        value: "1",
+                        disabled: ""
+                      },
+                      domProps: { checked: _vm._q(review.field_2, "1") },
+                      on: {
+                        change: function($event) {
+                          return _vm.$set(review, "field_2", "1")
+                        }
+                      }
+                    }),
+                    _c("label", {
+                      staticClass: "full",
+                      attrs: {
+                        for: "f2_star1",
+                        title: "Sucks big time - 1 star"
+                      }
+                    })
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row pt-3" }, [
+                _vm._m(3, true),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-6 col-sm-12" }, [
+                  _c("fieldset", { staticClass: "rating" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: review.field_3,
+                          expression: "review.field_3"
+                        }
+                      ],
+                      attrs: {
+                        type: "radio",
+                        id: "f3_star5",
+                        value: "5",
+                        disabled: ""
+                      },
+                      domProps: { checked: _vm._q(review.field_3, "5") },
+                      on: {
+                        change: function($event) {
+                          return _vm.$set(review, "field_3", "5")
+                        }
+                      }
+                    }),
+                    _c("label", {
+                      staticClass: "full",
+                      attrs: { for: "f3_star5", title: "Awesome - 5 stars" }
+                    }),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: review.field_3,
+                          expression: "review.field_3"
+                        }
+                      ],
+                      attrs: {
+                        type: "radio",
+                        id: "f3_star4",
+                        value: "4",
+                        disabled: ""
+                      },
+                      domProps: { checked: _vm._q(review.field_3, "4") },
+                      on: {
+                        change: function($event) {
+                          return _vm.$set(review, "field_3", "4")
+                        }
+                      }
+                    }),
+                    _c("label", {
+                      staticClass: "full",
+                      attrs: { for: "f3_star4", title: "Pretty good - 4 stars" }
+                    }),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: review.field_3,
+                          expression: "review.field_3"
+                        }
+                      ],
+                      attrs: {
+                        type: "radio",
+                        id: "f3_star3",
+                        value: "3",
+                        disabled: ""
+                      },
+                      domProps: { checked: _vm._q(review.field_3, "3") },
+                      on: {
+                        change: function($event) {
+                          return _vm.$set(review, "field_3", "3")
+                        }
+                      }
+                    }),
+                    _c("label", {
+                      staticClass: "full",
+                      attrs: { for: "f3_star3", title: "Meh - 3 stars" }
+                    }),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: review.field_3,
+                          expression: "review.field_3"
+                        }
+                      ],
+                      attrs: {
+                        type: "radio",
+                        id: "f3_star2",
+                        value: "2",
+                        disabled: ""
+                      },
+                      domProps: { checked: _vm._q(review.field_3, "2") },
+                      on: {
+                        change: function($event) {
+                          return _vm.$set(review, "field_3", "2")
+                        }
+                      }
+                    }),
+                    _c("label", {
+                      staticClass: "full",
+                      attrs: { for: "f3_star2", title: "Kinda bad - 2 stars" }
+                    }),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: review.field_3,
+                          expression: "review.field_3"
+                        }
+                      ],
+                      attrs: {
+                        type: "radio",
+                        id: "f3_star1",
+                        value: "1",
+                        disabled: ""
+                      },
+                      domProps: { checked: _vm._q(review.field_3, "1") },
+                      on: {
+                        change: function($event) {
+                          return _vm.$set(review, "field_3", "1")
+                        }
+                      }
+                    }),
+                    _c("label", {
+                      staticClass: "full",
+                      attrs: {
+                        for: "f3_star1",
+                        title: "Sucks big time - 1 star"
+                      }
+                    })
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row pt-3" }, [
+                _c("div", { staticClass: "col-md-12 col-xs-12 center" }, [
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("label", { staticClass: "form__label" }, [
+                      _vm._v("Review:")
+                    ]),
+                    _vm._v(" "),
+                    _c("div", {
+                      domProps: { innerHTML: _vm._s(review.review) }
+                    })
+                  ])
+                ])
+              ])
             ])
           ])
         }),
         0
       )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-lg-12 margin-tb" }, [
+        _c("div", { staticClass: "card" }, [
+          _vm._m(4),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body no-padding" }, [
+            _c(
+              "form",
+              {
+                on: {
+                  submit: function($event) {
+                    $event.preventDefault()
+                    return _vm.submit($event)
+                  }
+                }
+              },
+              [
+                _c("div", { staticClass: "row pt-3" }, [
+                  _c("div", { staticClass: "col-12 col-sm-12" }, [
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.rendered.state,
+                            expression: "rendered.state"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { id: "statuses-selected", name: "state" },
+                        on: {
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              _vm.rendered,
+                              "state",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(">\n                                    "),
+                        _vm._l(_vm.json_status, function(status) {
+                          return _c(
+                            "option",
+                            { domProps: { value: status.id } },
+                            [
+                              _vm._v(
+                                "\n                                        " +
+                                  _vm._s(status.name) +
+                                  "\n                                    "
+                              )
+                            ]
+                          )
+                        })
+                      ],
+                      2
+                    )
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row pt-3" }, [
+                  _c("div", { staticClass: "col-md-12 col-xs-12 center" }, [
+                    _c("div", { staticClass: "form-group" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "button btn-primary btn btn-block",
+                          attrs: {
+                            type: "submit",
+                            disabled: _vm.submitStatus === "PENDING"
+                          }
+                        },
+                        [
+                          _c("i", {
+                            staticClass: "fa fa-floppy-o",
+                            attrs: { "aria-hidden": "true" }
+                          }),
+                          _vm._v(
+                            " Submit!\n                                    "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _vm.submitStatus === "OK"
+                        ? _c("p", { staticClass: "typo__p" }, [
+                            _vm._v("Thanks for your submission!")
+                          ])
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm.submitStatus === "ERROR"
+                        ? _c("p", { staticClass: "typo__p" }, [
+                            _vm._v(
+                              "Please fill the form\n                                        correctly."
+                            )
+                          ])
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm.submitStatus === "PENDING"
+                        ? _c("p", { staticClass: "typo__p" }, [
+                            _vm._v("Sending...")
+                          ])
+                        : _vm._e()
+                    ])
+                  ])
+                ])
+              ]
+            )
+          ])
+        ])
+      ])
     ])
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
+        _vm._v("\n                        Assigned To:\n                    ")
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -62672,6 +62905,16 @@ var staticRenderFns = [
     return _c("div", { staticClass: "col-md-6 col-sm-12" }, [
       _c("span", { staticClass: "text-bold" }, [
         _vm._v(" Relevance of the paper:")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
+        _vm._v("\n                        Status\n                    ")
       ])
     ])
   }
@@ -65825,7 +66068,9 @@ var render = function() {
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(item.name))]),
                       _vm._v(" "),
-                      _c("td", [_vm._v(" " + _vm._s(item.surname))]),
+                      _c("td", [_vm._v(_vm._s(item.surname))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(item.email))]),
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(item.role))]),
                       _vm._v(" "),
@@ -65921,6 +66166,8 @@ var staticRenderFns = [
         _c("th", [_vm._v("First Name")]),
         _vm._v(" "),
         _c("th", [_vm._v("Last Name")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Email")]),
         _vm._v(" "),
         _c("th", [_vm._v("Role")]),
         _vm._v(" "),
@@ -82440,7 +82687,9 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _PostTable_vue_vue_type_template_id_72038a33_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PostTable.vue?vue&type=template&id=72038a33&scoped=true& */ "./resources/js/components/PostTable.vue?vue&type=template&id=72038a33&scoped=true&");
 /* harmony import */ var _PostTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PostTable.vue?vue&type=script&lang=js& */ "./resources/js/components/PostTable.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _PostTable_vue_vue_type_style_index_0_id_72038a33_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PostTable.vue?vue&type=style&index=0&id=72038a33&scoped=true&lang=css& */ "./resources/js/components/PostTable.vue?vue&type=style&index=0&id=72038a33&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
 
 
 
@@ -82448,7 +82697,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _PostTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _PostTable_vue_vue_type_template_id_72038a33_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
   _PostTable_vue_vue_type_template_id_72038a33_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
@@ -82477,6 +82726,22 @@ component.options.__file = "resources/js/components/PostTable.vue"
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PostTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./PostTable.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PostTable.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PostTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/PostTable.vue?vue&type=style&index=0&id=72038a33&scoped=true&lang=css&":
+/*!********************************************************************************************************!*\
+  !*** ./resources/js/components/PostTable.vue?vue&type=style&index=0&id=72038a33&scoped=true&lang=css& ***!
+  \********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PostTable_vue_vue_type_style_index_0_id_72038a33_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./PostTable.vue?vue&type=style&index=0&id=72038a33&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PostTable.vue?vue&type=style&index=0&id=72038a33&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PostTable_vue_vue_type_style_index_0_id_72038a33_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PostTable_vue_vue_type_style_index_0_id_72038a33_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PostTable_vue_vue_type_style_index_0_id_72038a33_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PostTable_vue_vue_type_style_index_0_id_72038a33_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PostTable_vue_vue_type_style_index_0_id_72038a33_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
 
 /***/ }),
 
@@ -83819,6 +84084,11 @@ var Ziggy = {
     },
     "posts.link": {
       "uri": "admin\/posts\/{post}\/link",
+      "methods": ["PATCH"],
+      "domain": null
+    },
+    "posts.valid": {
+      "uri": "admin\/posts\/{post}\/validate",
       "methods": ["PATCH"],
       "domain": null
     },

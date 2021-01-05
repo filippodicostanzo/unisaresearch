@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Author;
 use App\Models\Post;
 use App\Models\Review;
+use App\Models\Status;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,20 +44,8 @@ class PostController extends Controller
     public function index()
     {
         if ($this->user->hasRole('superadministrator|administrator')) {
-            $items = Post::orderBy('id', 'ASC')->get();
+            $items = Post::orderBy('id', 'ASC')->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->get();
 
-            foreach ($items as $item) {
-
-                $postauthor = [];
-                $authors = explode(',', $item['authors']);
-                foreach ($authors as $author) {
-                    array_push($postauthor, Author::where('id', $author)->first());
-                }
-                $item['json_authors'] = json_encode($postauthor, true);
-                $item['category'] = $item->category_fk->name;
-                $item['template'] = $item->template_fk->name;
-
-            }
 
             return view('posts.index', ['items' => $items, 'title' => $this->title]);
         } else if ($this->user->hasRole('supervisor')) {
@@ -304,10 +293,12 @@ class PostController extends Controller
         $item = $post;
         $reviews  = Review::where('post', $item->id)->with('user_fk')->get();
 
-        $itm = Post::with('state_fk', 'category_fk', 'template_fk', 'authors', 'user_fk')->where('id',$post->id)->first();
+        $itm = Post::with('state_fk', 'category_fk', 'template_fk', 'authors', 'user_fk', 'users')->where('id',$post->id)->first();
+
+        $status = Status::all();
 
         if ($this->user->hasRole('superadministrator|administrator')) {
-            return view('posts.valid', ['title' => $this->title, 'item' => $itm, 'reviews'=>$reviews]);
+            return view('posts.valid', ['title' => $this->title, 'item' => $itm, 'reviews'=>$reviews, 'status' => $status]);
         }
 
     }
@@ -323,26 +314,18 @@ class PostController extends Controller
     public function validupdate(Request $request, Post $post)
     {
 
-        $supervisors = $request->input('supervisors');
-        $supervisors_array = $request->input('supervisors');
+        $data = $request['state'];
 
+        $postfind = Post::find($post->id);
 
-        if ($supervisors != null) {
-            $supervisors = implode(',', $supervisors);
+        if($postfind) {
+            $post->state = $data;
+            $res = $post->save();
         }
 
-
-        $data = $request->all();
-        $data['supervisors'] = $supervisors;
-        $data['latest_modify'] = Carbon::now();
-
-
-        $res = Post::find($post->id)->update($data);
-
-        $post->users()->sync($supervisors_array);
         $message = $res ? 'The Post ' . $post->title. ' has been saved' : 'The Post ' . $post->title . ' was not saved';
         session()->flash('message', $message);
-        return redirect()->route('posts.index');
+
     }
 
 

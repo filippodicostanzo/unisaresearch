@@ -1,21 +1,5 @@
 <template>
     <div class="row">
-        <!--   <div class="input-group">
-               <span class="input-group-btn">
-                   <a id="lfm_pdf" data-input="lfm_pdf_input" data-preview="lfm_pdf_preview"
-                      class="btn btn-secondary">
-                       <i class="fa fa-picture-o"></i> Choose
-                   </a>
-               </span>
-               <input type="text" name="cover" class="file-src" id="lfm_pdf_input"/>
-           </div>
-
-           <a id="lfm_" data-input="lfm_pdf_input" data-preview="lfm_pdf_preview"
-              class="btn btn-secondary" v-on:click="openFileManager($event)">
-               <i class="fa fa-picture-o"></i> Choose
-           </a>
-   -->
-
         <div class="col-lg-12 margin-tb">
 
             <div class="card">
@@ -39,6 +23,7 @@
                                 <th>Category</th>
                                 <th>Template</th>
                                 <th>Created</th>
+                                <th>Status</th>
                                 <th class="text-right">Options</th>
                             </tr>
                             </thead>
@@ -52,6 +37,7 @@
                                 <td>{{item.category_fk.name}}</td>
                                 <td>{{item.template_fk.name}}</td>
                                 <td> {{ format(new Date(item.created_at), 'dd/MM/yyyy')  }}</td>
+                                <td><span :style="`background-color:${item.state_fk.color}`" class="post-status">{{item.state_fk.name}}</span></td>
                                 <td class="text-right">
                                     <a class="btn btn-default btn-xs" :href="route('posts.show', {id: item.id})">
                                         <i class="fas fa-eye fa-1x fa-lg" aria-hidden="true"></i>
@@ -67,9 +53,16 @@
                                     </a>
 
                                     <a class="btn btn-default btn-xs"
+                                       :href="route('posts.valid', {id: item.id})" v-if="json_role.name==='superadministrator' || json_role.name==='administrator'">
+                                        <i class="fas fa-clipboard-check fa-1x fa-lg" aria-hidden="true"></i>
+                                    </a>
+
+                                    <a class="btn btn-default btn-xs"
                                        :href="route('posts.edit', {id: item.id})" v-if="json_role.name==='researcher'">
                                         <i class="fas fa-pencil-alt fa-1x fa-lg" aria-hidden="true"></i>
                                     </a>
+
+
                                     <a class="btn btn-danger btn-xs" v-on:click="deleteItem(item.id, $event)" v-if="json_role.name==='superadministrator' || json_role.name==='administrator'">
                                         <i class="fas fa-minus-circle fa-1x fa-lg" aria-hidden="true"></i>
                                     </a>
@@ -185,5 +178,10 @@
 </script>
 
 <style scoped>
+
+    .post-status {
+        padding: 5px 10px;
+        border-radius: 20px;
+    }
 
 </style>
