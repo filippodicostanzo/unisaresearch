@@ -57,20 +57,9 @@ class PostController extends Controller
 
             return view('posts.index', ['items' => $items, 'title' => $this->title]);
         } else {
-            $items = Post::where('created', $this->user->id)->orderBy('id', 'ASC')->get();
 
-            foreach ($items as $item) {
+            $items= Post::where('created', Auth::id())->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->get();
 
-                $postauthor = [];
-                $authors = explode(',', $item['authors']);
-                foreach ($authors as $author) {
-                    array_push($postauthor, Author::where('id', $author)->first());
-                }
-                $item['json_authors'] = json_encode($postauthor, true);
-                $item['category'] = $item->category_fk->name;
-                $item['template'] = $item->template_fk->name;
-
-            }
 
             return view('posts.index', ['items' => $items, 'title' => $this->title]);
         }
@@ -109,6 +98,7 @@ class PostController extends Controller
         $post['authors'] = $authors;
         $post['state'] = 1;
         $post['latest_modify'] = Carbon::now();
+        $post['created'] = Auth::id();
 
 
         $res = $post->save();
@@ -127,19 +117,11 @@ class PostController extends Controller
     public function show(Post $post)
     {
 
-        $item = $post;
+        $item = Post::with('state_fk', 'category_fk', 'template_fk', 'authors', 'user_fk', 'users')->where('id',$post->id)->first();
+        $user = Auth::user();
+        $roles = $user->roles()->first();
 
-        $postauthor = [];
-        $authors = explode(',', $item['authors']);
-        foreach ($authors as $author) {
-            array_push($postauthor, Author::where('id', $author)->first());
-        }
-        $item['json_authors'] = json_encode($postauthor, true);
-        $item['category'] = $post->category_fk->name;
-        $item['template'] = $post->template_fk->name;
-        $item['template_fields'] = $post->template_fk->fields;
-
-        return view('posts.show', ['item' => $item]);
+        return view('posts.show', ['item' => $item, 'role'=>$roles]);
     }
 
     /**

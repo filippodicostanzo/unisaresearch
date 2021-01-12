@@ -7,7 +7,7 @@
                     <h1 class="m0 text-dark card-title text-xl">
                         {{this.title}}
                     </h1>
-                    <div class="card-action">
+                    <div class="card-action" v-if="this.json_role.name==='researcher'">
                         <a :href="route('posts.create')">
                             <i class="fa fa-plus-circle fa-3x fa-fw" aria-hidden="true"></i>
                         </a>
@@ -100,9 +100,10 @@
             return {
                 rendered: {},
                 pages: 0,
-                perpage: 4,
+                perpage: 10,
                 page: 1,
                 renderedPaginate: [],
+                json_role:{},
                 format,
             }
         },

@@ -52,7 +52,7 @@
 
                             <div class="row pt-3">
                                 <div class="col-md-6 col-sm-12"><span
-                                    class="text-bold"> General quality of the paper:</span>
+                                    class="text-bold"> Pertinence on forum session:</span>
 
                                 </div>
                                 <div class="col-md-6 col-sm-12">
@@ -205,7 +205,7 @@
                     .post("/admin/reviews", this.review)
                     .then(response => {
                         if (response.status === 200) {
-                            window.location.href = route('reviews.index')
+                            window.location.href = route('posts.index')
                         }
                     })
                     .catch(error => {

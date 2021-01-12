@@ -8,23 +8,10 @@
 
 @php
 
-    $items = \App\Models\Post::orderBy('id', 'DESC')->limit(20)->get();
-
-               foreach ($items as $item) {
-
-                   $postauthor = [];
-                   $authors = explode(',', $item['authors']);
-                   foreach ($authors as $author) {
-                       array_push($postauthor, \App\Models\Author::where('id',$author)->first());
-                   }
-                   $item['json_authors'] = json_encode($postauthor,true);
-                   $item['category'] = $item->category_fk->name;
-                   $item['template'] = $item->template_fk->name;
-                   $item['state'] = $item->state_fk->name;
-                   $item['color'] = $item->state_fk->color;
-
-
-           }
+    use App\Models\Post;
+    $items=Post::orderBy('id', 'DESC')->limit(20)->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->get();
+    $user=Auth::user();
+    $roles = $user->roles()->first();
 
 @endphp
 
@@ -46,7 +33,7 @@
 
     <div class="row mt-5">
         <div class="col-12">
-            <card-table data="{{$items}}"></card-table>
+            <card-table data="{{$items}}" role="{{$roles}}"></card-table>
         </div>
     </div>
 @stop

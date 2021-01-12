@@ -141,7 +141,7 @@ class ReviewController extends Controller
             $res = $review->save();
         }
 
-        $message = $res ? 'The Author has been saved' : 'The Author was not saved';
+        $message = $res ? 'The Review has been saved' : 'The Review was not saved';
         session()->flash('message', $message);
 
     }

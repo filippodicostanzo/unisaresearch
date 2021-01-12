@@ -29,8 +29,8 @@
 
                         <div class="row pt-3">
                             <div class="col-md-6 col-sm-12"><span class="text-bold">Tags: </span>{{rendered.tags}}</div>
-                            <div class="col-md-6 col-sm-12" v-show="true"><span class="text-bold">Download PDF:</span><a
-                                :href="rendered.pdf" class="btn button" target="_blank">Download</a></div>
+                            <div class="col-md-6 col-sm-12" v-show="true"><span class="text-bold">PDF: </span><a
+                                :href="rendered.pdf" class="btn button btn-primary" target="_blank">Download</a></div>
                         </div>
                     </div>
                 </div>

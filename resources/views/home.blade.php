@@ -3,33 +3,22 @@
 @section('title', 'AdminLTE')
 
 @php
-    use App\Models\Post;use Illuminate\Support\Facades\Auth;
+    use App\Models\Post;
+    use Illuminate\Support\Facades\Auth;
     use Illuminate\Support\Facades\DB;
 
-    $items = \App\Models\Post::orderBy('id', 'DESC')->limit(20)->get();
+$items=Post::orderBy('id', 'DESC')->limit(20)->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->get();
 
-                   foreach ($items as $item) {
+$user=Auth::user();
+$roles = $user->roles()->first();
 
-                       $postauthor = [];
-                       $authors = explode(',', $item['authors']);
-                       foreach ($authors as $author) {
-                           array_push($postauthor, \App\Models\Author::where('id',$author)->first());
-                       }
-                       $item['json_authors'] = json_encode($postauthor,true);
-                       $item['category'] = $item->category_fk->name;
-                       $item['template'] = $item->template_fk->name;
-                       $item['state'] = $item->state_fk->name;
-
-               }
-
-$postresearcher =  \App\Models\Post::where('created', \Illuminate\Support\Facades\Auth::id())->orderBy('id', 'DESC')->limit(20)->get();
+$postresearcher =  Post::orderBy('id', 'DESC')->limit(20)->get();
 //$postsupervisor = Post::with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->get();
-
 
         $postsupervisor = Post::whereHas('users', function($q) {
         $q->where('users.id', Auth::id());
     })
-->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')
+->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->limit(20)
     ->get();
 
 
@@ -55,7 +44,7 @@ $postresearcher =  \App\Models\Post::where('created', \Illuminate\Support\Facade
     @role('supervisor')
     <div class="row mt-5">
         <div class="col-12">
-            <card-table data="{{$postsupervisor}}" ></card-table>
+            <card-table data="{{$postsupervisor}}" role="{{json_encode($roles)}}"></card-table>
         </div>
     </div>
     @endrole
@@ -63,7 +52,7 @@ $postresearcher =  \App\Models\Post::where('created', \Illuminate\Support\Facade
     @role('researcher')
     <div class="row mt-5">
         <div class="col-12">
-            <card-table data="{{$postresearcher}}" ></card-table>
+            <card-table data="{{$postresearcher}}" user="{{$user}}" role="{{json_encode($roles)}}"></card-table>
         </div>
     </div>
     @endrole

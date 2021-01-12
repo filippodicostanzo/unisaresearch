@@ -5,7 +5,7 @@
             <div class="card">
                 <div class="card-header">
                     <h1 class="m0 text-dark card-title text-xl">
-                        {{this.rendered.title}} <span>{{this.role}}</span>
+                        {{this.rendered.title}} <span v-if="rendered.state_fk" :style="`background-color:${rendered.state_fk.color}`">{{rendered.state_fk.name}}</span>
                     </h1>
 
                     <div class="card-action">
@@ -17,30 +17,13 @@
                 </div>
 
                 <div class="card-body no-padding">
-                    <div class="row pt-3">
+                    <div class="row pt-3" v-if="json_role.name!=='supervisor'">
                         <div class="col-md-12 col-sm-12"><span class="text-bold">Authors:</span> <span
-                            v-for="author in authors">{{author.firstname}} {{author.lastname}} - </span></div>
+                            v-for="(author, index) in this.rendered.authors">{{author.firstname}} {{author.lastname}} <span v-if="index+1 != rendered.authors.length">-&nbsp;</span></span></div>
                     </div>
-                    <div class="row pt-3">
-                        <div class="col-md-6 col-sm-12"><span class="text-bold">Category:</span>
-                            {{this.rendered.category}}
-                        </div>
-                        <div class="col-md-6 col-sm-12"><span class="text-bold">Language:</span>
-                            {{this.rendered.language}}
-                        </div>
-                    </div>
-
-                    <div class="row pt-3">
-                        <div class="col-md-12 col-sm-12"><span class="text-bold">Astract:</span></div>
-                        <div class="col-md-12 col-sm-12">
-                            <div v-html="rendered.abstract"></div>
-                        </div>
-                    </div>
-
-                    <div class="row pt-3">
-                        <div class="col-md-12 col-sm-12"><span class="text-bold">Intro:</span></div>
-                        <div class="col-md-12 col-sm-12">
-                            <div v-html="rendered.intro"></div>
+                    <div class="row pt-3" v-if="rendered.category_fk">
+                        <div class="col-md-12 col-sm-12"><span class="text-bold">Category:</span>
+                          {{rendered.category_fk.name}}
                         </div>
                     </div>
 
@@ -52,23 +35,8 @@
                     </div>
 
                     <div class="row pt-3">
-                        <div class="col-md-12 col-sm-12"><span class="text-bold">Ending:</span></div>
-                        <div class="col-md-12 col-sm-12">
-                            <div v-html="rendered.ending"></div>
-                        </div>
-                    </div>
-
-
-                    <div class="row pt-3">
-                        <div class="col-md-12 col-sm-12"><span class="text-bold">Biography:</span></div>
-                        <div class="col-md-12 col-sm-12">
-                            <div v-html="rendered.biography"></div>
-                        </div>
-                    </div>
-
-                    <div class="row pt-3">
                         <div class="col-md-6 col-sm-12"><span class="text-bold">Tags: </span>{{rendered.tags}}</div>
-                        <div class="col-md-6 col-sm-12"  v-show="true"><span class="text-bold">Donwload PDF:</span><a href="#" class="btn button" target="_blank">Download</a> </div>
+                        <div class="col-md-6 col-sm-12"  v-show="true"><span class="text-bold">PDF: </span><a :href="rendered.pdf" class="btn button btn-primary" target="_blank">Download</a> </div>
                     </div>
                 </div>
             </div>
@@ -80,24 +48,22 @@
 
 
     export default {
-        name: "UserShow",
+        name: "PostShow",
         props: ['item', 'role'],
         data: () => {
             return {
                 rendered: {},
                 authors: [],
                 fields: [],
-                nameFields:[]
+                nameFields:[],
+                json_role:{},
             }
         },
         mounted() {
+            this.json_role = JSON.parse(this.role);
             this.rendered = JSON.parse(this.item);
-            this.authors = JSON.parse(this.rendered.json_authors);
-            this.nameFields = JSON.parse(this.rendered.template_fields);
+            this.nameFields = JSON.parse(this.rendered.template_fk.fields);
             this.createFields();
-            console.log(this.rendered);
-            console.log(this.fields);
-            console.log(this.role)
         },
         methods: {
             createFields() {
