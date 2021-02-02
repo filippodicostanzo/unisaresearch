@@ -2240,12 +2240,14 @@ __webpack_require__.r(__webpack_exports__);
       var alt = confirm('Are you sure to delete this item?');
 
       if (alt) {
-        this.$http["delete"]("/admin/authors/" + id).then(function (response) {
+        this.$http.post("/admin/authors/" + id, {
+          _method: 'delete'
+        }).then(function (response) {
           if (response.status === 200) {
             window.location.href = '/admin/authors';
           }
         })["catch"](function (error) {
-          alert(error.message);
+          alert(error.status);
         });
       }
     },
@@ -3048,6 +3050,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3055,7 +3077,7 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     'vue-pagination': vue_pagination_2__WEBPACK_IMPORTED_MODULE_0___default.a
   },
-  props: ['title', 'items', 'role'],
+  props: ['title', 'items', 'role', 'reviews'],
   data: function data() {
     return {
       rendered: {},
@@ -3064,14 +3086,18 @@ __webpack_require__.r(__webpack_exports__);
       page: 1,
       renderedPaginate: [],
       json_role: {},
+      json_reviews: [],
       format: date_fns__WEBPACK_IMPORTED_MODULE_1__["format"]
     };
   },
   mounted: function mounted() {
     this.json_role = JSON.parse(this.role);
+    this.json_reviews = JSON.parse(this.reviews);
     this.rendered = JSON.parse(this.items);
     this.pages = this.rendered.length;
-    this.paginateData(this.page - 1, this.perpage); //jquery('#cover').filemanager('image', '', false);
+    this.paginateData(this.page - 1, this.perpage);
+    this.checkedReviews(this.rendered, this.json_reviews);
+    console.log(this.rendered); //jquery('#cover').filemanager('image', '', false);
   },
   methods: {
     deleteItem: function deleteItem(id, e) {
@@ -3079,7 +3105,10 @@ __webpack_require__.r(__webpack_exports__);
       var alt = confirm('Are you sure to delete this item?');
 
       if (alt) {
-        this.$http["delete"]("/admin/posts/" + id).then(function (response) {
+        this.$http //.delete("/admin/posts/" + id)
+        .post('/admin/posts/' + id, {
+          _method: 'delete'
+        }).then(function (response) {
           if (response.status === 200) {
             window.location.href = '/admin/posts';
           }
@@ -3120,6 +3149,17 @@ __webpack_require__.r(__webpack_exports__);
     },
     paginateData: function paginateData(start, end) {
       this.renderedPaginate = this.rendered.slice(start, end);
+    },
+    checkedReviews: function checkedReviews(items, reviews) {
+      items.map(function (el) {
+        el.users.map(function (us) {
+          reviews.map(function (rew) {
+            if (us.pivot.user_id == rew.supervisor && us.pivot.post_id == rew.post) {
+              us.checked = true;
+            }
+          });
+        });
+      });
     }
   }
 });
@@ -3351,14 +3391,43 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PostValidate.vue",
-  props: ['item', 'reviews', 'title', 'status'],
+  props: ['item', 'reviews', 'title', 'status', 'comment'],
   data: function data() {
     return {
       rendered: {
         template_fk: {},
-        category_fk: {}
+        category_fk: {},
+        comment: ''
       },
       review: {
         post: 0,
@@ -3381,10 +3450,12 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {
+    this.json_comment = JSON.parse(this.comment);
     this.json_reviews = JSON.parse(this.reviews);
     this.json_status = JSON.parse(this.status);
     console.log(this.json_reviews);
     this.rendered = JSON.parse(this.item);
+    this.rendered.comment = this.json_comment.comment;
     console.log(this.rendered);
     this.nameFields = JSON.parse(this.rendered.template_fk.fields);
     this.createFields();
@@ -3605,6 +3676,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ReviewCreate.vue",
   props: ['item', 'oldreview', 'title'],
@@ -3637,11 +3728,13 @@ __webpack_require__.r(__webpack_exports__);
     console.log(this.oldreview);
     console.log(this.rendered);
 
-    if (this.oldreview !== 'null') {
+    if (this.oldreview !== '') {
       this.review = JSON.parse(this.oldreview);
     }
 
+    console.log(this.rendered.template_fk.fields);
     this.nameFields = JSON.parse(this.rendered.template_fk.fields);
+    console.log(this.nameFields);
     this.createFields();
   },
   methods: {
@@ -5038,6 +5131,8 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       console.log('submit!');
+      console.log(this.password);
+      console.log(this.user.password);
       this.$v.$touch();
       console.log(this.key);
 
@@ -60639,6 +60734,7 @@ var render = function() {
                           }
                         ],
                         staticClass: "form__input",
+                        attrs: { disabled: this.source === "edit" },
                         domProps: { value: _vm.$v.author.email.$model },
                         on: {
                           input: function($event) {
@@ -60989,7 +61085,7 @@ var render = function() {
                 _vm._v(" "),
                 _c("th", { attrs: { scope: "col" } }, [_vm._v("Name")]),
                 _vm._v(" "),
-                _vm.json_role.name !== "supervisor"
+                _vm.json_role.name === "researcher"
                   ? _c("th", { attrs: { scope: "col" } }, [_vm._v("Authors")])
                   : _vm._e(),
                 _vm._v(" "),
@@ -61015,7 +61111,7 @@ var render = function() {
                   _vm._v(" "),
                   _c("td", [_vm._v(_vm._s(item.title))]),
                   _vm._v(" "),
-                  _vm.json_role.name !== "supervisor"
+                  _vm.json_role.name == "researcher"
                     ? _c(
                         "td",
                         _vm._l(item.authors, function(author, index) {
@@ -61128,7 +61224,7 @@ var render = function() {
                         )
                       : _vm._e(),
                     _vm._v(" "),
-                    _vm.json_role.name === "researcher"
+                    _vm.json_role.name === "researcher" && item.state == 1
                       ? _c(
                           "a",
                           {
@@ -61953,160 +62049,232 @@ var render = function() {
             { staticClass: "table-responsive" },
             [
               _c("table", { staticClass: "table card-table table-striped" }, [
-                _vm._m(0),
+                _c("thead", [
+                  _c("tr", [
+                    _c("th", [_vm._v("Id")]),
+                    _vm._v(" "),
+                    _c("th", [_vm._v("Title")]),
+                    _vm._v(" "),
+                    _c("th", [_vm._v("Category")]),
+                    _vm._v(" "),
+                    _c("th", [_vm._v("Template")]),
+                    _vm._v(" "),
+                    _c("th", [_vm._v("Created")]),
+                    _vm._v(" "),
+                    _c("th", [_vm._v("Status")]),
+                    _vm._v(" "),
+                    _vm.json_role.name === "superadministrator" ||
+                    _vm.json_role.name === "administrator"
+                      ? _c("th", [
+                          _vm._v(
+                            "\n                                Reviews\n                            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("th", { staticClass: "text-right" }, [_vm._v("Options")])
+                  ])
+                ]),
                 _vm._v(" "),
                 _c(
                   "tbody",
-                  _vm._l(_vm.renderedPaginate, function(item, k) {
-                    return _c("tr", { key: k }, [
-                      _c("td", [_vm._v(_vm._s(item.id))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(item.title))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(item.category_fk.name))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(item.template_fk.name))]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _vm._v(
-                          " " +
-                            _vm._s(
-                              _vm.format(
-                                new Date(item.created_at),
-                                "dd/MM/yyyy"
+                  [
+                    _c("div"),
+                    _vm._v(" "),
+                    _vm._l(_vm.renderedPaginate, function(item, k) {
+                      return _c("tr", { key: k }, [
+                        _c("td", [_vm._v(_vm._s(item.id))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(item.title))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(item.category_fk.name))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(item.template_fk.name))]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _vm._v(
+                            " " +
+                              _vm._s(
+                                _vm.format(
+                                  new Date(item.created_at),
+                                  "dd/MM/yyyy"
+                                )
                               )
-                            )
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _c(
-                          "span",
-                          {
-                            staticClass: "post-status",
-                            style: "background-color:" + item.state_fk.color
-                          },
-                          [_vm._v(_vm._s(item.state_fk.name))]
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "text-right" }, [
-                        _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-default btn-xs",
-                            attrs: {
-                              href: _vm.route("posts.show", { id: item.id })
-                            }
-                          },
-                          [
-                            _c("i", {
-                              staticClass: "fas fa-eye fa-1x fa-lg",
-                              attrs: { "aria-hidden": "true" }
-                            })
-                          ]
-                        ),
+                          )
+                        ]),
                         _vm._v(" "),
-                        _vm.json_role.name === "supervisor"
-                          ? _c(
-                              "a",
-                              {
-                                staticClass: "btn btn-default btn-xs",
-                                attrs: { href: "reviews/create?id=" + item.id }
-                              },
-                              [
-                                _c("i", {
-                                  staticClass: "fas fa-pencil-alt fa-1x fa-lg",
-                                  attrs: { "aria-hidden": "true" }
-                                })
-                              ]
-                            )
-                          : _vm._e(),
+                        _c("td", [
+                          _c(
+                            "span",
+                            {
+                              staticClass: "post-status",
+                              style: "background-color:" + item.state_fk.color
+                            },
+                            [_vm._v(_vm._s(item.state_fk.name))]
+                          )
+                        ]),
                         _vm._v(" "),
                         _vm.json_role.name === "superadministrator" ||
                         _vm.json_role.name === "administrator"
                           ? _c(
-                              "a",
-                              {
-                                staticClass: "btn btn-default btn-xs",
-                                attrs: {
-                                  href: _vm.route("posts.link", { id: item.id })
-                                }
-                              },
-                              [
-                                _c("i", {
-                                  staticClass: "fas fa-link fa-1x fa-lg",
-                                  attrs: { "aria-hidden": "true" }
-                                })
-                              ]
+                              "td",
+                              _vm._l(item.users, function(reviews) {
+                                return _c("span", [
+                                  !reviews.checked
+                                    ? _c("i", {
+                                        staticClass: "far fa-circle",
+                                        attrs: {
+                                          "data-toggle": "tooltip",
+                                          "data-placement": "top",
+                                          title:
+                                            reviews.name + " " + reviews.surname
+                                        }
+                                      })
+                                    : _vm._e(),
+                                  reviews.checked
+                                    ? _c("i", {
+                                        staticClass: "fas fa-circle",
+                                        attrs: {
+                                          "data-toggle": "tooltip",
+                                          "data-placement": "top",
+                                          title:
+                                            reviews.name + " " + reviews.surname
+                                        }
+                                      })
+                                    : _vm._e()
+                                ])
+                              }),
+                              0
                             )
                           : _vm._e(),
                         _vm._v(" "),
-                        _vm.json_role.name === "superadministrator" ||
-                        _vm.json_role.name === "administrator"
-                          ? _c(
-                              "a",
-                              {
-                                staticClass: "btn btn-default btn-xs",
-                                attrs: {
-                                  href: _vm.route("posts.valid", {
-                                    id: item.id
-                                  })
-                                }
-                              },
-                              [
-                                _c("i", {
-                                  staticClass:
-                                    "fas fa-clipboard-check fa-1x fa-lg",
-                                  attrs: { "aria-hidden": "true" }
-                                })
-                              ]
-                            )
-                          : _vm._e(),
-                        _vm._v(" "),
-                        _vm.json_role.name === "researcher"
-                          ? _c(
-                              "a",
-                              {
-                                staticClass: "btn btn-default btn-xs",
-                                attrs: {
-                                  href: _vm.route("posts.edit", { id: item.id })
-                                }
-                              },
-                              [
-                                _c("i", {
-                                  staticClass: "fas fa-pencil-alt fa-1x fa-lg",
-                                  attrs: { "aria-hidden": "true" }
-                                })
-                              ]
-                            )
-                          : _vm._e(),
-                        _vm._v(" "),
-                        _vm.json_role.name === "superadministrator" ||
-                        _vm.json_role.name === "administrator"
-                          ? _c(
-                              "a",
-                              {
-                                staticClass: "btn btn-danger btn-xs",
-                                on: {
-                                  click: function($event) {
-                                    return _vm.deleteItem(item.id, $event)
+                        _c("td", { staticClass: "text-right" }, [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "btn btn-default btn-xs",
+                              attrs: {
+                                href: _vm.route("posts.show", { id: item.id })
+                              }
+                            },
+                            [
+                              _c("i", {
+                                staticClass: "fas fa-eye fa-1x fa-lg",
+                                attrs: { "aria-hidden": "true" }
+                              })
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _vm.json_role.name === "supervisor"
+                            ? _c(
+                                "a",
+                                {
+                                  staticClass: "btn btn-default btn-xs",
+                                  attrs: {
+                                    href: "reviews/create?id=" + item.id
                                   }
-                                }
-                              },
-                              [
-                                _c("i", {
-                                  staticClass:
-                                    "fas fa-minus-circle fa-1x fa-lg",
-                                  attrs: { "aria-hidden": "true" }
-                                })
-                              ]
-                            )
-                          : _vm._e()
+                                },
+                                [
+                                  _c("i", {
+                                    staticClass:
+                                      "fas fa-pencil-alt fa-1x fa-lg",
+                                    attrs: { "aria-hidden": "true" }
+                                  })
+                                ]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.json_role.name === "superadministrator" ||
+                          _vm.json_role.name === "administrator"
+                            ? _c(
+                                "a",
+                                {
+                                  staticClass: "btn btn-default btn-xs",
+                                  attrs: {
+                                    href: _vm.route("posts.link", {
+                                      id: item.id
+                                    })
+                                  }
+                                },
+                                [
+                                  _c("i", {
+                                    staticClass: "fas fa-link fa-1x fa-lg",
+                                    attrs: { "aria-hidden": "true" }
+                                  })
+                                ]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.json_role.name === "superadministrator" ||
+                          _vm.json_role.name === "administrator"
+                            ? _c(
+                                "a",
+                                {
+                                  staticClass: "btn btn-default btn-xs",
+                                  attrs: {
+                                    href: _vm.route("posts.valid", {
+                                      id: item.id
+                                    })
+                                  }
+                                },
+                                [
+                                  _c("i", {
+                                    staticClass:
+                                      "fas fa-clipboard-check fa-1x fa-lg",
+                                    attrs: { "aria-hidden": "true" }
+                                  })
+                                ]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.json_role.name === "researcher" && item.state == 1
+                            ? _c(
+                                "a",
+                                {
+                                  staticClass: "btn btn-default btn-xs",
+                                  attrs: {
+                                    href: _vm.route("posts.edit", {
+                                      id: item.id
+                                    })
+                                  }
+                                },
+                                [
+                                  _c("i", {
+                                    staticClass:
+                                      "fas fa-pencil-alt fa-1x fa-lg",
+                                    attrs: { "aria-hidden": "true" }
+                                  })
+                                ]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.json_role.name === "superadministrator" ||
+                          _vm.json_role.name === "administrator" ||
+                          item.state == 1
+                            ? _c(
+                                "a",
+                                {
+                                  staticClass: "btn btn-danger btn-xs",
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.deleteItem(item.id, $event)
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("i", {
+                                    staticClass:
+                                      "fas fa-minus-circle fa-1x fa-lg",
+                                    attrs: { "aria-hidden": "true" }
+                                  })
+                                ]
+                              )
+                            : _vm._e()
+                        ])
                       ])
-                    ])
-                  }),
-                  0
+                    })
+                  ],
+                  2
                 )
               ]),
               _vm._v(" "),
@@ -62133,30 +62301,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", [_vm._v("Id")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Title")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Category")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Template")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Created")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Status")]),
-        _vm._v(" "),
-        _c("th", { staticClass: "text-right" }, [_vm._v("Options")])
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -62781,6 +62926,42 @@ var render = function() {
           _vm._m(4),
           _vm._v(" "),
           _c("div", { staticClass: "card-body no-padding" }, [
+            _c("div", { staticClass: "row pt-3" }, [
+              _c("div", { staticClass: "col-md-12 col-xs-12 center" }, [
+                _c(
+                  "div",
+                  { staticClass: "form-group" },
+                  [
+                    _c("label", { staticClass: "form__label" }, [
+                      _vm._v("Write a Comment:")
+                    ]),
+                    _vm._v(" "),
+                    _c("ckeditor", {
+                      attrs: { config: _vm.editorConfig },
+                      model: {
+                        value: _vm.rendered.comment,
+                        callback: function($$v) {
+                          _vm.$set(_vm.rendered, "comment", $$v)
+                        },
+                        expression: "rendered.comment"
+                      }
+                    })
+                  ],
+                  1
+                )
+              ])
+            ])
+          ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-lg-12 margin-tb" }, [
+        _c("div", { staticClass: "card" }, [
+          _vm._m(5),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body no-padding" }, [
             _c(
               "form",
               {
@@ -62873,21 +63054,25 @@ var render = function() {
                       _vm._v(" "),
                       _vm.submitStatus === "OK"
                         ? _c("p", { staticClass: "typo__p" }, [
-                            _vm._v("Thanks for your submission!")
+                            _vm._v(
+                              "Thanks for your\n                                        submission!"
+                            )
                           ])
                         : _vm._e(),
                       _vm._v(" "),
                       _vm.submitStatus === "ERROR"
                         ? _c("p", { staticClass: "typo__p" }, [
                             _vm._v(
-                              "Please fill the form\n                                        correctly."
+                              "Please fill\n                                        the form\n                                        correctly."
                             )
                           ])
                         : _vm._e(),
                       _vm._v(" "),
                       _vm.submitStatus === "PENDING"
                         ? _c("p", { staticClass: "typo__p" }, [
-                            _vm._v("Sending...")
+                            _vm._v(
+                              "\n                                        Sending..."
+                            )
                           ])
                         : _vm._e()
                     ])
@@ -62948,6 +63133,16 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header" }, [
       _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
+        _vm._v("\n                        Comment\n                    ")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
         _vm._v("\n                        Status\n                    ")
       ])
     ])
@@ -62976,22 +63171,22 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-lg-12 margin-tb" }, [
-        _c("div", { staticClass: "card" }, [
-          _c("div", { staticClass: "card-header" }, [
-            _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
-              _vm._v(
-                "\n                        " +
-                  _vm._s(this.rendered.title) +
-                  "\n                    "
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "card-body no-padding" },
-            [
+      _c(
+        "div",
+        { staticClass: "col-lg-12 margin-tb" },
+        [
+          _c("div", { staticClass: "card" }, [
+            _c("div", { staticClass: "card-header" }, [
+              _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
+                _vm._v(
+                  "\n                        " +
+                    _vm._s(this.rendered.title) +
+                    "\n                    "
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-body no-padding" }, [
               _c("div", { staticClass: "row pt-3" }, [
                 _c("div", { staticClass: "col-md-6 col-sm-12" }, [
                   _c("span", { staticClass: "text-bold" }, [
@@ -63014,24 +63209,38 @@ var render = function() {
                       "\n                        "
                   )
                 ])
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _vm._l(_vm.nameFields, function(field, index) {
+            return _c("div", { staticClass: "card" }, [
+              _c("div", { staticClass: "card-header" }, [
+                _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(field.name) +
+                      "\n                    "
+                  )
+                ])
               ]),
               _vm._v(" "),
-              _vm._l(_vm.nameFields, function(field, index) {
-                return _c("div", { staticClass: "row pt-3" }, [
-                  _c("div", { staticClass: "col-md-12 col-sm-12" }, [
-                    _c("span", { staticClass: "text-bold" }, [
-                      _vm._v(_vm._s(field.name) + ":")
-                    ])
-                  ]),
-                  _vm._v(" "),
+              _c("div", { staticClass: "card-body no-padding" }, [
+                _c("div", { staticClass: "row pt-3" }, [
                   _c("div", { staticClass: "col-md-12 col-sm-12" }, [
                     _c("div", {
                       domProps: { innerHTML: _vm._s("" + _vm.fields[index]) }
                     })
                   ])
                 ])
-              }),
-              _vm._v(" "),
+              ])
+            ])
+          }),
+          _vm._v(" "),
+          _c("div", { staticClass: "card" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-body no-padding" }, [
               _c("div", { staticClass: "row pt-3" }, [
                 _c("div", { staticClass: "col-md-6 col-sm-12" }, [
                   _c("span", { staticClass: "text-bold" }, [_vm._v("Tags: ")]),
@@ -63053,12 +63262,12 @@ var render = function() {
                   },
                   [
                     _c("span", { staticClass: "text-bold" }, [
-                      _vm._v("Download PDF:")
+                      _vm._v("Download PDF: ")
                     ]),
                     _c(
                       "a",
                       {
-                        staticClass: "btn button",
+                        staticClass: "btn btn-primary",
                         attrs: { href: _vm.rendered.pdf, target: "_blank" }
                       },
                       [_vm._v("Download")]
@@ -63066,17 +63275,17 @@ var render = function() {
                   ]
                 )
               ])
-            ],
-            2
-          )
-        ])
-      ])
+            ])
+          ])
+        ],
+        2
+      )
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-lg-12 margin-tb" }, [
         _c("div", { staticClass: "card" }, [
-          _vm._m(0),
+          _vm._m(1),
           _vm._v(" "),
           _c("div", { staticClass: "card-body no-padding" }, [
             _c(
@@ -63091,7 +63300,7 @@ var render = function() {
               },
               [
                 _c("div", { staticClass: "row pt-3" }, [
-                  _vm._m(1),
+                  _vm._m(2),
                   _vm._v(" "),
                   _c("div", { staticClass: "col-md-6 col-sm-12" }, [
                     _c("fieldset", { staticClass: "rating" }, [
@@ -63215,7 +63424,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "row pt-3" }, [
-                  _vm._m(2),
+                  _vm._m(3),
                   _vm._v(" "),
                   _c("div", { staticClass: "col-md-6 col-sm-12" }, [
                     _c("fieldset", { staticClass: "rating" }, [
@@ -63339,7 +63548,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "row pt-3" }, [
-                  _vm._m(3),
+                  _vm._m(4),
                   _vm._v(" "),
                   _c("div", { staticClass: "col-md-6 col-sm-12" }, [
                     _c("fieldset", { staticClass: "rating" }, [
@@ -63542,6 +63751,16 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
+        _vm._v("\n                        Extra Info\n                    ")
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -81819,7 +82038,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip();
+});
 
 /***/ }),
 

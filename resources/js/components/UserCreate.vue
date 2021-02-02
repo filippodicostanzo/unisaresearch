@@ -433,6 +433,8 @@
 
 
                 console.log('submit!')
+                console.log(this.password);
+                console.log(this.user.password);
                 this.$v.$touch()
                 console.log(this.key);
 

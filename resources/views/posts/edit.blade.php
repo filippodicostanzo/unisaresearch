@@ -11,22 +11,20 @@
 
     $usx = Auth::user();
 
-    if ($usx->hasRole('superadministrator|administrator|supervisor')){
-    $authors = Author::orderBy('id')->get();
-    }
-
-    else {
-    $authors = Author::where('user_id', Auth::id())->get();
-    }
+    $authors= Author::whereHas('users', function($q) {
+                $q->where('users.id', Auth::id());
+            })->get();
     $user = Auth::id();
     $mainaut = User::where('id', $item->created)->first();
     $categories = Category::orderBy('id')->get();
-    $template = Template::where('active', 1)->first();
-    $fields=json_decode($template->fields);
     $aut = explode(",", $item->authors);
     $sup = explode(",", $item->supervisors);
     $statuses = Status::orderBy('id')->get();
     $supervisors = User::whereRoleIs('supervisor')->get();
+    $templates = Template::where('active',1)->orderBy('id')->get();
+    $template = Template::where('id', $item->template )->first();
+    $fields=json_decode($template->fields);
+
 
 
 
@@ -54,6 +52,20 @@
                     @csrf
                     <!-- One "tab" for each step in the form: -->
                         <div class="tab">
+
+                            <div class="form-group">
+                                <div class="col-12"><label>Template</label></div>
+                                <select id="template-selected" name="template" class="form-control">
+                                    <option value="" data-type="">Choose</option>
+                                    @foreach($templates as $template)
+                                        <option value="{{$template->id}}"
+                                                data-type="{{$template->id}}" {{$item->template == $template->id ? 'selected="selected"' : ''}}>
+                                            {{$template->name}}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
                             <div class="form-group">
                                 <label>Title:</label>
                                 {!! Form::text('title', null, array('placeholder' => 'Title','class' => 'form-control',  'oninput'=>"this.className = ''")) !!}
@@ -146,40 +158,14 @@
                         </div>
 
 
-                        <div class="tab">
-                            <div class="form-group">
-                                <label>Abstract</label>
-                                {!! Form::textarea('abstract', null, array('placeholder' => 'Abstract','class' => 'form-control', 'id' => 'abstract', 'rows'=>10, 'cols'=>80)) !!}
-                            </div>
-
-                            <div class="form-group">
-                                <label>Intro</label>
-                                {!! Form::textarea('intro', null, array('placeholder' => 'Intro','class' => 'form-control', 'id' => 'intro', 'rows'=>10, 'cols'=>80)) !!}
-                            </div>
-                        </div>
-
-                        <div class="tab">
+                        <div class="tab" id="textarea-section">
                             @foreach($fields as $key => $value)
                                 <div class="form-group">
                                     <label>{{$value->name}}</label>
-
                                     {!! Form::textarea('field_'.($key+1), null, array('placeholder' => 'Intro','class' => 'form-control', 'id' => 'field_'.($key+1), 'rows'=>10, 'cols'=>80)) !!}
-
                                 </div>
                             @endforeach
 
-                        </div>
-
-                        <div class="tab">
-                            <div class="form-group">
-                                <label>Ending</label>
-                                {!! Form::textarea('ending', null, array('placeholder' => 'Ending','class' => 'form-control', 'id' => 'ending', 'rows'=>10, 'cols'=>80)) !!}
-                            </div>
-
-                            <div class="form-group">
-                                <label>Biography</label>
-                                {!! Form::textarea('biography', null, array('placeholder' => 'Biography','class' => 'form-control', 'id' => 'biography', 'rows'=>10, 'cols'=>80)) !!}
-                            </div>
                         </div>
 
 
@@ -192,6 +178,14 @@
                             </div>
                             <div class="form-group imageUpload">
                                 <label for="image">PDF Document</label>
+                                <div class="note">
+                                    <p class="small">As you know the Forum adopts a double-blind peer review evaluation.
+                                        Amongst other rules, it is expected that abstracts must be anonymous when sent
+                                        to reviewer.
+                                        Consequently, we inform you don’t have to include in your text any direct
+                                        references to to authors. Otherwise, the abstract will not be accepted for
+                                        evaluation.</p>
+                                </div>
                                 <div class="input-group">
                                     <span class="input-group-btn">
                                         <a id="document" data-input="thumbnail" data-preview="cover_preview"
@@ -207,10 +201,14 @@
                             <!--<button type="submit" class="btn btn-primary btn-lg btn-block">
                                 <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
                             </button> -->
+                            <div class="form-group" id="error">
+
+                            </div>
                         </div>
 
                         <div style="display: none" id="loader"><h3>Loading...</h3></div>
                         <div style="overflow:auto;">
+                            <div style="float: left" id="divSubmit"></div>
                             <div style="float:right;">
                                 <button type="button" id="prevBtn" onclick="nextPrev(-1)" class="btn btn-primary">
                                     Previous
@@ -225,13 +223,34 @@
                             <span class="step"></span>
                             <span class="step"></span>
                             <span class="step"></span>
-                            <span class="step"></span>
-                            <span class="step"></span>
                         </div>
 
-                        {{ Form::hidden('template', $template['id']) }}
+                        <div class="modal fade" id="modalSubmit" tabindex="-1" role="dialog" aria-labelledby="modalSubmitLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalSubmitLabel">Submit for Review</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure to <b>submit the paper for review?</b><br> By doing so, you will no longer be able to modify it.
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary" id="confirmSubmit">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         {{ Form::hidden('created', $user) }}
                         {{ Form::hidden('edit', $user) }}
+
+                        @role('researcher')
+                        {{ Form::hidden('state', 1, array('id'=>'post_state')) }}
+                        @endrole
 
 
                         {!! Form::close() !!}
@@ -247,6 +266,8 @@
             src="https://code.jquery.com/jquery-3.4.1.min.js"
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
             crossorigin="anonymous"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
     <script src="../../../ckeditor/ckeditor.js"></script>
 
@@ -274,6 +295,34 @@
             }
 
             $('#document').filemanager('file', '', false);
+
+            $('#template-selected').change(function () {
+                console.log($(this).val());
+
+                $('#template').val($(this).val());
+
+
+                $.getJSON("/templates/" + $(this).val(), function (jsonData) {
+
+                    $('#textarea-section').empty();
+
+
+                    let fields = JSON.parse(jsonData.fields);
+
+                    fields.forEach((value, key) => {
+
+                        $('#textarea-section').append('<div class="form-group"> <label>' + value.name + '</label> <textarea name="field_' + parseInt(key + 1) + '" id="field_' + parseInt(key + 1) + '" rows="10" cols="80" form="regForm"></textarea></div>');
+                        CKEDITOR.replace('field_' + parseInt(key + 1), options);
+                    })
+
+                })
+
+
+                //   $('#textarea-section').append('<textarea name="field_21" id="field_21" rows="10" cols="80" class="form-control"></textarea>')
+
+
+            });
+
         });
 
         var currentTab = 0; // Current tab is set to be the first tab (0)
@@ -290,9 +339,12 @@
                 document.getElementById("prevBtn").style.display = "inline";
             }
             if (n == (x.length - 1)) {
-                document.getElementById("nextBtn").innerHTML = "Submit";
+                document.getElementById("nextBtn").innerHTML = "Save";
+                document.getElementById('error').innerHTML = '';
+                document.getElementById("divSubmit").innerHTML = '<button type="button" id="submBtn" onclick="validateFormReview()" class="btn btn-danger">Submit For Review</button>';
             } else {
                 document.getElementById("nextBtn").innerHTML = "Next";
+                document.getElementById("divSubmit").innerHTML = '';
             }
             // ... and run a function that displays the correct step indicator:
             fixStepIndicator(n)
@@ -327,9 +379,19 @@
             var x, y, i, z, k, valid = true;
             x = document.getElementsByClassName("tab");
             y = x[currentTab].getElementsByTagName("input");
-            z = x[currentTab].getElementsByTagName("textarea");
+            //z = x[currentTab].getElementsByTagName("textarea");
 
+            var template = document.getElementById("template-selected");
+            console.log(template.value);
 
+            if (!template.value) {
+                template.className += ' invalid'
+                valid = false;
+            } else {
+                template.classList.remove('invalid');
+                valid = true;
+            }
+            /*
             var checkbox = document.querySelector('input[name="authors[]"]:checked');
             if (!checkbox) {
                 document.getElementById('author_error').innerHTML = '<p class="text-danger">Please select an author</p>'
@@ -338,8 +400,10 @@
                 document.getElementById('author_error').innerHTML = '';
                 valid = true;
             }
+            */
 
             // A loop that checks every input field in the current tab:
+            /*
             for (i = 0; i < y.length; i++) {
                 // If a field is empty...
                 if (y[i].value == "") {
@@ -349,8 +413,9 @@
                     valid = false;
                 }
 
-            }
+            }*/
 
+            /*
             for (i = 0; i < z.length; i++) {
                 var id = z[i].getAttribute('id');
 
@@ -361,7 +426,7 @@
                 } else {
                     z[i].classList.remove('invalid');
                 }
-            }
+            }*/
             // If the valid status is true, mark the step as finished and valid:
             if (valid) {
                 document.getElementsByClassName("step")[currentTab].className += " finish";
@@ -377,6 +442,59 @@
             }
             //... and adds the "active" class to the current step:
             x[n].className += " active";
+        }
+
+        function validateFormReview() {
+            let input_textarea = document.getElementById('regForm').getElementsByTagName("textarea");
+            let input_field = document.getElementById('regForm').getElementsByTagName("input");
+
+            let valid = true;
+            let i;
+
+            for (i = 0; i < input_textarea.length; i++) {
+                var id = input_textarea[i].getAttribute('id');
+                // If a field is empty...
+                if (CKEDITOR.instances[id].getData() === "") {
+                    console.log('sono nella text area');
+                    // add an "invalid" class to the field:
+                    input_textarea[i].className += " invalid";
+                    // and set the current valid status to false:
+                    valid = false;
+                }
+                else {
+                    input_textarea[i].classList.remove("invalid");
+                }
+
+            }
+
+            for (i = 0; i < input_field.length; i++) {
+                // If a field is empty...
+                if (input_field[i].value === "") {
+                    // add an "invalid" class to the field:
+                    input_field[i].className += " invalid";
+                    // and set the current valid status to false:
+                    valid = false;
+
+                }
+
+                else {
+                    input_field[i].classList.remove("invalid");
+                }
+            }
+
+            if (!valid) {
+                document.getElementById('error').innerHTML = '<p class="text-danger">please fill in all required fields</p>'
+            } else {
+
+                document.getElementById('error').innerHTML = '';
+                document.getElementById('post_state').value = 2;
+                $('#modalSubmit').modal('show');
+                $('#confirmSubmit').on('click', function () {
+                    document.getElementById("regForm").submit();
+                })
+
+            }
+
         }
     </script>
 

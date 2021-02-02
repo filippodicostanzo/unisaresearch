@@ -41,7 +41,7 @@
                             <div class="col-md-4 col-xs-12">
                                 <div class="form-group" :class="{ 'form-group--error': $v.author.email.$error }">
                                     <label class="form__label">Email</label>
-                                    <input class="form__input" v-model="$v.author.email.$model"/>
+                                    <input class="form__input" v-model="$v.author.email.$model" :disabled="this.source ==='edit'" />
                                 </div>
                                 <div class="error" v-if="!$v.author.email.required">Email is required</div>
                                 <div class="error" v-if="!$v.author.email.minLength">Email must have at least

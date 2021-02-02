@@ -93,7 +93,7 @@
                 let alt = confirm('Are you sure to delete this item?');
                 if (alt) {
                     this.$http
-                        .delete("/admin/authors/" + id)
+                        .post("/admin/authors/" + id, {_method: 'delete'})
                         .then(response => {
 
                             if (response.status === 200) {
@@ -101,7 +101,7 @@
                             }
                         })
                         .catch(error => {
-                            alert(error.message)
+                            alert(error.status)
                         });
 
                 }

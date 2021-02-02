@@ -10,7 +10,7 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
-                        <th scope="col" v-if="json_role.name!=='supervisor'">Authors</th>
+                        <th scope="col" v-if="json_role.name==='researcher'">Authors</th>
                         <th scope="col">Date</th>
                         <th scope="col">Status</th>
                         <th scope="col" class="text-right">Options</th>
@@ -20,7 +20,7 @@
                     <tr v-for="(item,k) in renderedPaginate" :key="k">
                         <th scope="row">{{item.id}}</th>
                         <td>{{item.title}}</td>
-                        <td  v-if="json_role.name!=='supervisor'"><span
+                        <td  v-if="json_role.name=='researcher'"><span
                             v-for="(author, index) in item.authors ">{{author.firstname}} {{author.lastname}} <span
                             v-if="index+1 != item.authors.length"> - </span></span></td>
                         <td> {{ format(new Date(item.created_at), 'dd/MM/yyyy') }}</td>
@@ -47,7 +47,7 @@
                             </a>
 
                             <a class="btn btn-default btn-xs"
-                               :href="route('posts.edit', {id: item.id})" v-if="json_role.name==='researcher'">
+                               :href="route('posts.edit', {id: item.id})" v-if="json_role.name==='researcher' && item.state == 1">
                                 <i class="fas fa-pencil-alt fa-1x fa-lg" aria-hidden="true"></i>
                             </a>
 

@@ -35,10 +35,6 @@
 
 
 
-
-
-
-
 @endphp
 
 @section('content')
@@ -188,11 +184,6 @@
                         <div style="text-align:center;margin-top:40px;">
                             <span class="step"></span>
                         </div>
-
-                        {{ Form::hidden('template', $template['id']) }}
-                        {{ Form::hidden('created', $user) }}
-                        {{ Form::hidden('edit', $user) }}
-
 
                         {!! Form::close() !!}
                     </div>

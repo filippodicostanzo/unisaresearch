@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Monarobase\CountryList\CountryListFacade;
 use function PHPUnit\Framework\isEmpty;
 
@@ -169,6 +170,8 @@ class UserController extends Controller
 
 
 
+
+
         $data = $request->all();
 
         if ($data['new_password']) {
@@ -180,6 +183,23 @@ class UserController extends Controller
         }
 
         unset($data['new_password']);
+
+
+
+        /**
+         *
+         * SEND EMAIL WHEN CHANGE USER ROLE
+         *
+         */
+
+        $roles = Role::all()->sortBy('name');
+        $role = $user->getRoles();
+        $role_id = Role::where('name', $role)->first();
+
+
+        if ($role_id['id'] !== $data['role']) {
+                Mail::to($user->email)->send(new \App\Mail\ChangeUserRole($user));
+        }
 
 
         if (isset($user->id)) {
@@ -197,7 +217,9 @@ class UserController extends Controller
         }
 
 
-        $message = $res ? 'User ' . $user->name . ' has been saved' : 'User ' . $user->name . ' was not saved';
+
+
+        $message = $res ? 'User ' . $user->name .' '. $user->surname . ' has been saved' : 'User ' . $user->name .' '. $user->surname .' was not saved';
         session()->flash('message', $message);
     }
 

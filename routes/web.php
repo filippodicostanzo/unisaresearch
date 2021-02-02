@@ -46,8 +46,8 @@ Route::get('/home', function () {
 
 Route::group(['namespace' => 'Auth'], function () {
 
-    Route::get('/posts/{id}', [PostController::class, 'single'])->middleware('verified')->name('posts.single');
-    Route::get('/posts', [PostController::class, 'index'])->middleware('verified');
+    //Route::get('/posts/{id}', [PostController::class, 'single'])->middleware('verified')->name('posts.single');
+   // Route::get('/posts', [PostController::class, 'index'])->middleware('verified');
 
 });
 
@@ -62,7 +62,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => '', 'middl
         return view('guest.index');
     })->middleware('verified');
 
-    //Route::resource('posts', 'PostController');
+    Route::resource('posts', 'PostController');
 });
 
 Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', 'middleware' => ['role:superadministrator']], function () {
@@ -75,7 +75,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
     Route::resource('categories', 'CategoryController');
     Route::resource('authors', 'AuthorController');
     Route::resource('users', 'UserController');
-    Route::resource('posts', 'PostController');
+    //Route::resource('posts', 'PostController');
     Route::resource('statuses', 'StatusController');
     Route::resource('reviews', 'ReviewController');
 
@@ -97,8 +97,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
 
 Route::group(['namespace' => 'Auth', 'middleware' => ['role:user|supervisor|researcher']], function () {
 
-    Route::get('/profile', [ProfileController::class, 'edit'])->middleware('verified');
-    Route::patch('/profile/{id}', [UserController::class, 'update'])->middleware('verified');
+    Route::get('/profile', [ProfileController::class, 'edit']);
+    Route::patch('/profile/{id}', [UserController::class, 'update']);
 
     /*    Route::get('/profile', function () {
         return view('profile.index');

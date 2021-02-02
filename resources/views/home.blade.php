@@ -12,7 +12,7 @@ $items=Post::orderBy('id', 'DESC')->limit(20)->with('state_fk', 'category_fk', '
 $user=Auth::user();
 $roles = $user->roles()->first();
 
-$postresearcher =  Post::orderBy('id', 'DESC')->limit(20)->get();
+$postresearcher =  Post::where('created','=',Auth::id())->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->orderBy('id', 'DESC')->limit(20)->get();
 //$postsupervisor = Post::with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->get();
 
         $postsupervisor = Post::whereHas('users', function($q) {

@@ -172,6 +172,31 @@
                 <div class="card">
                     <div class="card-header">
                         <h1 class="m0 text-dark card-title text-xl">
+                            Comment
+                        </h1>
+                    </div>
+
+                    <div class="card-body no-padding">
+                        <div class="row pt-3">
+                            <div class="col-md-12 col-xs-12 center">
+                                <div class="form-group">
+                                    <label class="form__label">Write a Comment:</label>
+                                    <ckeditor v-model="rendered.comment" :config="editorConfig"></ckeditor>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-lg-12 margin-tb">
+
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="m0 text-dark card-title text-xl">
                             Status
                         </h1>
                     </div>
@@ -197,10 +222,13 @@
                                                 :disabled="submitStatus === 'PENDING'"><i
                                             class="fa fa-floppy-o" aria-hidden="true"></i> Submit!
                                         </button>
-                                        <p class="typo__p" v-if="submitStatus === 'OK'">Thanks for your submission!</p>
-                                        <p class="typo__p" v-if="submitStatus === 'ERROR'">Please fill the form
+                                        <p class="typo__p" v-if="submitStatus === 'OK'">Thanks for your
+                                            submission!</p>
+                                        <p class="typo__p" v-if="submitStatus === 'ERROR'">Please fill
+                                            the form
                                             correctly.</p>
-                                        <p class="typo__p" v-if="submitStatus === 'PENDING'">Sending...</p>
+                                        <p class="typo__p" v-if="submitStatus === 'PENDING'">
+                                            Sending...</p>
 
                                     </div>
                                 </div>
@@ -217,12 +245,13 @@
 <script>
     export default {
         name: "PostValidate.vue",
-        props: ['item', 'reviews', 'title', 'status'],
+        props: ['item', 'reviews', 'title', 'status','comment'],
         data: () => {
             return {
                 rendered: {
                     template_fk: {},
-                    category_fk: {}
+                    category_fk: {},
+                    comment: ''
                 },
                 review: {
                     post: 0,
@@ -246,11 +275,12 @@
         },
 
         mounted() {
-
+            this.json_comment = JSON.parse(this.comment);
             this.json_reviews = JSON.parse(this.reviews);
             this.json_status = JSON.parse(this.status);
             console.log(this.json_reviews);
             this.rendered = JSON.parse(this.item);
+            this.rendered.comment = this.json_comment.comment;
             console.log(this.rendered);
             this.nameFields = JSON.parse(this.rendered.template_fk.fields);
             this.createFields();

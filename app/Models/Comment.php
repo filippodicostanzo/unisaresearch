@@ -5,23 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Author extends Model
+class Comment extends Model
 {
     use HasFactory;
 
-    protected $table = 'authors';
+    protected $table = 'comments';
 
     protected $primaryKey = 'id';
 
     protected $fillable=[
         'id',
-        'firstname',
-        'lastname',
-        'email',
-        'user_id'
+        'comment',
+        'post',
+        'user',
     ];
-    public function users()
-    {
-        return $this->belongsToMany('App\Models\User');
-    }
 }

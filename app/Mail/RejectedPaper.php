@@ -3,23 +3,22 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class AddAuthorEmail extends Mailable
+class RejectedPaper extends Mailable
 {
     use Queueable, SerializesModels;
-    public $details;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($author, $post)
+    public function __construct($details)
     {
-        $this->author = $author;
-        $this->post = $post;
+        $this->details = $details;
     }
 
     /**
@@ -29,7 +28,7 @@ class AddAuthorEmail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Add Author')
-            ->view('mail.addauthor')->with('author', $this->author)->with('post', $this->post);
+        return $this->subject('The Naples Fos')
+            ->view('mail.rejectedpaper')->with('post', $this->details);
     }
 }

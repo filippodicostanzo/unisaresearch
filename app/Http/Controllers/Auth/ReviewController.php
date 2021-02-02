@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class ReviewController extends Controller
 {
@@ -140,6 +141,9 @@ class ReviewController extends Controller
         else {
             $res = $review->save();
         }
+
+        Mail::to('filippo@localidautore.it')->send(new \App\Mail\SupervisorReview($review->user_fk, $review->post_fk));
+
 
         $message = $res ? 'The Review has been saved' : 'The Review was not saved';
         session()->flash('message', $message);

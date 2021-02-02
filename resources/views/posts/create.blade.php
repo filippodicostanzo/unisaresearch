@@ -9,7 +9,9 @@
     use App\Models\Template;
     use Illuminate\Support\Facades\Auth;
 
-    $authors = Author::where('user_id', Auth::id())->get();
+    $authors= Author::whereHas('users', function($q) {
+                $q->where('users.id', Auth::id());
+            })->get();
     $usr = Auth::user();
     $user = Auth::id();
     $categories = Category::orderBy('id')->get();
@@ -53,7 +55,7 @@
 
                             <div class="form-group">
                                 <label>Title:</label>
-                                {!! Form::text('title', null, array('placeholder' => 'Title','class' => 'form-control',  'oninput'=>"this.className = ''")) !!}
+                                {!! Form::text('title', null, array('placeholder' => 'Title','class' => 'form-control',  'oninput'=>"this.className = ''", 'id'=>'title')) !!}
                             </div>
 
                             <div class="form-group row">
@@ -62,7 +64,6 @@
                                 @if(count($authors)==0)
                                     <div>You can add an author from the appropriate section</div>
                                 @endif
-
 
 
                                 <div class="item col-md-6 col-xs-6 mb-3">
@@ -86,29 +87,31 @@
                                     <div id="author_error"></div>
                                 </div>
 
+                                <!--
+                                                                <div class="col-12">
+                                                                    <p class="small">If the author is already present and has not been entered by you
+                                                                        try to search via email  <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample"
+                                                                                                    role="button" aria-expanded="false" aria-controls="collapseExample">
+                                                                            +
+                                                                        </a></p>
+                                                                </div>
 
-                                <div class="col-12">
-                                    <p class="small">If the author is already present and has not been entered by you
-                                        try to search via email  <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample"
-                                                                    role="button" aria-expanded="false" aria-controls="collapseExample">
-                                            +
-                                        </a></p>
-                                </div>
+                                                                <div class="col-12">
 
-                                <div class="col-12">
+                                                                    <div class="collapse" id="collapseExample">
+                                                                        <div class="card card-body">
+                                                                            <input type="text" class="form-controller" id="search"
+                                                                                   placeholder="Search By Email and press Enter" name="search">
 
-                                    <div class="collapse" id="collapseExample">
-                                        <div class="card card-body">
-                                            <input type="text" class="form-controller" id="search"
-                                                   placeholder="Search By Email and press Enter" name="search">
+                                                                        </div>
 
-                                        </div>
-
-                                        <div class="authors-checkbox row"></div>
+                                                                        <div class="authors-checkbox row"></div>
 
 
-                                    </div>
-                                </div>
+                                                                    </div>
+                                                                </div>
+
+                                -->
 
                             </div>
 
@@ -120,6 +123,7 @@
                                     @endforeach
                                 </select>
                             </div>
+
 
                         </div>
 
@@ -150,21 +154,6 @@
 
                         </div>
 
-                        <!--
-                        <div class="tab">
-                            <div class="form-group">
-                                <label>Ending</label>
-                                <textarea name="ending" id="ending" rows="10" cols="80"
-                                          class="form-control"></textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Biography</label>
-                                <textarea name="biography" id="biography" rows="10" cols="80"
-                                          class="form-control"></textarea>
-                            </div>
-                        </div>
--->
 
                         <div class="tab">
                             <div class="form-group">
@@ -175,6 +164,14 @@
                             </div>
                             <div class="form-group imageUpload">
                                 <label for="image">PDF Document</label>
+                                <div class="note">
+                                    <p class="small">As you know the Forum adopts a double-blind peer review evaluation.
+                                        Amongst other rules, it is expected that abstracts must be anonymous when sent
+                                        to reviewer.
+                                        Consequently, we inform you don’t have to include in your text any direct
+                                        references to to authors. Otherwise, the abstract will not be accepted for
+                                        evaluation.</p>
+                                </div>
                                 <div class="input-group">
                                     <span class="input-group-btn">
                                         <a id="document" data-input="thumbnail" data-preview="cover_preview"
@@ -190,17 +187,24 @@
                             <!--<button type="submit" class="btn btn-primary btn-lg btn-block">
                                 <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
                             </button> -->
+
+                            <div class="form-group" id="error">
+
+                            </div>
                         </div>
 
                         <div style="display: none" id="loader"><h3>Loading...</h3></div>
                         <div style="overflow:auto;">
+                            <div style="float: left" id="divSubmit"></div>
                             <div style="float:right;">
                                 <button type="button" id="prevBtn" onclick="nextPrev(-1)" class="btn btn-primary">
                                     Previous
                                 </button>
                                 <button type="button" id="nextBtn" onclick="nextPrev(1)" class="btn btn-primary">Next
                                 </button>
+
                             </div>
+
                         </div>
 
                         <!-- Circles which indicates the steps of the form: -->
@@ -210,10 +214,34 @@
                             <span class="step"></span>
                         </div>
 
+                        <div class="modal fade" id="modalSubmit" tabindex="-1" role="dialog" aria-labelledby="modalSubmitLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalSubmitLabel">Submit for Review</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure to <b>submit the paper for review?</b><br> By doing so, you will no longer be able to modify it.
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary" id="confirmSubmit">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         {{ Form::hidden('template', null, array('id'=>'template')) }}
                         {{ Form::hidden('created', $user) }}
                         {{ Form::hidden('edit', $user) }}
+                        {{ Form::hidden('source', null, array('id'=>'source')) }}
 
+                        @role('researcher')
+                        {{ Form::hidden('state', 1, array('id'=>'post_state')) }}
+                        @endrole
 
                         {!! Form::close() !!}
                     </div>
@@ -228,6 +256,8 @@
             src="https://code.jquery.com/jquery-3.4.1.min.js"
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
             crossorigin="anonymous"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
     <script src="../../ckeditor/ckeditor.js"></script>
 
@@ -323,13 +353,17 @@
                 document.getElementById("prevBtn").style.display = "inline";
             }
             if (n == (x.length - 1)) {
-                document.getElementById("nextBtn").innerHTML = "Submit";
+                document.getElementById("nextBtn").innerHTML = "Save";
+                document.getElementById('error').innerHTML = '';
+                document.getElementById("divSubmit").innerHTML = '<button type="button" id="submBtn" onclick="validateFormReview()" class="btn btn-danger">Submit For Review</button>';
             } else {
                 document.getElementById("nextBtn").innerHTML = "Next";
+                document.getElementById("divSubmit").innerHTML = '';
             }
             // ... and run a function that displays the correct step indicator:
             fixStepIndicator(n)
         }
+
 
         function nextPrev(n) {
             // This function will figure out which tab to display
@@ -346,8 +380,10 @@
                 document.getElementById('loader').style.display = "block";
                 document.getElementById("prevBtn").style.display = "none";
                 document.getElementById("nextBtn").style.display = "none";
+                document.getElementById("submBtn").style.display = "none";
 
                 //...the form gets submitted:
+                document.getElementById('source').value = 'save';
                 document.getElementById("regForm").submit();
                 return false;
             }
@@ -360,18 +396,33 @@
             var x, y, i, z, k, valid = true;
             x = document.getElementsByClassName("tab");
             y = x[currentTab].getElementsByTagName("input");
-            z = x[currentTab].getElementsByTagName("textarea");
+            //z = x[currentTab].getElementsByTagName("textarea");
 
             var template = document.getElementById("template-selected");
+            var title = document.getElementById("title");
             console.log(template.value);
+            console.log(title.value);
 
-            if (!template.value) {
-                template.className += ' invalid'
+            if (!template.value || !title.value) {
                 valid = false;
             } else {
-                template.classList.remove('invalid');
                 valid = true;
             }
+
+            if (!template.value) {
+                template.className += ' invalid';
+            }
+            else {
+                template.classList.remove('invalid');
+            }
+
+            if (!title.value) {
+                title.className += ' invalid';
+            }
+            else {
+                title.classList.remove('invalid');
+            }
+
             /*
             var checkbox = document.querySelector('input[name="authors[]"]:checked');
             if (!checkbox) {
@@ -384,6 +435,7 @@
             */
 
             // A loop that checks every input field in the current tab:
+            /*
             for (i = 0; i < y.length; i++) {
                 // If a field is empty...
                 if (y[i].value == "") {
@@ -393,8 +445,9 @@
                     valid = false;
                 }
 
-            }
+            }*/
 
+            /*
             for (i = 0; i < z.length; i++) {
                 var id = z[i].getAttribute('id');
 
@@ -405,7 +458,7 @@
                 } else {
                     z[i].classList.remove('invalid');
                 }
-            }
+            }*/
             // If the valid status is true, mark the step as finished and valid:
             if (valid) {
                 document.getElementsByClassName("step")[currentTab].className += " finish";
@@ -422,6 +475,63 @@
             //... and adds the "active" class to the current step:
             x[n].className += " active";
         }
+
+        function save() {
+            console.log('save');
+        }
+
+        function validateFormReview() {
+            let input_textarea = document.getElementById('regForm').getElementsByTagName("textarea");
+            let input_field = document.getElementById('regForm').getElementsByTagName("input");
+
+            let valid = true;
+            let i;
+            document.getElementById('source').value = 'submitted';
+
+            for (i = 0; i < input_textarea.length; i++) {
+                var id = input_textarea[i].getAttribute('id');
+                // If a field is empty...
+                if (CKEDITOR.instances[id].getData() === "") {
+
+                    // add an "invalid" class to the field:
+                    input_textarea[i].className += " invalid";
+                    // and set the current valid status to false:
+                    valid = false;
+                }
+                else {
+                    input_textarea[i].classList.remove("invalid");
+                }
+
+            }
+
+            for (i = 0; i < input_field.length; i++) {
+                // If a field is empty...
+                if (input_field[i].value === "") {
+                    // add an "invalid" class to the field:
+                    input_field[i].className += " invalid";
+                    // and set the current valid status to false:
+                    valid = false;
+                }
+
+                else {
+                    input_field[i].classList.remove("invalid");
+                }
+            }
+
+            if (!valid) {
+                document.getElementById('error').innerHTML = '<p class="text-danger">please fill in all required fields</p>'
+            } else {
+                document.getElementById('error').innerHTML = '';
+                document.getElementById('post_state').value = 2;
+                $('#modalSubmit').modal('show');
+                $('#confirmSubmit').on('click', function () {
+                    document.getElementById("regForm").submit();
+                })
+            }
+
+        }
+
+
     </script>
 
 @endpush

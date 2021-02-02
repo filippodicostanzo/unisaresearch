@@ -264,7 +264,7 @@ return [
 
         ['header' => 'users_settings', 'role' => 'superadministrator|administrator', 'key'=>'users_settings' ],
 
-        ['header'=>'posts_settings', 'role'=>'user|researcher|supervisor', 'key'=>'posts_settings'],
+        ['header'=>'posts_settings', 'role'=>'researcher|supervisor', 'key'=>'posts_settings'],
 
 
 
@@ -273,7 +273,15 @@ return [
             'text' => 'profile',
             'url'  => 'admin/profile',
             'icon' => 'fas fa-fw fa-user',
-        ]
+            'role'=>'researcher|supervisor|administrator|superadministrator'
+        ],
+
+        [
+        'text' => 'profile',
+        'url'  => 'profile',
+        'icon' => 'fas fa-fw fa-user',
+        'role'=>'user'
+    ]
     ],
 
     /*

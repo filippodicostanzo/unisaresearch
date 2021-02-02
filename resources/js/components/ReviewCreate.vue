@@ -19,22 +19,42 @@
                                 {{this.rendered.category_fk.name}}
                             </div>
                         </div>
+                    </div>
+                </div>
 
-                        <div class="row pt-3" v-for="(field, index) in nameFields">
-                            <div class="col-md-12 col-sm-12"><span class="text-bold">{{field.name}}:</span></div>
+                <div class="card" v-for="(field, index) in nameFields">
+                    <div class="card-header">
+                        <h1 class="m0 text-dark card-title text-xl">
+                            {{field.name}}
+                        </h1>
+                    </div>
+                    <div class="card-body no-padding">
+                        <div class="row pt-3">
                             <div class="col-md-12 col-sm-12">
                                 <div v-html="`${fields[index]}`"></div>
                             </div>
                         </div>
+                    </div>
+                </div>
 
+
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="m0 text-dark card-title text-xl">
+                            Extra Info
+                        </h1>
+                    </div>
+
+                    <div class="card-body no-padding">
                         <div class="row pt-3">
                             <div class="col-md-6 col-sm-12"><span class="text-bold">Tags: </span>{{rendered.tags}}</div>
-                            <div class="col-md-6 col-sm-12" v-show="true"><span class="text-bold">Download PDF:</span><a
-                                :href="rendered.pdf" class="btn button" target="_blank">Download</a></div>
+                            <div class="col-md-6 col-sm-12" v-show="true"><span class="text-bold">Download PDF: </span><a
+                                :href="rendered.pdf" class="btn btn-primary" target="_blank">Download</a></div>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
 
         <div class="row">
@@ -185,12 +205,15 @@
             console.log(this.rendered);
 
 
-            if (this.oldreview!=='null') {
+            if (this.oldreview !== '') {
                 this.review = JSON.parse(this.oldreview);
             }
 
 
+            console.log(this.rendered.template_fk.fields);
             this.nameFields = JSON.parse(this.rendered.template_fk.fields);
+
+            console.log(this.nameFields);
 
             this.createFields();
         },

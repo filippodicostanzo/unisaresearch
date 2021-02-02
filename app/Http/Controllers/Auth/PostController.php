@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Author;
+use App\Models\Comment;
 use App\Models\Post;
 use App\Models\Review;
 use App\Models\Status;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class PostController extends Controller
 {
@@ -43,25 +44,23 @@ class PostController extends Controller
      */
     public function index()
     {
+        $reviews = Review::all();
+
         if ($this->user->hasRole('superadministrator|administrator')) {
-            $items = Post::orderBy('id', 'ASC')->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->get();
-
-
-            return view('posts.index', ['items' => $items, 'title' => $this->title]);
+            $items = Post::where('state', '!=', 1)->orderBy('id', 'ASC')->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->get();
+            return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews]);
         } else if ($this->user->hasRole('supervisor')) {
-            $items= Post::whereHas('users', function($q) {
+            $items = Post::whereHas('users', function ($q) {
                 $q->where('users.id', Auth::id());
             })
                 ->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')
                 ->get();
 
-            return view('posts.index', ['items' => $items, 'title' => $this->title]);
+            return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews]);
         } else {
 
-            $items= Post::where('created', Auth::id())->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->get();
-
-
-            return view('posts.index', ['items' => $items, 'title' => $this->title]);
+            $items = Post::where('created', Auth::id())->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->get();
+            return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews]);
         }
     }
 
@@ -84,7 +83,6 @@ class PostController extends Controller
     public function store(Request $request)
     {
 
-
         $post = new Post($request->all());
 
         $authors_array = $request->input('authors');
@@ -94,15 +92,31 @@ class PostController extends Controller
             $authors = implode(',', $authors);
         }
 
-
         $post['authors'] = $authors;
-        $post['state'] = 1;
         $post['latest_modify'] = Carbon::now();
         $post['created'] = Auth::id();
 
 
         $res = $post->save();
-        $post->authors()->sync($authors_array);
+
+        if ($res) {
+            $post->authors()->sync($authors_array);
+        }
+
+
+        // SEND MAIL FOR PAPER SUBMITTED
+        $authors_post = Post::where('id',$post->id)->with('authors')->first();
+        $auts = $authors_post->authors()->get();
+        $authors_post->authors_fk = $auts;
+
+        // SEND MAIL FOR PAPER SUBMITTED
+        if ($request->state === '2') {
+            Mail::to('filippo@localidautore.it')->send(new \App\Mail\NewPaperEmail($post));
+            foreach ($auts as $aut) {
+                Mail::to($aut->email)->send(new \App\Mail\AddAuthorEmail($aut, $authors_post));
+            }
+        }
+
         $message = $res ? 'The Post ' . $post->title . ' has been saved' : 'The Post ' . $post->title . ' was not saved';
         session()->flash('message', $message);
         return redirect()->route('posts.index');
@@ -117,11 +131,11 @@ class PostController extends Controller
     public function show(Post $post)
     {
 
-        $item = Post::with('state_fk', 'category_fk', 'template_fk', 'authors', 'user_fk', 'users')->where('id',$post->id)->first();
+        $item = Post::with('state_fk', 'category_fk', 'template_fk', 'authors', 'user_fk', 'users')->where('id', $post->id)->first();
         $user = Auth::user();
         $roles = $user->roles()->first();
 
-        return view('posts.show', ['item' => $item, 'role'=>$roles]);
+        return view('posts.show', ['item' => $item, 'role' => $roles]);
     }
 
     /**
@@ -137,7 +151,8 @@ class PostController extends Controller
         if ($this->user->hasRole('superadministrator|administrator')) {
             return view('posts.edit', ['title' => $this->title, 'item' => $item]);
         } else {
-            if ($item->created === Auth::id()) {
+            if ($item->created === Auth::id() && $item->state === '1') {
+
 
                 return view('posts.edit', ['title' => $this->title, 'item' => $item]);
             }
@@ -164,12 +179,11 @@ class PostController extends Controller
     {
 
         $authors = $request->input('authors');
-
+        $authors_array = $request->input('authors');
 
         if ($authors != null) {
             $authors = implode(',', $authors);
         }
-
 
 
         $data = $request->all();
@@ -177,6 +191,26 @@ class PostController extends Controller
         $data['latest_modify'] = Carbon::now();
 
         $res = Post::find($post->id)->update($data);
+
+        if ($res) {
+            $post->authors()->sync($authors_array);
+        }
+
+
+        $authors_post = Post::where('id',$post->id)->with('authors')->first();
+        $auts = $authors_post->authors()->get();
+        $authors_post->authors_fk = $auts;
+
+        // SEND MAIL FOR PAPER SUBMITTED
+        if ($data['state'] === '2') {
+            Mail::to('filippo@localidautore.it')->send(new \App\Mail\NewPaperEmail($post));
+            foreach ($auts as $aut) {
+                Mail::to($aut->email)->send(new \App\Mail\AddAuthorEmail($aut, $authors_post));
+            }
+        }
+
+
+
         $message = $res ? 'The Post ' . $data['title'] . ' has been saved' : 'The Post ' . $data['title'] . ' was not saved';
         session()->flash('message', $message);
         return redirect()->route('posts.index');
@@ -190,7 +224,14 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+
+        if (($this->user->hasRole('superadministrator|administrator')) || ($post['created'] === Auth::id())) {
+            $res = $post->delete();
+            $message = $res ? 'The Post ' . $post->title . ' has been deleted' : 'The Post ' . $post->title . ' was not deleted';
+            session()->flash('message', $message);
+        } else {
+            return abort(403);
+        }
     }
 
 
@@ -222,7 +263,7 @@ class PostController extends Controller
 
         $item = $post;
 
-        $itm = Post::with('state_fk', 'category_fk', 'template_fk', 'authors', 'user_fk')->where('id',$post->id)->first();
+        $itm = Post::with('state_fk', 'category_fk', 'template_fk', 'authors', 'user_fk')->where('id', $post->id)->first();
 
         if ($this->user->hasRole('superadministrator|administrator')) {
             return view('posts.link', ['title' => $this->title, 'item' => $itm]);
@@ -256,9 +297,19 @@ class PostController extends Controller
 
 
         $res = Post::find($post->id)->update($data);
-
         $post->users()->sync($supervisors_array);
-        $message = $res ? 'The Post ' . $post->title. ' has been saved' : 'The Post ' . $post->title . ' was not saved';
+
+
+        //SEND EMAIL TO SUPERVISORS & ADMIN
+        $supervisors_post = Post::where('id',$post->id)->with('users')->first();
+        if ($data['state'] === '3') {
+            Mail::to($post->user_fk->email)->send(new \App\Mail\ReviewPaper($post));
+            foreach ($supervisors_post->users as $supervisor) {
+                Mail::to($supervisor->email)->send(new \App\Mail\SupervisorPaper($supervisor, $supervisors_post));
+            }
+        }
+
+        $message = $res ? 'The Post ' . $post->title . ' has been saved' : 'The Post ' . $post->title . ' was not saved';
         session()->flash('message', $message);
         return redirect()->route('posts.index');
     }
@@ -273,14 +324,15 @@ class PostController extends Controller
     {
 
         $item = $post;
-        $reviews  = Review::where('post', $item->id)->with('user_fk')->get();
+        $reviews = Review::where('post', $item->id)->with('user_fk')->get();
 
-        $itm = Post::with('state_fk', 'category_fk', 'template_fk', 'authors', 'user_fk', 'users')->where('id',$post->id)->first();
+        $itm = Post::with('state_fk', 'category_fk', 'template_fk', 'authors', 'user_fk', 'users')->where('id', $post->id)->first();
+        $comment = Comment::where('post_id', $post->id)->first();
 
         $status = Status::all();
 
         if ($this->user->hasRole('superadministrator|administrator')) {
-            return view('posts.valid', ['title' => $this->title, 'item' => $itm, 'reviews'=>$reviews, 'status' => $status]);
+            return view('posts.valid', ['title' => $this->title, 'item' => $itm, 'comment' => $comment, 'reviews' => $reviews, 'status' => $status]);
         }
 
     }
@@ -300,16 +352,32 @@ class PostController extends Controller
 
         $postfind = Post::find($post->id);
 
-        if($postfind) {
+        if ($postfind) {
             $post->state = $data;
             $res = $post->save();
+
+            $comment = new Comment();
+            $comment['comment'] = $request['comment'];
+            $comment['user_id'] = Auth::id();
+            $comment['post_id'] = $post->id;
+            $comment->save();
         }
 
-        $message = $res ? 'The Post ' . $post->title. ' has been saved' : 'The Post ' . $post->title . ' was not saved';
+
+        //ACCEPTED PAPER
+        if ($request['state'] == '4') {
+            Mail::to($post->user_fk->email)->send(new \App\Mail\AcceptedPaper($post));
+        }
+
+        //REJECTED PAPER
+        if ($request['state'] == '5') {
+            Mail::to($post->user_fk->email)->send(new \App\Mail\RejectedPaper($post));
+        }
+
+        $message = $res ? 'The Post ' . $post->title . ' has been saved' : 'The Post ' . $post->title . ' was not saved';
         session()->flash('message', $message);
 
     }
-
 
 
 }

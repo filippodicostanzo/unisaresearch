@@ -23,8 +23,8 @@ class CreatePostsTable extends Migration
             $table->bigInteger('edit')->unsigned();
             $table->string('state');
             $table->bigInteger('supervisor')->unsigned()->nullable();
-            $table->longText('tags');
-            $table->longText('pdf');
+            $table->longText('tags')->nullable();
+            $table->longText('pdf')->nullable();
             $table->longText('field_1')->nullable();
             $table->longText('field_2')->nullable();
             $table->longText('field_3')->nullable();

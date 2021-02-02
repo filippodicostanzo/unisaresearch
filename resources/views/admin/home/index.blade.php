@@ -9,7 +9,7 @@
 @php
 
     use App\Models\Post;
-    $items=Post::orderBy('id', 'DESC')->limit(20)->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->get();
+    $items=Post::where('state','!=', '1')->orderBy('id', 'DESC')->limit(20)->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->get();
     $user=Auth::user();
     $roles = $user->roles()->first();
 

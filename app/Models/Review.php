@@ -27,4 +27,8 @@ class Review extends Model
         return $this->belongsTo('App\Models\User', 'supervisor', 'id');
     }
 
+    public function post_fk() {
+        return $this->belongsTo('App\Models\Post', 'post', 'id');
+    }
+
 }

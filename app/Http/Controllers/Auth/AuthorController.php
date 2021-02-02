@@ -4,12 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Author;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
 
 class AuthorController extends Controller
 {
@@ -46,7 +44,10 @@ class AuthorController extends Controller
             $items = Author::orderBy('id', 'ASC')->get();
             return view('authors.index', ['items' => $items, 'title' => $this->title]);
         } else {
-            $items = Author::where('user_id', $this->user->id)->orderBy('id', 'ASC')->get();
+            $items= Author::whereHas('users', function($q) {
+                $q->where('users.id', Auth::id());
+            })->orderBy('id', 'ASC')->get();
+
             return view('authors.index', ['items' => $items, 'title' => $this->title]);
         }
 
@@ -91,20 +92,40 @@ class AuthorController extends Controller
         $this->validate($request, [
             'firstname' => 'required',
             'lastname' => 'required',
-            'email' => 'required|unique:authors'
+            'email' => 'required'
         ]);
 
-        $author = new Author($request->all());
-        $author['user_id'] = Auth::id();
 
-        $res = $author->save();
+        /**
+         * CHECK IS AUTHOR IS PRESENT
+         *
+         */
 
-        if ($res) {
-            Mail::to($author->email)->send(new \App\Mail\AddAuthorEmail($author));
+        $email = $request['email'];
+        $author_find = Author::where('email', '=', $email)->first();
+
+        if ($author_find) {
+            $author_find->users()->sync(Auth::id(), false);
+            $message = 'The author is already present. You can enter him as the author of your papers but you cannot change his name and surname';
+            session()->flash('message', $message);
+        } else {
+
+
+            $author = new Author($request->all());
+            $author['user_id'] = Auth::id();
+
+            $res = $author->save();
+
+            $author->users()->sync(Auth::id());
+
+            if ($res) {
+                Mail::to($author->email)->send(new \App\Mail\AddAuthorEmail($author));
+            }
+
+            $message = $res ? 'The Author ' . $author->name . ' has been saved' : 'The Author ' . $author->name . ' was not saved';
+            session()->flash('message', $message);
+            session()->flash('alert-class', 'alert-success');
         }
-
-        $message = $res ? 'The Author ' . $author->name . ' has been saved' : 'The Author ' . $author->name . ' was not saved';
-        session()->flash('message', $message);
         //}
     }
 
@@ -116,8 +137,29 @@ class AuthorController extends Controller
      */
     public function show(Author $author)
     {
-        $item = $author;
-        return view('authors.show', ['item' => $item]);
+
+        if ($this->user->hasRole('superadministrator|administrator')) {
+            $item = $author;
+            return view('authors.show', ['item' => $item]);
+        }
+
+        else {
+            $items= Author::whereHas('users', function($q) {
+                $q->where('users.id', Auth::id());
+            })->orderBy('id', 'ASC')->get()->toArray();
+
+
+
+            if (in_array($author->toArray(), $items)) {
+                $item = $author;
+                return view('authors.show', ['item' => $item]);
+            }
+            else {
+                abort( 403) ;
+            }
+        }
+
+
     }
 
     /**
@@ -156,7 +198,7 @@ class AuthorController extends Controller
         $this->validate($request, [
             'firstname' => 'required',
             'lastname' => 'required',
-            'email' => 'required|unique:authors'
+            'email' => 'required'
         ]);
 
 
@@ -174,7 +216,38 @@ class AuthorController extends Controller
      */
     public function destroy(Author $author)
     {
-        //
+        if ($this->user->hasRole('superadministrator|administrator')) {
+
+            try {
+                $res = $author->delete();
+                $message = $res ? 'The Author ' . $author->firstname . ' ' .$author->lastname. ' has been deleted' : 'The Author ' . $author->firstname . ' ' .$author->lastname. ' was not deleted';
+                session()->flash('message', $message);
+                session()->flash('alert-class', 'alert-success');
+            } catch (\Exception $e) {
+                if ($e->getCode() =='23000') {
+                    $message = 'The author cannot be deleted because he is present in the list of authors inserted by the researchers';
+                    session()->flash('message', $message);
+                    session()->flash('alert-class', 'alert-danger');
+                }
+            }
+        }
+        else {
+            $items= Author::whereHas('users', function($q) {
+                $q->where('users.id', Auth::id());
+            })->orderBy('id', 'ASC')->get()->toArray();
+
+
+
+            if (in_array($author->toArray(), $items)) {
+                $author->users()->detach(Auth::id());
+                $message = 'The Author ' . $author->firstname . ' ' .$author->lastname. ' has been deleted';
+                session()->flash('message', $message);
+            }
+            else {
+                abort( 403) ;
+            }
+        }
+
     }
 
     /**
@@ -192,7 +265,7 @@ class AuthorController extends Controller
             $output = "";
             $authors = DB::table('authors')->where('email', '=', $request->search)->get();
 
-            if (count($authors)>0) {
+            if (count($authors) > 0) {
                 foreach ($authors as $key => $author) {
 
                     $output .= '<div class="item col-md-6 col-xs-6 mb-3">
