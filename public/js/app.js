@@ -3070,6 +3070,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3077,7 +3093,7 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     'vue-pagination': vue_pagination_2__WEBPACK_IMPORTED_MODULE_0___default.a
   },
-  props: ['title', 'items', 'role', 'reviews'],
+  props: ['title', 'items', 'role', 'reviews', 'user'],
   data: function data() {
     return {
       rendered: {},
@@ -3087,13 +3103,16 @@ __webpack_require__.r(__webpack_exports__);
       renderedPaginate: [],
       json_role: {},
       json_reviews: [],
+      json_user: {},
       format: date_fns__WEBPACK_IMPORTED_MODULE_1__["format"]
     };
   },
   mounted: function mounted() {
     this.json_role = JSON.parse(this.role);
     this.json_reviews = JSON.parse(this.reviews);
+    this.json_user = JSON.parse(this.user);
     this.rendered = JSON.parse(this.items);
+    console.log(this.json_user);
     this.pages = this.rendered.length;
     this.paginateData(this.page - 1, this.perpage);
     this.checkedReviews(this.rendered, this.json_reviews);
@@ -62064,7 +62083,8 @@ var render = function() {
                     _c("th", [_vm._v("Status")]),
                     _vm._v(" "),
                     _vm.json_role.name === "superadministrator" ||
-                    _vm.json_role.name === "administrator"
+                    _vm.json_role.name === "administrator" ||
+                    _vm.json_role.name === "supervisor"
                       ? _c("th", [
                           _vm._v(
                             "\n                                Reviews\n                            "
@@ -62131,6 +62151,7 @@ var render = function() {
                                         }
                                       })
                                     : _vm._e(),
+                                  _vm._v(" "),
                                   reviews.checked
                                     ? _c("i", {
                                         staticClass: "fas fa-circle",
@@ -62141,6 +62162,48 @@ var render = function() {
                                             reviews.name + " " + reviews.surname
                                         }
                                       })
+                                    : _vm._e()
+                                ])
+                              }),
+                              0
+                            )
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.json_role.name === "supervisor"
+                          ? _c(
+                              "td",
+                              _vm._l(item.users, function(reviews) {
+                                return _c("span", [
+                                  reviews.id === _vm.json_user.id
+                                    ? _c("span", [
+                                        !reviews.checked
+                                          ? _c("i", {
+                                              staticClass: "far fa-circle",
+                                              attrs: {
+                                                "data-toggle": "tooltip",
+                                                "data-placement": "top",
+                                                title:
+                                                  reviews.name +
+                                                  " " +
+                                                  reviews.surname
+                                              }
+                                            })
+                                          : _vm._e(),
+                                        _vm._v(" "),
+                                        reviews.checked
+                                          ? _c("i", {
+                                              staticClass: "fas fa-circle",
+                                              attrs: {
+                                                "data-toggle": "tooltip",
+                                                "data-placement": "top",
+                                                title:
+                                                  reviews.name +
+                                                  " " +
+                                                  reviews.surname
+                                              }
+                                            })
+                                          : _vm._e()
+                                      ])
                                     : _vm._e()
                                 ])
                               }),
@@ -62165,7 +62228,7 @@ var render = function() {
                             ]
                           ),
                           _vm._v(" "),
-                          _vm.json_role.name === "supervisor"
+                          _vm.json_role.name === "supervisor" && item.state == 3
                             ? _c(
                                 "a",
                                 {

@@ -17,7 +17,7 @@
 
     @endphp
 
-    <post-table title="{{$title}}" items="{{json_encode($items)}}" role="{{json_encode($roles)}}" reviews="{{json_encode($reviews)}}"></post-table>
+    <post-table title="{{$title}}" items="{{json_encode($items)}}" role="{{json_encode($roles)}}" reviews="{{json_encode($reviews)}}" user="{{json_encode($user)}}"></post-table>
 
 @stop
 @push('js')

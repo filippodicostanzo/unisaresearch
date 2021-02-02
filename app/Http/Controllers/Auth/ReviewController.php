@@ -60,11 +60,17 @@ class ReviewController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create(Request $request)
+
     {
         if ($request['id'] != null) {
 
 
             $item = Post::where('id',$request['id'])->with('state_fk', 'category_fk', 'template_fk', 'authors')->first();
+
+            if ($item->state != '3') {
+                abort(403);
+            }
+
 
             $authors = $item->authors;
             $array_authors=[];

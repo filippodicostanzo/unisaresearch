@@ -24,7 +24,7 @@
                                 <th>Template</th>
                                 <th>Created</th>
                                 <th>Status</th>
-                                <th v-if="json_role.name==='superadministrator' || json_role.name==='administrator'">
+                                <th v-if="json_role.name==='superadministrator' || json_role.name==='administrator'|| json_role.name==='supervisor'">
                                     Reviews
                                 </th>
                                 <th class="text-right">Options</th>
@@ -47,19 +47,35 @@
                                 </td>
                                 <td v-if="json_role.name==='superadministrator' || json_role.name==='administrator'">
 
-                                    <span v-for="reviews in item.users"><i class="far fa-circle" v-if="!reviews.checked"
-                                                                           data-toggle="tooltip" data-placement="top"
-                                                                           :title="reviews.name+' '+ reviews.surname"></i><i
-                                        class="fas fa-circle" v-if="reviews.checked" data-toggle="tooltip"
-                                        data-placement="top" :title="reviews.name+' '+ reviews.surname"></i></span>
+                                    <span v-for="reviews in item.users">
+
+                                        <i class="far fa-circle" v-if="!reviews.checked"
+                                           data-toggle="tooltip" data-placement="top"
+                                           :title="reviews.name+' '+ reviews.surname"></i>
+                                        <i class="fas fa-circle" v-if="reviews.checked" data-toggle="tooltip"
+                                           data-placement="top" :title="reviews.name+' '+ reviews.surname"></i></span>
                                 </td>
+
+                                <td v-if="json_role.name==='supervisor'">
+
+                                    <span v-for="reviews in item.users">
+                                        <span v-if="reviews.id === json_user.id">
+                                        <i class="far fa-circle" v-if="!reviews.checked"
+                                           data-toggle="tooltip" data-placement="top"
+                                           :title="reviews.name+' '+ reviews.surname"></i>
+                                        <i
+                                            class="fas fa-circle" v-if="reviews.checked" data-toggle="tooltip"
+                                            data-placement="top" :title="reviews.name+' '+ reviews.surname"></i></span>
+                                    </span>
+                                </td>
+
                                 <td class="text-right">
                                     <a class="btn btn-default btn-xs" :href="route('posts.show', {id: item.id})">
                                         <i class="fas fa-eye fa-1x fa-lg" aria-hidden="true"></i>
                                     </a>
 
                                     <a class="btn btn-default btn-xs" :href="'reviews/create?id='+ item.id"
-                                       v-if="json_role.name==='supervisor'">
+                                       v-if="json_role.name==='supervisor' && item.state ==3">
                                         <i class="fas fa-pencil-alt fa-1x fa-lg" aria-hidden="true"></i>
                                     </a>
 
@@ -115,7 +131,7 @@
         components: {
             'vue-pagination': Pagination
         },
-        props: ['title', 'items', 'role', 'reviews'],
+        props: ['title', 'items', 'role', 'reviews', 'user'],
         data: () => {
             return {
                 rendered: {},
@@ -125,6 +141,7 @@
                 renderedPaginate: [],
                 json_role: {},
                 json_reviews: [],
+                json_user: {},
                 format,
             }
         },
@@ -132,7 +149,9 @@
 
             this.json_role = JSON.parse(this.role);
             this.json_reviews = JSON.parse(this.reviews);
+            this.json_user = JSON.parse(this.user);
             this.rendered = JSON.parse(this.items);
+            console.log(this.json_user);
             this.pages = this.rendered.length;
             this.paginateData(this.page - 1, this.perpage);
             this.checkedReviews(this.rendered, this.json_reviews)
