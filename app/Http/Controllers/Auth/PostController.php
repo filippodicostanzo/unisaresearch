@@ -34,7 +34,7 @@ class PostController extends Controller
             return $next($request);
         });
 
-        $this->title = 'posts';
+        $this->title = 'papers';
     }
 
     /**
@@ -356,11 +356,20 @@ class PostController extends Controller
             $post->state = $data;
             $res = $post->save();
 
-            $comment = new Comment();
-            $comment['comment'] = $request['comment'];
-            $comment['user_id'] = Auth::id();
-            $comment['post_id'] = $post->id;
-            $comment->save();
+            $post_comment = Comment::where('post_id', $post->id)->first();
+
+            if ($post_comment) {
+                $cmt = Comment::find($post_comment->id);
+                $cmt->comment = $request['comment'];
+                $cmt->save();
+            }
+            else {
+                $comment = new Comment();
+                $comment['comment'] = $request['comment'];
+                $comment['user_id'] = Auth::id();
+                $comment['post_id'] = $post->id;
+                $comment->save();
+            }
         }
 
 

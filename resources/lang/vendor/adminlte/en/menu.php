@@ -21,6 +21,7 @@ return [
     'categories'                    => 'Categories',
     'statuses'                      => 'Status',
     'posts'                         => 'Posts',
+    'papers'                        => 'Papers',
     'users'                         => 'Users',
     'authors'                       => 'Authors',
     'users_settings'                => 'USERS SETTINGS',

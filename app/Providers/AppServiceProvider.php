@@ -71,7 +71,7 @@ class AppServiceProvider extends ServiceProvider
                     'label_color' => 'success',
                 ],
                 [
-                    'text' => 'posts',
+                    'text' => 'papers',
                     'url' => 'admin/posts',
                     'icon' => 'fas fa-fw fa-file',
                     'label' => Post::count(),
