@@ -118,9 +118,6 @@ class AuthorController extends Controller
 
             $author->users()->sync(Auth::id());
 
-            if ($res) {
-                Mail::to($author->email)->send(new \App\Mail\AddAuthorEmail($author));
-            }
 
             $message = $res ? 'The Author ' . $author->name . ' has been saved' : 'The Author ' . $author->name . ' was not saved';
             session()->flash('message', $message);

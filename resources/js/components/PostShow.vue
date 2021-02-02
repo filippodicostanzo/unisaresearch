@@ -5,7 +5,8 @@
             <div class="card">
                 <div class="card-header">
                     <h1 class="m0 text-dark card-title text-xl">
-                        {{this.rendered.title}} <span v-if="rendered.state_fk" :style="`background-color:${rendered.state_fk.color}`">{{rendered.state_fk.name}}</span>
+                        {{this.rendered.title}} <span v-if="rendered.state_fk"
+                                                      :style="`background-color:${rendered.state_fk.color}`">{{rendered.state_fk.name}}</span>
                     </h1>
 
                     <div class="card-action">
@@ -16,27 +17,57 @@
 
                 </div>
 
+
                 <div class="card-body no-padding">
-                    <div class="row pt-3" v-if="json_role.name!=='supervisor'">
-                        <div class="col-md-12 col-sm-12"><span class="text-bold">Authors:</span> <span
-                            v-for="(author, index) in this.rendered.authors">{{author.firstname}} {{author.lastname}} <span v-if="index+1 != rendered.authors.length">-&nbsp;</span></span></div>
-                    </div>
-                    <div class="row pt-3" v-if="rendered.category_fk">
-                        <div class="col-md-12 col-sm-12"><span class="text-bold">Category:</span>
-                          {{rendered.category_fk.name}}
+                    <div class="row pt-3">
+                        <div class="col-md-6 col-sm-12"  v-if="json_role.name!=='supervisor'"><span class="text-bold">Submitted By: </span>
+                            {{rendered.user_fk.name}} {{rendered.user_fk.surname}}
+                            <!--
+                            <span
+                            v-for="(author, index) in this.rendered.authors">{{author.firstname}} {{author.lastname}} <span
+                            v-if="index+1 != rendered.authors.length">-&nbsp;</span></span>
+                            --> </div>
+                        <div class="col-md-6 col-sm-12"><span class="text-bold">Template: </span> {{rendered.template_fk.name}}</div>
+                        <div class="col-md-6 col-sm-12" v-if="rendered.category_fk"><span class="text-bold">Category:</span>
+                            {{rendered.category_fk.name}}
                         </div>
+
                     </div>
 
-                    <div class="row pt-3" v-for="(field, index) in nameFields">
-                        <div class="col-md-12 col-sm-12"><span class="text-bold">{{field.name}}:</span></div>
+                </div>
+            </div>
+
+            <div class="card" v-for="(field, index) in nameFields">
+                <div class="card-header">
+                    <h1 class="m0 text-dark card-title text-xl">
+                        {{field.name}}
+                    </h1>
+                </div>
+
+                <div class="card-body no-padding">
+                    <div class="row pt-3">
                         <div class="col-md-12 col-sm-12">
                             <div v-html="`${fields[index]}`"></div>
                         </div>
                     </div>
 
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="m0 text-dark card-title text-xl">
+                        Extra
+                    </h1>
+                </div>
+
+                <div class="card-body no-padding">
                     <div class="row pt-3">
-                        <div class="col-md-6 col-sm-12"><span class="text-bold">Tags: </span>{{rendered.tags}}</div>
-                        <div class="col-md-6 col-sm-12"  v-show="true"><span class="text-bold">PDF: </span><a :href="rendered.pdf" class="btn button btn-primary" target="_blank">Download</a> </div>
+                        <div class="col-md-6 col-sm-12"><span class="text-bold">Tags: </span>{{rendered.tags}}
+                        </div>
+                        <div class="col-md-6 col-sm-12" v-show="true"><span class="text-bold">PDF: </span><a
+                            :href="rendered.pdf" class="btn button btn-primary" target="_blank">Download</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -52,11 +83,14 @@
         props: ['item', 'role'],
         data: () => {
             return {
-                rendered: {},
+                rendered: {
+                    user_fk:{},
+                    template_fk: {},
+                },
                 authors: [],
                 fields: [],
-                nameFields:[],
-                json_role:{},
+                nameFields: [],
+                json_role: {},
             }
         },
         mounted() {
@@ -64,6 +98,7 @@
             this.rendered = JSON.parse(this.item);
             this.nameFields = JSON.parse(this.rendered.template_fk.fields);
             this.createFields();
+            console.log(this.rendered);
         },
         methods: {
             createFields() {

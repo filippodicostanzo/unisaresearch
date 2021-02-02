@@ -40,11 +40,13 @@
 @section('content')
     <div class="container post-form">
         <div class="row">
+
             <div class="col-lg-12 margin-tb">
-                <div class="card card-mini">
+                <div class="card">
+
                     <div class="card-header">
                         <h1 class="m0 text-dark card-title text-xl">
-                            Link {{$title}}
+                            Assign Paper {{$item->title}} to Supervisors
                         </h1>
                         <div class="card-action">
                             <a href="{{ route('posts.index') }}">
@@ -54,142 +56,205 @@
                     </div>
                     <div class="card-body">
                         <input type="hidden" id="count_fields" value="{{count($fields)}}">
-                    {!! Form::model($item, ['method' => 'PATCH','route' => ['posts.link', $item->id], 'enctype' => 'multipart/form-data', 'id'=>'regForm'] ) !!}
-                    @csrf
-                    <!-- One "tab" for each step in the form: -->
-                        <div class="tab">
-                            <div class="form-group">
-                                <label>Title:</label>
-                                {{$item->title}}
+
+                        <!-- One "tab" for each step in the form: -->
+
+
+                        <div class="row pt-3">
+                            <div class="col-md-6 col-sm-12">
+                                <span class="text-bold">Submitted By: </span>
+                                {{$item->user_fk->name}} {{$item->user_fk->surname}}
                             </div>
 
-                            <div class="form-group row">
-                                <div class="col-12"><label>Authors:</label>
-
-                                    <span>{{$item->user_fk->name}} {{$item->user_fk->surname}}&nbsp; - &nbsp;</span>
-                                    @foreach($autx as $author)
-                                        <span>{{$author['firstname']}} {{$author['lastname']}} -  </span>
-                                    @endforeach
-                                </div>
+                            <div class="col-md-6 col-sm-12">
+                                <span class="text-bold">Template: </span>
+                                {{$item->template_fk->name}}
                             </div>
 
-                            <div class="form-group">
-
-                                <div class="col-12"><label>Category:</label>
-
-                                    {{$item->category_fk->name}}
-
-                                </div>
-
+                            <div class="col-md-6 col-sm-12">
+                                <span class="text-bold">Category: </span>
+                                {{$item->category_fk->name}}
                             </div>
-                            @foreach($flx as $key => $value)
-                                <div class="form-group">
-                                    <label>{{$value->name}}</label>
-                                    @if($key===0)
+                        </div>
+                    </div>
+                </div>
+
+
+                @foreach($flx as $key => $value)
+                    <div class="card">
+                        <div class="card-header">
+                            <h1 class="m0 text-dark card-title text-xl">
+                                {{$value->name}}
+                            </h1>
+                        </div>
+
+                        @if($key===0)
+                            <div class="card-body">
+                                <div class="row pt-3">
+                                    <div class="col-md-12 col-sm-12">
                                         {!! $item->field_1!!}
-                                    @endif
-                                    @if($key===1)
-                                        {!! $item->field_2!!}
-                                    @endif
-                                    @if($key===2)
-                                        {!! $item->field_3!!}
-                                    @endif
-                                    @if($key===3)
-                                        {!! $item->field_4!!}
-                                    @endif
-                                    @if($key===4)
-                                        {!! $item->field_5!!}
-                                    @endif
-                                    @if($key===5)
-                                        {!! $item->field_6!!}
-                                    @endif
-                                    @if($key===6)
-                                        {!! $item->field_7!!}
-                                    @endif
-                                    @if($key===7)
-                                        {!! $item->field_8!!}
-                                    @endif
-                                    @if($key===8)
-                                        {!! $item->field_9!!}
-                                    @endif
-
+                                    </div>
                                 </div>
-                            @endforeach
+                            </div>
+                        @endif
+                        @if($key===1)
+                            <div class="card-body">
+                                <div class="row pt-3">
+                                    <div class="col-md-12 col-sm-12">
+                                        {!! $item->field_2!!}
+
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if($key===2)
+                            <div class="card-body">
+                                <div class="row pt-3">
+                                    <div class="col-md-12 col-sm-12">
+                                        {!! $item->field_3!!}
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if($key===3)
+                            <div class="card-body">
+                                <div class="row pt-3">
+                                    <div class="col-md-12 col-sm-12">
+                                        {!! $item->field_4!!}
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if($key===4)
+                            <div class="card-body">
+                                <div class="row pt-3">
+                                    <div class="col-md-12 col-sm-12">
+                                        {!! $item->field_5!!}
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if($key===5)
+                            <div class="card-body">
+                                <div class="row pt-3">
+                                    <div class="col-md-12 col-sm-12">
+                                        {!! $item->field_6!!}
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if($key===6)
+                            <div class="card-body">
+                                <div class="row pt-3">
+                                    <div class="col-md-12 col-sm-12">
+                                        {!! $item->field_7!!}
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if($key===7)
+                            <div class="card-body">
+                                <div class="row pt-3">
+                                    <div class="col-md-12 col-sm-12">
+                                        {!! $item->field_8!!}
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if($key===8)
+                            <div class="card-body">
+                                <div class="row pt-3">
+                                    <div class="col-md-12 col-sm-12">
+                                        {!! $item->field_9!!}
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
+                    </div>
+                @endforeach
 
 
-                            <div class="form-group">
-                                <label>
-                                    Tags:
-                                </label>
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="m0 text-dark card-title text-xl">
+                            Extra
+                        </h1>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row pt-3">
+                            <div class="col-md-6 col-sm-12">
+                                <span class="text-bold"> Tags: </span>
                                 {{$item->tags}}
                             </div>
-                            <div class="form-group imageUpload">
-                                <label for="image">PDF Document</label>
 
-                                <a href="{{$item->pdf}}">Download</a>
-
-
+                            <div class="col-md-6 col-sm-12">
+                                <span class="text-bold"> Pdf Document: </span>
+                                <a href="{{$item->pdf}}" class="btn btn-primary">Download</a>
                             </div>
+                        </div>
+                    </div>
+                </div>
 
 
-                            @role('superadministrator|administrator|supervisor')
-                            <div class="form-group">
+                @role('superadministrator|administrator|supervisor')
 
-                                <div class="col-12"><label>Status</label></div>
+                <div class="card">
+                    {!! Form::model($item, ['method' => 'PATCH','route' => ['posts.link', $item->id], 'enctype' => 'multipart/form-data', 'id'=>'regForm'] ) !!}
+                    @csrf
+                    <div class="card-header">
+                        <h1 class="m0 text-dark card-title text-xl">
+                            Change Status & Assign To Reviewers
+                        </h1>
+                    </div>
+                    <div class="card-body">
+                        <div class="row pt-3">
+                            <div class="col-12"><label>Status</label></div>
 
-                                <select id="statuses-selected" name="state" class="form-control">
-                                    <option value="" data-type="">Choose</option>
-                                    @foreach($statuses as $status)
-                                        <option value="{{$status->id}}"
-                                                data-type="{{$status->id}}" {{$item->state == $status->id ? 'selected="selected"' : ''}}>
-                                            {{$status->name}}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            @endrole
-
-                            @role('superadministrator|administrator')
-                            <div class="form-group row">
-
-                                <div class="col-12"><label>Supervisors</label></div>
-
-                                @foreach ($supervisors as $supervisor)
-
-                                    <div class="item col-md-6 col-xs-6 mb-3">
-                                        <div class="form-check">
-                                            <input type="checkbox" id="{{$supervisor->id}}"
-                                                   name="supervisors[]"
-                                                   value="{{$supervisor->id}}" {{ in_array($supervisor->id, $sup) ? 'checked' : ''}}>
-                                            <label class="form-check-label"
-                                                   for="exampleCheck1">{{$supervisor->name}} {{$supervisor->surname}}</label>
-                                        </div>
-                                    </div>
-
+                            <select id="statuses-selected" name="state" class="form-control">
+                                <option value="" data-type="">Choose</option>
+                                @foreach($statuses as $status)
+                                    <option value="{{$status->id}}"
+                                            data-type="{{$status->id}}" {{$item->state == $status->id ? 'selected="selected"' : ''}}>
+                                        {{$status->name}}
+                                    </option>
                                 @endforeach
+                            </select>
+                        </div>
 
-                            </div>
+                        <div class="row pt-3">
+                            <div class="col-12"><label>Supervisors</label></div>
 
-                            @endrole
+                            @foreach ($supervisors as $supervisor)
 
+                                <div class="item col-md-6 col-xs-6 mb-3">
+                                    <div class="form-check">
+                                        <input type="checkbox" id="{{$supervisor->id}}"
+                                               name="supervisors[]"
+                                               value="{{$supervisor->id}}" {{ in_array($supervisor->id, $sup) ? 'checked' : ''}}>
+                                        <label class="form-check-label"
+                                               for="exampleCheck1">{{$supervisor->name}} {{$supervisor->surname}}</label>
+                                    </div>
+                                </div>
 
+                            @endforeach
+                        </div>
+
+                        <div class="row pt-3">
                             <button type="submit" class="btn btn-primary btn-lg btn-block">
                                 <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
                             </button>
-
                         </div>
-
-
-                        <!-- Circles which indicates the steps of the form: -->
-                        <div style="text-align:center;margin-top:40px;">
-                            <span class="step"></span>
-                        </div>
-
-                        {!! Form::close() !!}
                     </div>
+                    {!! Form::close() !!}
                 </div>
+                @endrole
+
             </div>
         </div>
+    </div>
+    </div>
     </div>
 @stop
 

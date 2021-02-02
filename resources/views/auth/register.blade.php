@@ -20,7 +20,7 @@
         {{ csrf_field() }}
         <div class="row">
             {{-- Name field --}}
-            <div class="input-group mb-3 col-6">
+            <div class="input-group mb-3 col-md-6 col-sm-12">
                 <input type="text" name="name" class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}"
                        value="{{ old('name') }}" placeholder="{{ __('adminlte::adminlte.name') }}" autofocus>
                 <div class="input-group-append">
@@ -36,7 +36,7 @@
             </div>
 
             {{-- Name field --}}
-            <div class="input-group mb-3 col-6">
+            <div class="input-group mb-3 col-md-6 col-sm-126">
                 <input type="text" name="surname" class="form-control {{ $errors->has('surname') ? 'is-invalid' : '' }}"
                        value="{{ old('surname') }}" placeholder="{{ __('adminlte::adminlte.surname') }}" autofocus>
                 <div class="input-group-append">
@@ -51,7 +51,7 @@
                 @endif
             </div>
 
-            <div class="input-group mb-3 col-6">
+            <div class="input-group mb-3 col-md-6 col-sm-12">
                 <select id="title" name="title"  class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}">
                     <option value="">Title</option>
                     <option value="Prof">Prof.</option>
@@ -72,7 +72,7 @@
                 @endif
             </div>
 
-            <div class="input-group mb-3 col-6">
+            <div class="input-group mb-3 col-md-6 col-sm-12">
                 <select id="gender" name="gender"  class="form-control {{ $errors->has('gender') ? 'is-invalid' : '' }}">
                     <option value="">Gender</option>
                     <option value="M">Male</option>
@@ -92,7 +92,7 @@
 
             </div>
 
-            <div class="input-group mb-3 col-6">
+            <div class="input-group mb-3 col-md-6 col-sm-12">
                 <select id="country" name="country"  class="form-control {{ $errors->has('country') ? 'is-invalid' : '' }}">
                     <option value="">Country</option>
                     @foreach($countries  as $key => $value)
@@ -114,7 +114,7 @@
             </div>
 
             {{-- City field --}}
-            <div class="input-group mb-3 col-6">
+            <div class="input-group mb-3 col-md-6 col-sm-12">
                 <input type="text" name="city" class="form-control {{ $errors->has('city') ? 'is-invalid' : '' }}"
                        value="{{ old('city') }}" placeholder="{{ __('adminlte::adminlte.city') }}">
                 <div class="input-group-append">
@@ -130,7 +130,7 @@
             </div>
 
             {{-- Affiliation field --}}
-            <div class="input-group mb-3 col-6">
+            <div class="input-group mb-3 col-md-6 col-sm-12">
                 <input type="text" name="affiliation"
                        class="form-control {{ $errors->has('affiliation') ? 'is-invalid' : '' }}"
                        value="{{ old('affiliation') }}" placeholder="{{ __('adminlte::adminlte.affiliation') }}">
@@ -147,7 +147,7 @@
             </div>
 
             {{-- Disciplinary field --}}
-            <div class="input-group mb-3 col-6">
+            <div class="input-group mb-3 col-md-6 col-sm-12">
                 <input type="text" name="disciplinary"
                        class="form-control {{ $errors->has('disciplinary') ? 'is-invalid' : '' }}"
                        value="{{ old('disciplinary') }}" placeholder="{{ __('adminlte::adminlte.disciplinary') }}">

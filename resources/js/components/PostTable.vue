@@ -136,7 +136,7 @@
             return {
                 rendered: {},
                 pages: 0,
-                perpage: 10,
+                perpage: 20,
                 page: 1,
                 renderedPaginate: [],
                 json_role: {},

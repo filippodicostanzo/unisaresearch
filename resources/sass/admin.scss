@@ -767,3 +767,16 @@ input.invalid, select.invalid {
     background-color: #6c757d;
     color: #ffffff;
 }
+
+
+.login-card-body {
+    input[type="checkbox"] {
+        width: auto;
+    }
+}
+
+.invalid-feedback {
+    strong {
+        letter-spacing: 0.2pt
+    }
+}

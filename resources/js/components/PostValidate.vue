@@ -245,7 +245,7 @@
 <script>
     export default {
         name: "PostValidate.vue",
-        props: ['item', 'reviews', 'title', 'status','comment'],
+        props: ['item', 'reviews', 'title', 'status', 'comment'],
         data: () => {
             return {
                 rendered: {
@@ -279,8 +279,11 @@
             this.json_reviews = JSON.parse(this.reviews);
             this.json_status = JSON.parse(this.status);
             console.log(this.json_reviews);
+            console.log(this.comment);
             this.rendered = JSON.parse(this.item);
-            this.rendered.comment = this.json_comment.comment;
+            if (this.json_comment !== {}) {
+                this.rendered.comment = this.json_comment.comment;
+            }
             console.log(this.rendered);
             this.nameFields = JSON.parse(this.rendered.template_fk.fields);
             this.createFields();

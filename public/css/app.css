@@ -31290,6 +31290,14 @@ select.invalid {
   color: #ffffff;
 }
 
+.login-card-body input[type=checkbox] {
+  width: auto;
+}
+
+.invalid-feedback strong {
+  letter-spacing: 0.2pt;
+}
+
 @-webkit-keyframes loading-frame {
   0% {
     border-color: #3acfd5;

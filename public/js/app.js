@@ -2890,12 +2890,46 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PostShow",
   props: ['item', 'role'],
   data: function data() {
     return {
-      rendered: {},
+      rendered: {
+        user_fk: {},
+        template_fk: {}
+      },
       authors: [],
       fields: [],
       nameFields: [],
@@ -2907,6 +2941,7 @@ __webpack_require__.r(__webpack_exports__);
     this.rendered = JSON.parse(this.item);
     this.nameFields = JSON.parse(this.rendered.template_fk.fields);
     this.createFields();
+    console.log(this.rendered);
   },
   methods: {
     createFields: function createFields() {
@@ -3098,7 +3133,7 @@ __webpack_require__.r(__webpack_exports__);
     return {
       rendered: {},
       pages: 0,
-      perpage: 10,
+      perpage: 20,
       page: 1,
       renderedPaginate: [],
       json_role: {},
@@ -3473,8 +3508,13 @@ __webpack_require__.r(__webpack_exports__);
     this.json_reviews = JSON.parse(this.reviews);
     this.json_status = JSON.parse(this.status);
     console.log(this.json_reviews);
+    console.log(this.comment);
     this.rendered = JSON.parse(this.item);
-    this.rendered.comment = this.json_comment.comment;
+
+    if (this.json_comment !== {}) {
+      this.rendered.comment = this.json_comment.comment;
+    }
+
     console.log(this.rendered);
     this.nameFields = JSON.parse(this.rendered.template_fk.fields);
     this.createFields();
@@ -61887,100 +61927,109 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row" }, [
-    _c("div", { staticClass: "col-lg-12 margin-tb" }, [
-      _c("div", { staticClass: "card" }, [
-        _c("div", { staticClass: "card-header" }, [
-          _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
-            _vm._v(
-              "\n                    " + _vm._s(this.rendered.title) + " "
-            ),
-            _vm.rendered.state_fk
-              ? _c(
-                  "span",
-                  { style: "background-color:" + _vm.rendered.state_fk.color },
-                  [_vm._v(_vm._s(_vm.rendered.state_fk.name))]
-                )
-              : _vm._e()
+    _c(
+      "div",
+      { staticClass: "col-lg-12 margin-tb" },
+      [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
+              _vm._v(
+                "\n                    " + _vm._s(this.rendered.title) + " "
+              ),
+              _vm.rendered.state_fk
+                ? _c(
+                    "span",
+                    {
+                      style: "background-color:" + _vm.rendered.state_fk.color
+                    },
+                    [_vm._v(_vm._s(_vm.rendered.state_fk.name))]
+                  )
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-action" }, [
+              _c("a", { attrs: { href: _vm.route("posts.index") } }, [
+                _c("i", {
+                  staticClass: "fa fa-arrow-circle-left fa-3x fa-fw",
+                  attrs: { "aria-hidden": "true" }
+                })
+              ])
+            ])
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "card-action" }, [
-            _c("a", { attrs: { href: _vm.route("posts.index") } }, [
-              _c("i", {
-                staticClass: "fa fa-arrow-circle-left fa-3x fa-fw",
-                attrs: { "aria-hidden": "true" }
-              })
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "card-body no-padding" },
-          [
-            _vm.json_role.name !== "supervisor"
-              ? _c("div", { staticClass: "row pt-3" }, [
-                  _c(
-                    "div",
-                    { staticClass: "col-md-12 col-sm-12" },
-                    [
-                      _c("span", { staticClass: "text-bold" }, [
-                        _vm._v("Authors:")
-                      ]),
-                      _vm._v(" "),
-                      _vm._l(this.rendered.authors, function(author, index) {
-                        return _c("span", [
-                          _vm._v(
-                            _vm._s(author.firstname) +
-                              " " +
-                              _vm._s(author.lastname) +
-                              " "
-                          ),
-                          index + 1 != _vm.rendered.authors.length
-                            ? _c("span", [_vm._v("- ")])
-                            : _vm._e()
-                        ])
-                      })
-                    ],
-                    2
-                  )
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.rendered.category_fk
-              ? _c("div", { staticClass: "row pt-3" }, [
-                  _c("div", { staticClass: "col-md-12 col-sm-12" }, [
+          _c("div", { staticClass: "card-body no-padding" }, [
+            _c("div", { staticClass: "row pt-3" }, [
+              _vm.json_role.name !== "supervisor"
+                ? _c("div", { staticClass: "col-md-6 col-sm-12" }, [
+                    _c("span", { staticClass: "text-bold" }, [
+                      _vm._v("Submitted By: ")
+                    ]),
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(_vm.rendered.user_fk.name) +
+                        " " +
+                        _vm._s(_vm.rendered.user_fk.surname) +
+                        "\n                        "
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-6 col-sm-12" }, [
+                _c("span", { staticClass: "text-bold" }, [
+                  _vm._v("Template: ")
+                ]),
+                _vm._v(" " + _vm._s(_vm.rendered.template_fk.name))
+              ]),
+              _vm._v(" "),
+              _vm.rendered.category_fk
+                ? _c("div", { staticClass: "col-md-6 col-sm-12" }, [
                     _c("span", { staticClass: "text-bold" }, [
                       _vm._v("Category:")
                     ]),
                     _vm._v(
-                      "\n                      " +
+                      "\n                        " +
                         _vm._s(_vm.rendered.category_fk.name) +
                         "\n                    "
                     )
                   ])
-                ])
-              : _vm._e(),
+                : _vm._e()
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _vm._l(_vm.nameFields, function(field, index) {
+          return _c("div", { staticClass: "card" }, [
+            _c("div", { staticClass: "card-header" }, [
+              _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
+                _vm._v(
+                  "\n                    " +
+                    _vm._s(field.name) +
+                    "\n                "
+                )
+              ])
+            ]),
             _vm._v(" "),
-            _vm._l(_vm.nameFields, function(field, index) {
-              return _c("div", { staticClass: "row pt-3" }, [
-                _c("div", { staticClass: "col-md-12 col-sm-12" }, [
-                  _c("span", { staticClass: "text-bold" }, [
-                    _vm._v(_vm._s(field.name) + ":")
-                  ])
-                ]),
-                _vm._v(" "),
+            _c("div", { staticClass: "card-body no-padding" }, [
+              _c("div", { staticClass: "row pt-3" }, [
                 _c("div", { staticClass: "col-md-12 col-sm-12" }, [
                   _c("div", {
                     domProps: { innerHTML: _vm._s("" + _vm.fields[index]) }
                   })
                 ])
               ])
-            }),
-            _vm._v(" "),
+            ])
+          ])
+        }),
+        _vm._v(" "),
+        _c("div", { staticClass: "card" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body no-padding" }, [
             _c("div", { staticClass: "row pt-3" }, [
               _c("div", { staticClass: "col-md-6 col-sm-12" }, [
                 _c("span", { staticClass: "text-bold" }, [_vm._v("Tags: ")]),
-                _vm._v(_vm._s(_vm.rendered.tags))
+                _vm._v(_vm._s(_vm.rendered.tags) + "\n                    ")
               ]),
               _vm._v(" "),
               _c(
@@ -62009,14 +62058,25 @@ var render = function() {
                 ]
               )
             ])
-          ],
-          2
-        )
-      ])
-    ])
+          ])
+        ])
+      ],
+      2
+    )
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
+        _vm._v("\n                    Extra\n                ")
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
