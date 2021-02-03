@@ -22,11 +22,13 @@
                     <div class="row pt-3">
                         <div class="col-md-6 col-sm-12"  v-if="json_role.name!=='supervisor'"><span class="text-bold">Submitted By: </span>
                             {{rendered.user_fk.name}} {{rendered.user_fk.surname}}
-                            <!--
+                        </div>
+                        <div class="col-md-6 col-sm-12"  v-if="json_role.name!=='supervisor'"><span class="text-bold">Co Authors: </span>
                             <span
                             v-for="(author, index) in this.rendered.authors">{{author.firstname}} {{author.lastname}} <span
                             v-if="index+1 != rendered.authors.length">-&nbsp;</span></span>
-                            --> </div>
+                        </div>
+
                         <div class="col-md-6 col-sm-12"><span class="text-bold">Template: </span> {{rendered.template_fk.name}}</div>
                         <div class="col-md-6 col-sm-12" v-if="rendered.category_fk"><span class="text-bold">Category:</span>
                             {{rendered.category_fk.name}}
@@ -91,6 +93,7 @@
                 fields: [],
                 nameFields: [],
                 json_role: {},
+
             }
         },
         mounted() {
