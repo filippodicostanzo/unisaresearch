@@ -45,10 +45,11 @@ class PostController extends Controller
     public function index()
     {
         $reviews = Review::all();
+        $statuses = Status::all();
 
         if ($this->user->hasRole('superadministrator|administrator')) {
             $items = Post::where('state', '!=', 1)->orderBy('id', 'ASC')->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->get();
-            return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews]);
+            return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews, 'statuses' => $statuses]);
         } else if ($this->user->hasRole('supervisor')) {
             $items = Post::whereHas('users', function ($q) {
                 $q->where('users.id', Auth::id());
@@ -56,11 +57,11 @@ class PostController extends Controller
                 ->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')
                 ->get();
 
-            return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews]);
+            return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews, 'statuses' => $statuses]);
         } else {
 
             $items = Post::where('created', Auth::id())->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->get();
-            return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews]);
+            return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews, 'statuses' => $statuses]);
         }
     }
 

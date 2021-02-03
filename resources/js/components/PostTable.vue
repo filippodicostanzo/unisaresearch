@@ -11,7 +11,18 @@
                         <a :href="route('posts.create')">
                             <i class="fa fa-plus-circle fa-3x fa-fw" aria-hidden="true"></i>
                         </a>
+
                     </div>
+                    <div class="card-action">
+                        <span>Filter By State: </span>
+                        <select name="status"  v-model="state" @change="onChange()" class="form-group">
+                            <option value="">All</option>
+                            <option v-for="status in json_statuses" :key="status.id" :value="status.id">
+                                {{status.name}}
+                            </option>
+                        </select>
+                    </div>
+
                 </div>
                 <div class="card-body no-padding">
                     <div class="table-responsive">
@@ -131,7 +142,7 @@
         components: {
             'vue-pagination': Pagination
         },
-        props: ['title', 'items', 'role', 'reviews', 'user'],
+        props: ['title', 'items', 'role', 'reviews', 'user', 'statuses'],
         data: () => {
             return {
                 rendered: {},
@@ -139,9 +150,12 @@
                 perpage: 20,
                 page: 1,
                 renderedPaginate: [],
+                backup_filter: [],
                 json_role: {},
                 json_reviews: [],
                 json_user: {},
+                json_statuses:{},
+                state: '',
                 format,
             }
         },
@@ -150,7 +164,9 @@
             this.json_role = JSON.parse(this.role);
             this.json_reviews = JSON.parse(this.reviews);
             this.json_user = JSON.parse(this.user);
+            this.json_statuses = JSON.parse(this.statuses);
             this.rendered = JSON.parse(this.items);
+            this.backup_filter = this.rendered;
             console.log(this.json_user);
             this.pages = this.rendered.length;
             this.paginateData(this.page - 1, this.perpage);
@@ -198,6 +214,18 @@
                 }
                 return false;
 
+            },
+
+            onChange() {
+
+                this.rendered = this.backup_filter;
+                if (this.state!='') {
+
+                    this.rendered = this.rendered.filter(item => item.state == this.state);
+                }
+
+                this.pages = this.rendered.length;
+                this.paginateData(this.page - 1, this.perpage);
             },
 
             callbackPagination(page) {

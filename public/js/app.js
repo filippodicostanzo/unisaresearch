@@ -2804,12 +2804,14 @@ __webpack_require__.r(__webpack_exports__);
       var alt = confirm('Are you sure to delete this item?');
 
       if (alt) {
-        this.$http["delete"]("/admin/categories/" + id).then(function (response) {
-          if (response.status == 200) {
+        this.$http.post("/admin/categories/" + id, {
+          _method: 'delete'
+        }).then(function (response) {
+          if (response.status === 200) {
             window.location.href = '/admin/categories';
           }
         })["catch"](function (error) {
-          alert(error.message);
+          alert(error.status);
         });
       }
     },
@@ -2844,6 +2846,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
 //
 //
 //
@@ -3121,6 +3125,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3128,7 +3143,7 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     'vue-pagination': vue_pagination_2__WEBPACK_IMPORTED_MODULE_0___default.a
   },
-  props: ['title', 'items', 'role', 'reviews', 'user'],
+  props: ['title', 'items', 'role', 'reviews', 'user', 'statuses'],
   data: function data() {
     return {
       rendered: {},
@@ -3136,9 +3151,12 @@ __webpack_require__.r(__webpack_exports__);
       perpage: 20,
       page: 1,
       renderedPaginate: [],
+      backup_filter: [],
       json_role: {},
       json_reviews: [],
       json_user: {},
+      json_statuses: {},
+      state: '',
       format: date_fns__WEBPACK_IMPORTED_MODULE_1__["format"]
     };
   },
@@ -3146,7 +3164,9 @@ __webpack_require__.r(__webpack_exports__);
     this.json_role = JSON.parse(this.role);
     this.json_reviews = JSON.parse(this.reviews);
     this.json_user = JSON.parse(this.user);
+    this.json_statuses = JSON.parse(this.statuses);
     this.rendered = JSON.parse(this.items);
+    this.backup_filter = this.rendered;
     console.log(this.json_user);
     this.pages = this.rendered.length;
     this.paginateData(this.page - 1, this.perpage);
@@ -3186,6 +3206,20 @@ __webpack_require__.r(__webpack_exports__);
       };
 
       return false;
+    },
+    onChange: function onChange() {
+      var _this = this;
+
+      this.rendered = this.backup_filter;
+
+      if (this.state != '') {
+        this.rendered = this.rendered.filter(function (item) {
+          return item.state == _this.state;
+        });
+      }
+
+      this.pages = this.rendered.length;
+      this.paginateData(this.page - 1, this.perpage);
     },
     callbackPagination: function callbackPagination(page) {
       var start = 0;
@@ -61970,9 +62004,36 @@ var render = function() {
                         _vm._s(_vm.rendered.user_fk.name) +
                         " " +
                         _vm._s(_vm.rendered.user_fk.surname) +
-                        "\n                        "
+                        "\n                    "
                     )
                   ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.json_role.name !== "supervisor"
+                ? _c(
+                    "div",
+                    { staticClass: "col-md-6 col-sm-12" },
+                    [
+                      _c("span", { staticClass: "text-bold" }, [
+                        _vm._v("Co Authors: ")
+                      ]),
+                      _vm._v(" "),
+                      _vm._l(this.rendered.authors, function(author, index) {
+                        return _c("span", [
+                          _vm._v(
+                            _vm._s(author.firstname) +
+                              " " +
+                              _vm._s(author.lastname) +
+                              " "
+                          ),
+                          index + 1 != _vm.rendered.authors.length
+                            ? _c("span", [_vm._v("- ")])
+                            : _vm._e()
+                        ])
+                      })
+                    ],
+                    2
+                  )
                 : _vm._e(),
               _vm._v(" "),
               _c("div", { staticClass: "col-md-6 col-sm-12" }, [
@@ -62119,7 +62180,65 @@ var render = function() {
                   })
                 ])
               ])
-            : _vm._e()
+            : _vm._e(),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-action" }, [
+            _c("span", [_vm._v("Filter By State: ")]),
+            _vm._v(" "),
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.state,
+                    expression: "state"
+                  }
+                ],
+                staticClass: "form-group",
+                attrs: { name: "status" },
+                on: {
+                  change: [
+                    function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.state = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    },
+                    function($event) {
+                      return _vm.onChange()
+                    }
+                  ]
+                }
+              },
+              [
+                _c("option", { attrs: { value: "" } }, [_vm._v("All")]),
+                _vm._v(" "),
+                _vm._l(_vm.json_statuses, function(status) {
+                  return _c(
+                    "option",
+                    { key: status.id, domProps: { value: status.id } },
+                    [
+                      _vm._v(
+                        "\n                            " +
+                          _vm._s(status.name) +
+                          "\n                        "
+                      )
+                    ]
+                  )
+                })
+              ],
+              2
+            )
+          ])
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "card-body no-padding" }, [
