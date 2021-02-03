@@ -49,7 +49,7 @@ class CreatePostsTable extends Migration
         });
 
         Schema::table('posts', function(Blueprint $table) {
-            $table->foreign('category')->references('id')->on('categories')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('category')->references('id')->on('categories');
         });
 
         Schema::table('posts', function(Blueprint $table) {

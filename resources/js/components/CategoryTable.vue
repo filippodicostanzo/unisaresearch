@@ -93,15 +93,15 @@
                 let alt = confirm('Are you sure to delete this item?');
                 if (alt) {
                     this.$http
-                        .delete("/admin/categories/" + id)
+                        .post("/admin/categories/" + id, {_method: 'delete'})
                         .then(response => {
 
-                            if (response.status == 200) {
+                            if (response.status === 200) {
                                 window.location.href = '/admin/categories'
                             }
                         })
                         .catch(error => {
-                            alert(error.message)
+                            alert(error.status)
                         });
 
                 }

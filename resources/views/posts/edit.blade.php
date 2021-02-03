@@ -16,7 +16,7 @@
             })->get();
     $user = Auth::id();
     $mainaut = User::where('id', $item->created)->first();
-    $categories = Category::orderBy('id')->get();
+    $categories = Category::where('visible',1)->orderBy('name','ASC')->get();
     $aut = explode(",", $item->authors);
     $sup = explode(",", $item->supervisors);
     $statuses = Status::orderBy('id')->get();

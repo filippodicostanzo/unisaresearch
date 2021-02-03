@@ -125,6 +125,19 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-
+        if ($this->user->hasRole('superadministrator|administrator')) {
+            try {
+                $res = $category->delete();
+                $message = $res ? 'The Category ' . $category->title .' has been deleted' : 'The Category ' . $category->title .' has been deleted';
+                session()->flash('message', $message);
+                session()->flash('alert-class', 'alert-success');
+            } catch (\Exception $e) {
+                if ($e->getCode() == '23000') {
+                    $message = 'The category cannot be deleted because it is present in a paper';
+                    session()->flash('message', $message);
+                    session()->flash('alert-class', 'alert-danger');
+                }
+            }
+        }
     }
 }

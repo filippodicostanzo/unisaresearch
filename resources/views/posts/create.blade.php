@@ -14,7 +14,7 @@
             })->get();
     $usr = Auth::user();
     $user = Auth::id();
-    $categories = Category::orderBy('id')->get();
+    $categories = Category::where('visible',1)->orderBy('name','ASC')->get();
     $templates = Template::where('active',1)->orderBy('id')->get();
     $template = Template::where('active', 1)->first();
     $fields=json_decode($template->fields);
