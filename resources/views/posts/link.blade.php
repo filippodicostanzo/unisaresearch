@@ -5,9 +5,11 @@
 
 @php
     use App\Models\Author;
+    use App\Models\Post;
     use App\Models\Category;
     use App\Models\Status;use App\Models\Template;
     use App\Models\User;use Illuminate\Support\Facades\Auth;
+    use Illuminate\Support\Facades\DB;
 
     $usx = Auth::user();
 
@@ -65,6 +67,17 @@
                                 <span class="text-bold">Submitted By: </span>
                                 {{$item->user_fk->name}} {{$item->user_fk->surname}}
                             </div>
+
+                            @if (count($autx)>0)
+                                <div class="col-md-6 col-sm-12">
+                                    <span class="text-bold">Co-Authors: </span>
+
+                                    @foreach ($autx as $author)
+                                        {{$author->firstname}} {{$author->lastname}}
+                                        @if(!$loop->last) - @endif
+                                    @endforeach
+                                </div>
+                            @endif
 
                             <div class="col-md-6 col-sm-12">
                                 <span class="text-bold">Template: </span>
@@ -227,14 +240,20 @@
                             <div class="col-12"><label>Supervisors</label></div>
 
                             @foreach ($supervisors as $supervisor)
-
+                                @php
+                                    $count = DB::table("posts")
+                                    ->select("posts.*")
+                                      ->whereRaw("find_in_set('".$supervisor->id."',posts.supervisors)")
+                                        ->count();
+                                @endphp
                                 <div class="item col-md-6 col-xs-6 mb-3">
                                     <div class="form-check">
                                         <input type="checkbox" id="{{$supervisor->id}}"
                                                name="supervisors[]"
                                                value="{{$supervisor->id}}" {{ in_array($supervisor->id, $sup) ? 'checked' : ''}}>
                                         <label class="form-check-label"
-                                               for="exampleCheck1">{{$supervisor->name}} {{$supervisor->surname}}</label>
+                                               for="exampleCheck1">{{$supervisor->name}} {{$supervisor->surname}}
+                                            ({{$count}})</label>
                                     </div>
                                 </div>
 
