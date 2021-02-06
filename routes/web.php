@@ -36,7 +36,7 @@ Route::get('send-mail', function () {
     dd("Email is Sent.");
 });
 
-Route::get('/authors/search',[\App\Http\Controllers\Auth\AuthorController::class, 'search']);
+//Route::get('/authors/search',[\App\Http\Controllers\Auth\AuthorController::class, 'search']);
 
 Route::get('/home', function () {
     return view('home');
@@ -160,7 +160,8 @@ Route::group(['namespace' => 'Auth', 'prefix'=>'admin', 'middleware' => ['role:a
 Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
     Lfm::routes();
 });
-
+/*
 Route::get('/{catchall?}', function () {
     return response()->view('authors.create');
 })->where('catchall', '(.*)');
+*/

@@ -1987,6 +1987,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AuthorCreate",
@@ -2285,6 +2286,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/esm/index.js");
 /* harmony import */ var vue_pagination_2__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-pagination-2 */ "./node_modules/vue-pagination-2/compiled/main.js");
 /* harmony import */ var vue_pagination_2__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_pagination_2__WEBPACK_IMPORTED_MODULE_1__);
+//
+//
+//
 //
 //
 //
@@ -60659,7 +60663,20 @@ var render = function() {
       _c("div", { staticClass: "card card-mini" }, [
         _c("div", { staticClass: "card-header" }, [
           _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
-            _vm._v("\n                    Create New Author\n                ")
+            this.source == "new"
+              ? _c("span", [_vm._v("Create New Co-Author")])
+              : _vm._e(),
+            _vm._v(" "),
+            this.source == "edit"
+              ? _c("span", [
+                  _vm._v(
+                    "Edit " +
+                      _vm._s(this.author.firstname) +
+                      " " +
+                      _vm._s(this.author.lastname)
+                  )
+                ])
+              : _vm._e()
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-action" }, [
@@ -61178,11 +61195,13 @@ var render = function() {
                 _vm._v(" "),
                 _c("th", { attrs: { scope: "col" } }, [_vm._v("Name")]),
                 _vm._v(" "),
+                _c("th", { attrs: { scope: "col" } }, [_vm._v("Topic")]),
+                _vm._v(" "),
                 _vm.json_role.name === "researcher"
                   ? _c("th", { attrs: { scope: "col" } }, [_vm._v("Authors")])
                   : _vm._e(),
                 _vm._v(" "),
-                _c("th", { attrs: { scope: "col" } }, [_vm._v("Date")]),
+                _c("th", { attrs: { scope: "col" } }, [_vm._v("Sumbitted")]),
                 _vm._v(" "),
                 _c("th", { attrs: { scope: "col" } }, [_vm._v("Status")]),
                 _vm._v(" "),
@@ -61203,6 +61222,8 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("td", [_vm._v(_vm._s(item.title))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(item.category_fk.name))]),
                   _vm._v(" "),
                   _vm.json_role.name == "researcher"
                     ? _c(
@@ -61261,7 +61282,7 @@ var render = function() {
                       ]
                     ),
                     _vm._v(" "),
-                    _vm.json_role.name === "supervisor"
+                    _vm.json_role.name === "supervisor" && item.state == 3
                       ? _c(
                           "a",
                           {
@@ -61389,7 +61410,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header" }, [
-      _c("h2", [_vm._v("Latest Posts")])
+      _c("h2", [_vm._v("Latest Paper")])
     ])
   }
 ]
@@ -61442,13 +61463,13 @@ var render = function() {
       _vm._v(" "),
       _vm.type === "posts"
         ? _c("span", { staticClass: "text-bold" }, [
-            _vm._v(_vm._s(_vm.posts_lastmonth) + " Posts ")
+            _vm._v(_vm._s(_vm.posts_lastmonth) + " Paper ")
           ])
         : _vm._e(),
       _vm._v(" "),
       _vm.type === "categories"
         ? _c("span", { staticClass: "text-bold" }, [
-            _vm._v(_vm._s(_vm.categories_lastmonth) + " Categories ")
+            _vm._v(_vm._s(_vm.categories_lastmonth) + " Topics ")
           ])
         : _vm._e(),
       _vm._v("\n        in " + _vm._s(_vm.month))
@@ -62046,7 +62067,7 @@ var render = function() {
               _vm.rendered.category_fk
                 ? _c("div", { staticClass: "col-md-6 col-sm-12" }, [
                     _c("span", { staticClass: "text-bold" }, [
-                      _vm._v("Category:")
+                      _vm._v("Topic:")
                     ]),
                     _vm._v(
                       "\n                        " +
@@ -62253,11 +62274,11 @@ var render = function() {
                     _vm._v(" "),
                     _c("th", [_vm._v("Title")]),
                     _vm._v(" "),
-                    _c("th", [_vm._v("Category")]),
+                    _c("th", [_vm._v("Topic")]),
                     _vm._v(" "),
                     _c("th", [_vm._v("Template")]),
                     _vm._v(" "),
-                    _c("th", [_vm._v("Created")]),
+                    _c("th", [_vm._v("Submitted")]),
                     _vm._v(" "),
                     _c("th", [_vm._v("Status")]),
                     _vm._v(" "),
@@ -62596,9 +62617,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "col-md-6 col-sm-12" }, [
-                  _c("span", { staticClass: "text-bold" }, [
-                    _vm._v("Category:")
-                  ]),
+                  _c("span", { staticClass: "text-bold" }, [_vm._v("Topic:")]),
                   _vm._v(
                     "\n                            " +
                       _vm._s(this.rendered.category_fk.name) +
@@ -63175,7 +63194,7 @@ var render = function() {
                   { staticClass: "form-group" },
                   [
                     _c("label", { staticClass: "form__label" }, [
-                      _vm._v("Write a Comment:")
+                      _vm._v("Write a Comment (optional):")
                     ]),
                     _vm._v(" "),
                     _c("ckeditor", {
@@ -63345,7 +63364,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "col-md-6 col-sm-12" }, [
       _c("span", { staticClass: "text-bold" }, [
-        _vm._v(" General quality of the paper:")
+        _vm._v(" Pertinence for Forum Topic:")
       ])
     ])
   },
@@ -63920,7 +63939,7 @@ var render = function() {
                       { staticClass: "form-group" },
                       [
                         _c("label", { staticClass: "form__label" }, [
-                          _vm._v("Write a Review:")
+                          _vm._v("Write a Review (optional):")
                         ]),
                         _vm._v(" "),
                         _c("ckeditor", {
@@ -64019,7 +64038,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "col-md-6 col-sm-12" }, [
       _c("span", { staticClass: "text-bold" }, [
-        _vm._v(" Pertinence on forum session:")
+        _vm._v(" Pertinence for Forum Topic:")
       ])
     ])
   },
