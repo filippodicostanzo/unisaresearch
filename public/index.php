@@ -31,7 +31,12 @@ if (file_exists(__DIR__.'/../storage/framework/maintenance.php')) {
 |
 */
 
-require __DIR__.'/../vendor/autoload.php';
+if (getenv('APP_PUBLIC')==true) {
+    require __DIR__ . './vendor/autoload.php';
+}
+else {
+    require __DIR__ . '/../vendor/autoload.php';
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -44,7 +49,12 @@ require __DIR__.'/../vendor/autoload.php';
 |
 */
 
-$app = require_once __DIR__.'/../bootstrap/app.php';
+if (getenv('APP_PUBLIC')==true) {
+    $app = require_once __DIR__.'./bootstrap/app.php';
+}
+else {
+    $app = require_once __DIR__.'/../bootstrap/app.php';
+}
 
 $kernel = $app->make(Kernel::class);
 
