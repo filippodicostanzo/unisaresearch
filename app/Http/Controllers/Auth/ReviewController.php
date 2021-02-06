@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use App\Models\Author;
 use App\Models\Post;
 use App\Models\Review;
-use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class ReviewController extends Controller
@@ -29,7 +27,7 @@ class ReviewController extends Controller
             return $next($request);
         });
 
-        $this->title = 'reviews';
+        $this->title = __('titles.reviews');
     }
 
     /**
@@ -40,18 +38,16 @@ class ReviewController extends Controller
     public function index()
     {
 
-        $posts = Post::whereHas('users', function($q) {
+        $posts = Post::whereHas('users', function ($q) {
             $q->where('users.id', Auth::id());
         })
             ->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')
             ->get();
 
 
+        return view('reviews.index', ['items' => $posts, 'title' => $this->title]);
 
-            return view('reviews.index', ['items' => $posts, 'title' => $this->title]);
-
-        }
-
+    }
 
 
     /**
@@ -65,7 +61,7 @@ class ReviewController extends Controller
         if ($request['id'] != null) {
 
 
-            $item = Post::where('id',$request['id'])->with('state_fk', 'category_fk', 'template_fk', 'authors')->first();
+            $item = Post::where('id', $request['id'])->with('state_fk', 'category_fk', 'template_fk', 'authors')->first();
 
             if ($item->state != '3') {
                 abort(403);
@@ -73,18 +69,14 @@ class ReviewController extends Controller
 
 
             $authors = $item->authors;
-            $array_authors=[];
-            $authors=explode(',',$authors);
+            $array_authors = [];
+            $authors = explode(',', $authors);
 
 
             foreach ($authors as $author) {
-              $aut = Author::where('id','=', $author)->first();
-              array_push($array_authors, $aut);
+                $aut = Author::where('id', '=', $author)->first();
+                array_push($array_authors, $aut);
             }
-
-
-
-
 
 
             //dd($item->state_fk->name);
@@ -106,10 +98,10 @@ class ReviewController extends Controller
             if (in_array($this->user->id, $supervisors)) {
 
 
-                $review = Review::where('post',$request['id'])->where('supervisor', Auth::id())->first();
+                $review = Review::where('post', $request['id'])->where('supervisor', Auth::id())->first();
 
 
-                return view('reviews.create', ['item' => $item, 'oldreview'=>$review]);
+                return view('reviews.create', ['item' => $item, 'oldreview' => $review, 'title' => $this->title]);
 
             } else {
                 abort(403);
@@ -131,20 +123,17 @@ class ReviewController extends Controller
     {
 
 
-
-
         $review = new Review($request->all());
 
         $review['supervisor'] = Auth::id();
 
-        $check = Review::where('post',$review['post'])->where('supervisor',  $review['supervisor'])->first();
+        $check = Review::where('post', $review['post'])->where('supervisor', $review['supervisor'])->first();
 
         if ($check) {
             $data = $request->all();
             $data['supervisor'] = Auth::id();
             $res = Review::find($check->id)->update($data);
-        }
-        else {
+        } else {
             $res = $review->save();
         }
 

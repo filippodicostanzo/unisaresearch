@@ -30,7 +30,7 @@ class AuthorController extends Controller
             return $next($request);
         });
 
-        $this->title = 'authors';
+        $this->title = __('titles.co-authors');
     }
 
     /**
@@ -137,7 +137,7 @@ class AuthorController extends Controller
 
         if ($this->user->hasRole('superadministrator|administrator')) {
             $item = $author;
-            return view('authors.show', ['item' => $item]);
+            return view('authors.show', ['item' => $item,  'title' => $this->title]);
         }
 
         else {
@@ -149,7 +149,7 @@ class AuthorController extends Controller
 
             if (in_array($author->toArray(), $items)) {
                 $item = $author;
-                return view('authors.show', ['item' => $item]);
+                return view('authors.show', ['item' => $item,  'title' => $this->title]);
             }
             else {
                 abort( 403) ;

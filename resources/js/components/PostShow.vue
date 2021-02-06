@@ -30,7 +30,7 @@
                         </div>
 
                         <div class="col-md-6 col-sm-12"><span class="text-bold">Template: </span> {{rendered.template_fk.name}}</div>
-                        <div class="col-md-6 col-sm-12" v-if="rendered.category_fk"><span class="text-bold">Category:</span>
+                        <div class="col-md-6 col-sm-12" v-if="rendered.category_fk"><span class="text-bold">Topic:</span>
                             {{rendered.category_fk.name}}
                         </div>
 

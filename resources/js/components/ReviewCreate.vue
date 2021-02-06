@@ -72,7 +72,7 @@
 
                             <div class="row pt-3">
                                 <div class="col-md-6 col-sm-12"><span
-                                    class="text-bold"> Pertinence on forum session:</span>
+                                    class="text-bold"> Pertinence for Forum Topic:</span>
 
                                 </div>
                                 <div class="col-md-6 col-sm-12">
@@ -138,7 +138,7 @@
                             <div class="row pt-3">
                                 <div class="col-md-12 col-xs-12 center">
                                     <div class="form-group">
-                                        <label class="form__label">Write a Review:</label>
+                                        <label class="form__label">Write a Review (optional):</label>
                                         <ckeditor v-model="review.review" :config="editorConfig"></ckeditor>
                                     </div>
                                 </div>

@@ -29,7 +29,7 @@ class TemplateController extends Controller
             return $next($request);
         });
 
-        $this->title = 'template';
+        $this->title = __('titles.templates');
     }
 
     /**
@@ -87,7 +87,7 @@ class TemplateController extends Controller
     public function show(Template $template)
     {
         $item = $template;
-        return view('admin.templates.show', ['item' => $item]);
+        return view('admin.templates.show', ['item' => $item, 'title' => $this->title]);
     }
 
     /**

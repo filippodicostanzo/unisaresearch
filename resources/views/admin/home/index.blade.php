@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'AdminLTE')
+@section('title', __('titles.nfos'))
 
 @section('content_header')
     <h1 class="m-0 text-dark">Dashboard</h1>
@@ -18,15 +18,15 @@
 @section('content')
     <div class="row">
         <div class="col-4">
-            <card-widget title="Total User" type="users" data="{{App\Models\User::all()}}"
+            <card-widget title="Total Users" type="users" data="{{App\Models\User::all()}}"
                          count="{{DB::table('users')->count()}}" icon="user"></card-widget>
         </div>
         <div class="col-4">
-            <card-widget title="Total Posts" type="posts" data="{{App\Models\Post::all()}}"
+            <card-widget title="Total Paper" type="posts" data="{{App\Models\Post::all()}}"
                          count="{{DB::table('posts')->count()}}" icon="file-alt"></card-widget>
         </div>
         <div class="col-4">
-            <card-widget title="Total Categories" type="categories" data="{{App\Models\Category::all()}}"
+            <card-widget title="Total Topics" type="categories" data="{{App\Models\Category::all()}}"
                          count="{{DB::table('categories')->count()}}" icon="tags"></card-widget>
         </div>
     </div>

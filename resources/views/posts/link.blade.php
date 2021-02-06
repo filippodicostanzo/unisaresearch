@@ -1,5 +1,7 @@
 @extends('adminlte::page')
 
+@section ('title_prefix',  __($title).' - ')
+
 @section('content_header')
 @stop
 
@@ -85,7 +87,7 @@
                             </div>
 
                             <div class="col-md-6 col-sm-12">
-                                <span class="text-bold">Category: </span>
+                                <span class="text-bold">Topic: </span>
                                 {{$item->category_fk->name}}
                             </div>
                         </div>

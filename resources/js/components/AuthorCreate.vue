@@ -4,7 +4,8 @@
             <div class="card card-mini">
                 <div class="card-header">
                     <h1 class="m0 text-dark card-title text-xl">
-                        Create New Author
+                        <span v-if="this.source == 'new'">Create New Co-Author</span>
+                        <span v-if="this.source == 'edit'">Edit {{this.author.firstname}} {{this.author.lastname}}</span>
                     </h1>
                     <div class="card-action">
                         <a :href="route('authors.index')">

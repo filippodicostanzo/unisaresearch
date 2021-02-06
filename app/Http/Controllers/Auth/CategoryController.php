@@ -29,7 +29,7 @@ class CategoryController extends Controller
             return $next($request);
         });
 
-        $this->title = 'categories';
+        $this->title = __('titles.categories');
     }
     /**
      * Display a listing of the resource.
@@ -83,7 +83,7 @@ class CategoryController extends Controller
     public function show(Category $category)
     {
         $item = $category;
-        return view('admin.categories.show', ['item' => $item]);
+        return view('admin.categories.show', ['item' => $item, 'title' => $this->title]);
     }
 
     /**

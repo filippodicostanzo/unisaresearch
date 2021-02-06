@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'AdminLTE')
+@section ('title_prefix',  __($title).' - ')
 
 @section('content')
 

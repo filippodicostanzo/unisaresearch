@@ -29,7 +29,7 @@ class ProfileController extends Controller
             return $next($request);
         });
 
-        $this->title = 'profile';
+        $this->title = __('titles.profile');
     }
 
     /**

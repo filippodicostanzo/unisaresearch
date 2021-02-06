@@ -1,5 +1,7 @@
 @extends('adminlte::page')
 
+@section ('title_prefix',  __($title).' - ')
+
 @section ('title_prefix', 'Author - ')
 
 @section('content')

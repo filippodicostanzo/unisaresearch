@@ -33,7 +33,7 @@ class UserController extends Controller
             return $next($request);
         });
 
-        $this->title = 'users';
+        $this->title = __('titles.users');
     }
 
 
@@ -127,7 +127,7 @@ class UserController extends Controller
         $role = $user->getRoles();
         $role_id = Role::where('name', $role)->first();
 
-        return view('admin.users.show', ['item' => $item, 'role'=>$role[0]]);
+        return view('admin.users.show', ['item' => $item, 'role'=>$role[0], 'title' => $this->title]);
     }
 
 

@@ -64,7 +64,7 @@ class AppServiceProvider extends ServiceProvider
                     'label_color' => 'success',
                 ],
                 [
-                    'text' => 'authors',
+                    'text' => 'coauthors',
                     'url' => 'admin/authors',
                     'icon' => 'fas fa-fw fa-user',
                     'label' => Author::count(),
@@ -105,7 +105,7 @@ class AppServiceProvider extends ServiceProvider
                     'label_color' => 'success',
                 ],
                 [
-                    'text' => 'researchers',
+                    'text' => 'authors',
                     'url' => 'admin/users?type=researcher',
                     'icon' => 'fas fa-fw fa-user-edit',
                     'label' => count($researchers),

@@ -1,7 +1,7 @@
 <template>
     <div class="card">
         <div class="card-header">
-            <h2>Latest Posts</h2>
+            <h2>Latest Paper</h2>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -10,8 +10,9 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
+                        <th scope="col">Topic</th>
                         <th scope="col" v-if="json_role.name==='researcher'">Authors</th>
-                        <th scope="col">Date</th>
+                        <th scope="col">Sumbitted</th>
                         <th scope="col">Status</th>
                         <th scope="col" class="text-right">Options</th>
                     </tr>
@@ -20,6 +21,7 @@
                     <tr v-for="(item,k) in renderedPaginate" :key="k">
                         <th scope="row">{{item.id}}</th>
                         <td>{{item.title}}</td>
+                        <td>{{item.category_fk.name}}</td>
                         <td  v-if="json_role.name=='researcher'"><span
                             v-for="(author, index) in item.authors ">{{author.firstname}} {{author.lastname}} <span
                             v-if="index+1 != item.authors.length"> - </span></span></td>
@@ -32,7 +34,8 @@
                                 <i class="fas fa-eye fa-1x fa-lg" aria-hidden="true"></i>
                             </a>
 
-                            <a class="btn btn-default btn-xs" :href="'admin/reviews/create?id='+ item.id" v-if="json_role.name==='supervisor'" >
+                            <a class="btn btn-default btn-xs" :href="'admin/reviews/create?id='+ item.id"
+                               v-if="json_role.name==='supervisor' && item.state ==3">
                                 <i class="fas fa-pencil-alt fa-1x fa-lg" aria-hidden="true"></i>
                             </a>
 

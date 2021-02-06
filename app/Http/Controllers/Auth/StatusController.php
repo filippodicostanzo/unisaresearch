@@ -29,7 +29,7 @@ class StatusController extends Controller
             return $next($request);
         });
 
-        $this->title = 'statuses';
+        $this->title = __('titles.status');
     }
 
     /**
@@ -83,7 +83,7 @@ class StatusController extends Controller
     public function show(Status $status)
     {
         $item = $status;
-        return view('admin.statuses.show', ['item' => $item]);
+        return view('admin.statuses.show', ['item' => $item, 'title' => $this->title]);
     }
 
     /**

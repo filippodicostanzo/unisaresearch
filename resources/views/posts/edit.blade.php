@@ -101,7 +101,7 @@
 
                             <div class="form-group">
 
-                                <div class="col-12"><label>Category</label></div>
+                                <div class="col-12"><label>Topic</label></div>
 
                                 <select id="items-selected" name="category" class="form-control">
                                     @foreach($categories as $category)
@@ -177,7 +177,7 @@
                                 {!! Form::text('tags', null, array('placeholder' => 'Tag separated by comma','class' => 'form-control',  'oninput'=>"this.className = ''")) !!}
                             </div>
                             <div class="form-group imageUpload">
-                                <label for="image">PDF Document</label>
+                                <label for="image">Upload Anonymus PDF</label>
                                 <div class="note">
                                     <p class="small">As you know the Forum adopts a double-blind peer review evaluation.
                                         Amongst other rules, it is expected that abstracts must be anonymous when sent

@@ -11,8 +11,8 @@
         </div>
         <div class="card-footer"><i :class="'fas fa-chart-line'"></i>  +
             <span v-if="type==='users'" class="text-bold">{{users_lastmonth}} Users </span>
-            <span v-if="type==='posts'" class="text-bold">{{posts_lastmonth}} Posts </span>
-            <span v-if="type==='categories'" class="text-bold">{{categories_lastmonth}} Categories </span>
+            <span v-if="type==='posts'" class="text-bold">{{posts_lastmonth}} Paper </span>
+            <span v-if="type==='categories'" class="text-bold">{{categories_lastmonth}} Topics </span>
             in {{month}}</div>
     </div>
 </template>

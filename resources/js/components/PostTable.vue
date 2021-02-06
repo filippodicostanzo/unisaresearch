@@ -31,9 +31,9 @@
                             <tr>
                                 <th>Id</th>
                                 <th>Title</th>
-                                <th>Category</th>
+                                <th>Topic</th>
                                 <th>Template</th>
-                                <th>Created</th>
+                                <th>Submitted</th>
                                 <th>Status</th>
                                 <th v-if="json_role.name==='superadministrator' || json_role.name==='administrator'|| json_role.name==='supervisor'">
                                     Reviews

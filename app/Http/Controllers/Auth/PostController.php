@@ -34,7 +34,7 @@ class PostController extends Controller
             return $next($request);
         });
 
-        $this->title = 'papers';
+        $this->title = __('titles.posts');
     }
 
     /**
@@ -136,7 +136,7 @@ class PostController extends Controller
         $user = Auth::user();
         $roles = $user->roles()->first();
 
-        return view('posts.show', ['item' => $item, 'role' => $roles]);
+        return view('posts.show', ['item' => $item, 'role' => $roles, 'title' => $this->title]);
     }
 
     /**
