@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Author;
 use App\Models\Comment;
+use App\Models\Edition;
 use App\Models\Post;
 use App\Models\Review;
 use App\Models\Status;
@@ -46,21 +47,22 @@ class PostController extends Controller
     {
         $reviews = Review::all();
         $statuses = Status::all();
+        $edition = Edition::where('active',1)->first();
 
         if ($this->user->hasRole('superadministrator|administrator')) {
-            $items = Post::where('state', '!=', 1)->orderBy('id', 'ASC')->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->get();
+            $items = Post::where('edition', $edition->id)->where('state', '!=', 1)->orderBy('id', 'ASC')->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->get();
             return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews, 'statuses' => $statuses]);
         } else if ($this->user->hasRole('supervisor')) {
             $items = Post::whereHas('users', function ($q) {
                 $q->where('users.id', Auth::id());
             })
-                ->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')
+                ->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->where('edition',$edition->id)
                 ->get();
 
             return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews, 'statuses' => $statuses]);
         } else {
 
-            $items = Post::where('created', Auth::id())->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->get();
+            $items = Post::where('edition', $edition->id)->where('created', Auth::id())->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->get();
             return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews, 'statuses' => $statuses]);
         }
     }
@@ -86,6 +88,8 @@ class PostController extends Controller
 
         $post = new Post($request->all());
 
+        $edition = Edition::where('active',1)->first();
+
         $authors_array = $request->input('authors');
         $authors = $request->input('authors');
 
@@ -96,6 +100,7 @@ class PostController extends Controller
         $post['authors'] = $authors;
         $post['latest_modify'] = Carbon::now();
         $post['created'] = Auth::id();
+        $post['edition'] = $edition->id;
 
 
         $res = $post->save();

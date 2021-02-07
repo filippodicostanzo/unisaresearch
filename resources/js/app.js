@@ -52,6 +52,9 @@ import StatusShow from "./components/StatusShow";
 import ReviewTable from "./components/ReviewTable";
 import ReviewCreate from "./components/ReviewCreate";
 import PostValidate from "./components/PostValidate";
+import EditionCreate from "./components/EditionCreate";
+import EditionTable from "./components/EditionTable";
+import EditionShow from "./components/EditionShow";
 
 window.route = route;
 window.Ziggy = Ziggy;
@@ -79,6 +82,9 @@ const app = new Vue({
     components: {
         'card-widget': CardWidget,
         'card-table': CardTable,
+        'edition-table': EditionTable,
+        'edition-create': EditionCreate,
+        'edition-show': EditionShow,
         'template-table': TemplateTable,
         'template-create': TemplateCreate,
         'template-show': TemplateShow,

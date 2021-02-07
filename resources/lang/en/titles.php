@@ -19,7 +19,8 @@ return [
     'status' => 'Status',
     'users' => 'Users',
     'templates' => 'Templates',
-    'profile' => 'Profile'
+    'profile' => 'Profile',
+    'editions' => 'Editions'
 
 
 

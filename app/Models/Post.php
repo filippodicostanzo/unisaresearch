@@ -66,6 +66,10 @@ class Post extends Model
         return $this->belongsToMany('App\Models\User');
     }
 
+    public function edition_fk()
+    {
+        return $this->belongsTo('App\Models\Edition', 'edition', 'id');
+    }
 
 
 }

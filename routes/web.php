@@ -78,6 +78,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
     //Route::resource('posts', 'PostController');
     Route::resource('statuses', 'StatusController');
     Route::resource('reviews', 'ReviewController');
+    Route::resource('editions', 'EditionController');
 
     Route::get('/posts/{post}/link', [PostController::class, 'link']);
     Route::patch('/posts/{post}/link',[PostController::class, 'updatelink'])->name('posts.link');

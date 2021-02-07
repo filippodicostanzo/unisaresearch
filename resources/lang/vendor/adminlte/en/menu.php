@@ -20,6 +20,7 @@ return [
     'templates'                     => 'Templates',
     'categories'                    => 'Categories',
     'statuses'                      => 'Status',
+    'editions'                      => 'Editions',
     'posts'                         => 'Posts',
     'papers'                        => 'Papers',
     'users'                         => 'Users',

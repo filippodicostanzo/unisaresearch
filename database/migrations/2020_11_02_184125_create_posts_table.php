@@ -17,6 +17,7 @@ class CreatePostsTable extends Migration
             $table->id();
             $table->string('title');
             $table->string('authors');
+            $table->string('edition')->unsigned();
             $table->bigInteger('template')->unsigned();
             $table->bigInteger('category')->unsigned();
             $table->bigInteger('created')->unsigned();
@@ -58,6 +59,10 @@ class CreatePostsTable extends Migration
 
         Schema::table('posts', function(Blueprint $table) {
             $table->foreign('supervisor')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+        });
+
+        Schema::table('posts', function(Blueprint $table) {
+            $table->foreign('edition')->references('id')->on('editions');
         });
 
     }

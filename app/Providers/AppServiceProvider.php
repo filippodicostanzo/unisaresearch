@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Author;
 use App\Models\Category;
+use App\Models\Edition;
 use App\Models\Post;
 use App\Models\Status;
 use App\Models\Template;
@@ -41,7 +42,16 @@ class AppServiceProvider extends ServiceProvider
 
         $events->listen(BuildingMenu::class, function (BuildingMenu $event) {
 
+            $edition = Edition::where('active', 1)->first();
+
             $array = [
+                [
+                    'text' => 'editions',
+                    'url' => 'admin/editions',
+                    'icon' => 'far fa-fw fa-dot-circle',
+                    'label' => Edition::count(),
+                    'label_color' => 'success',
+                ],
                 [
                     'text' => 'templates',
                     'url' => 'admin/templates',
@@ -74,7 +84,7 @@ class AppServiceProvider extends ServiceProvider
                     'text' => 'papers',
                     'url' => 'admin/posts',
                     'icon' => 'fas fa-fw fa-file',
-                    'label' => Post::count(),
+                    'label' => Post::where('edition', $edition->id)->count(),
                     'label_color' => 'success',
                 ],
             ];
