@@ -195,6 +195,17 @@
                         </div>
 
                         <div class="row pt-3">
+                            <div class="col-md-6 col-sm-12"><span class="text-bold"> Result:</span>
+
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+
+                                <span :style="resultClass(review.result)" class="result">{{review.result}}</span>
+                            </div>
+                        </div>
+
+
+                        <div class="row pt-3">
                             <div class="col-md-12 col-xs-12 center">
                                 <div class="form-group">
                                     <label class="form__label">Review:</label>
@@ -302,7 +313,8 @@
                     field_1: 0,
                     field_2: 0,
                     field_3: 0,
-                    review: ''
+                    review: '',
+                    result:''
                 },
                 json_reviews: [],
                 json_status: [],
@@ -325,7 +337,8 @@
             console.log(this.json_reviews);
             console.log(this.comment);
             this.rendered = JSON.parse(this.item);
-            if (this.json_comment !== {}) {
+            console.log(this.json_comment);
+            if (this.json_comment !== null) {
                 this.rendered.comment = this.json_comment.comment;
             }
             console.log(this.rendered);
@@ -352,6 +365,20 @@
                     });
 
 
+            },
+
+            resultClass(result) {
+                console.log(result);
+
+                if (result==='accepted') {
+                    return 'background-color: green';
+                }
+                else if (result==='review') {
+                    return 'background-color: lightgray';
+                }
+                else {
+                    return 'background-color: red';
+                }
             },
 
 
@@ -440,6 +467,12 @@
             display: inline-block;
             align-items: end;
         }
+    }
+    .result {
+        color: white;
+        padding: 10px;
+        border-radius: 10px;
+        text-transform: capitalize;
     }
 
 </style>

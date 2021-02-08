@@ -18,6 +18,7 @@ class CreateReviewsTable extends Migration
             $table->integer('field_1');
             $table->integer('field_2');
             $table->integer('field_3');
+            $table->string('result');
             $table->longText('review')->nullable();
             $table->bigInteger('post')->unsigned();
             $table->bigInteger('supervisor')->unsigned();

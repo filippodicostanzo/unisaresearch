@@ -3902,6 +3902,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PostValidate.vue",
   props: ['item', 'reviews', 'title', 'status', 'comment'],
@@ -3918,7 +3929,8 @@ __webpack_require__.r(__webpack_exports__);
         field_1: 0,
         field_2: 0,
         field_3: 0,
-        review: ''
+        review: '',
+        result: ''
       },
       json_reviews: [],
       json_status: [],
@@ -3940,8 +3952,9 @@ __webpack_require__.r(__webpack_exports__);
     console.log(this.json_reviews);
     console.log(this.comment);
     this.rendered = JSON.parse(this.item);
+    console.log(this.json_comment);
 
-    if (this.json_comment !== {}) {
+    if (this.json_comment !== null) {
       this.rendered.comment = this.json_comment.comment;
     }
 
@@ -3962,6 +3975,17 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         _this.errors = error.response.data.errors;
       });
+    },
+    resultClass: function resultClass(result) {
+      console.log(result);
+
+      if (result === 'accepted') {
+        return 'background-color: green';
+      } else if (result === 'review') {
+        return 'background-color: lightgray';
+      } else {
+        return 'background-color: red';
+      }
     },
     createFields: function createFields() {
       if (this.rendered.fields_1 !== '') {
@@ -4193,6 +4217,27 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ReviewCreate.vue",
   props: ['item', 'oldreview', 'title'],
@@ -4207,6 +4252,7 @@ __webpack_require__.r(__webpack_exports__);
         field_1: 0,
         field_2: 0,
         field_3: 0,
+        result: '',
         review: ''
       },
       nameFields: [],
@@ -4239,6 +4285,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.review.post = this.rendered.id;
+      this.submitStatus = 'PENDING';
       console.log(this.rendered);
       console.log(this.review);
       this.$http.post("/admin/reviews", this.review).then(function (response) {
@@ -4246,6 +4293,7 @@ __webpack_require__.r(__webpack_exports__);
           window.location.href = route('posts.index');
         }
       })["catch"](function (error) {
+        _this.submitStatus = 'ERROR';
         _this.errors = error.response.data.errors;
       });
     },
@@ -10599,7 +10647,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "@charset \"UTF-8\";\n.rating[data-v-3603e27e] {\n  border: none;\n  float: left;\n}\n.rating > input[data-v-3603e27e] {\n  display: none;\n}\n.rating > label[data-v-3603e27e]:before {\n  margin: 5px;\n  font-size: 1.25em;\n  font-family: \"Font Awesome 5 Free\";\n  display: inline-block;\n  content: \"\\F005\";\n}\n.rating > label[data-v-3603e27e] {\n  color: #ddd;\n  float: right;\n}\n\n/***** CSS Magic to Highlight Stars on Hover *****/\n.rating > input:checked ~ label[data-v-3603e27e],\n.rating:not(:checked) > label[data-v-3603e27e]:hover,\n.rating:not(:checked) > label:hover ~ label[data-v-3603e27e] {\n  color: #FFD700;\n}\n\n/* hover previous stars in list */\n.rating > input:checked + label[data-v-3603e27e]:hover,\n.rating > input:checked ~ label[data-v-3603e27e]:hover,\n.rating > label:hover ~ input:checked ~ label[data-v-3603e27e],\n.rating > input:checked ~ label:hover ~ label[data-v-3603e27e] {\n  color: #FFED85;\n}\nh1 span[data-v-3603e27e] {\n  font-size: 10px;\n  padding: 5px 8px;\n  background: green;\n  color: white;\n  border-radius: 7px;\n  display: inline-block;\n  align-items: end;\n}", ""]);
+exports.push([module.i, "@charset \"UTF-8\";\n.rating[data-v-3603e27e] {\n  border: none;\n  float: left;\n}\n.rating > input[data-v-3603e27e] {\n  display: none;\n}\n.rating > label[data-v-3603e27e]:before {\n  margin: 5px;\n  font-size: 1.25em;\n  font-family: \"Font Awesome 5 Free\";\n  display: inline-block;\n  content: \"\\F005\";\n}\n.rating > label[data-v-3603e27e] {\n  color: #ddd;\n  float: right;\n}\n\n/***** CSS Magic to Highlight Stars on Hover *****/\n.rating > input:checked ~ label[data-v-3603e27e],\n.rating:not(:checked) > label[data-v-3603e27e]:hover,\n.rating:not(:checked) > label:hover ~ label[data-v-3603e27e] {\n  color: #FFD700;\n}\n\n/* hover previous stars in list */\n.rating > input:checked + label[data-v-3603e27e]:hover,\n.rating > input:checked ~ label[data-v-3603e27e]:hover,\n.rating > label:hover ~ input:checked ~ label[data-v-3603e27e],\n.rating > input:checked ~ label:hover ~ label[data-v-3603e27e] {\n  color: #FFED85;\n}\nh1 span[data-v-3603e27e] {\n  font-size: 10px;\n  padding: 5px 8px;\n  background: green;\n  color: white;\n  border-radius: 7px;\n  display: inline-block;\n  align-items: end;\n}\n.result[data-v-3603e27e] {\n  color: white;\n  padding: 10px;\n  border-radius: 10px;\n  text-transform: capitalize;\n}", ""]);
 
 // exports
 
@@ -10732,7 +10780,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.rating[data-v-491dbc5f] {\n    border: none;\n    float: left;\n}\n.rating > input[data-v-491dbc5f] {\n    display: none;\n}\n.rating > label[data-v-491dbc5f]:before {\n    margin: 5px;\n    font-size: 1.25em;\n    font-family: \"Font Awesome 5 Free\";\n    display: inline-block;\n    content: \"\\F005\";\n}\n.rating > label[data-v-491dbc5f] {\n    color: #ddd;\n    float: right;\n}\n\n/***** CSS Magic to Highlight Stars on Hover *****/\n.rating > input:checked ~ label[data-v-491dbc5f], \n.rating:not(:checked) > label[data-v-491dbc5f]:hover, \n.rating:not(:checked) > label:hover ~ label[data-v-491dbc5f] {\n    color: #FFD700;\n}\n\n/* hover previous stars in list */\n.rating > input:checked + label[data-v-491dbc5f]:hover, \n.rating > input:checked ~ label[data-v-491dbc5f]:hover,\n.rating > label:hover ~ input:checked ~ label[data-v-491dbc5f], \n.rating > input:checked ~ label:hover ~ label[data-v-491dbc5f] {\n    color: #FFED85;\n}\n\n", ""]);
+exports.push([module.i, "\n.rating[data-v-491dbc5f] {\n    border: none;\n    float: left;\n}\n.rating > input[data-v-491dbc5f] {\n    display: none;\n}\n.rating > label[data-v-491dbc5f]:before {\n    margin: 5px;\n    font-size: 1.25em;\n    font-family: \"Font Awesome 5 Free\";\n    display: inline-block;\n    content: \"\\F005\";\n}\n.rating > label[data-v-491dbc5f] {\n    color: #ddd;\n    float: right;\n}\n\n/***** CSS Magic to Highlight Stars on Hover *****/\n.rating > input:checked ~ label[data-v-491dbc5f], \n.rating:not(:checked) > label[data-v-491dbc5f]:hover, \n.rating:not(:checked) > label:hover ~ label[data-v-491dbc5f] {\n    color: #FFD700;\n}\n\n/* hover previous stars in list */\n.rating > input:checked + label[data-v-491dbc5f]:hover, \n.rating > input:checked ~ label[data-v-491dbc5f]:hover,\n.rating > label:hover ~ input:checked ~ label[data-v-491dbc5f], \n.rating > input:checked ~ label:hover ~ label[data-v-491dbc5f] {\n    color: #FFED85;\n}\n.typo__p[data-v-491dbc5f]{\n    text-align: center;\n    margin-top: 30px;\n    width: 200px;\n    margin: 30px auto;\n    background: lightgray;\n    padding: 20px;\n    border-radius: 50px;\n}\n\n", ""]);
 
 // exports
 
@@ -64263,6 +64311,21 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "row pt-3" }, [
+                _vm._m(5, true),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-6 col-sm-12" }, [
+                  _c(
+                    "span",
+                    {
+                      staticClass: "result",
+                      style: _vm.resultClass(review.result)
+                    },
+                    [_vm._v(_vm._s(review.result))]
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row pt-3" }, [
                 _c("div", { staticClass: "col-md-12 col-xs-12 center" }, [
                   _c("div", { staticClass: "form-group" }, [
                     _c("label", { staticClass: "form__label" }, [
@@ -64285,7 +64348,7 @@ var render = function() {
     _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-lg-12 margin-tb" }, [
         _c("div", { staticClass: "card" }, [
-          _vm._m(5),
+          _vm._m(6),
           _vm._v(" "),
           _c("div", { staticClass: "card-body no-padding" }, [
             _c("div", { staticClass: "row pt-3" }, [
@@ -64321,7 +64384,7 @@ var render = function() {
     _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-lg-12 margin-tb" }, [
         _c("div", { staticClass: "card" }, [
-          _vm._m(6),
+          _vm._m(7),
           _vm._v(" "),
           _c("div", { staticClass: "card-body no-padding" }, [
             _c(
@@ -64497,6 +64560,14 @@ var staticRenderFns = [
       _c("span", { staticClass: "text-bold" }, [
         _vm._v(" Relevance of the paper:")
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-6 col-sm-12" }, [
+      _c("span", { staticClass: "text-bold" }, [_vm._v(" Result:")])
     ])
   },
   function() {
@@ -65043,7 +65114,130 @@ var render = function() {
                   ])
                 ]),
                 _vm._v(" "),
-                _vm._m(5),
+                _c("div", { staticClass: "row pt-3" }, [
+                  _vm._m(5),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-6 col-sm-12" }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "btn-group btn-group-toggle",
+                        attrs: { "data-toggle": "buttons" }
+                      },
+                      [
+                        _c(
+                          "label",
+                          { staticClass: "btn btn-outline-success active" },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.review.result,
+                                  expression: "review.result"
+                                }
+                              ],
+                              attrs: {
+                                type: "radio",
+                                id: "accepted",
+                                autocomplete: "off",
+                                value: "accepted"
+                              },
+                              domProps: {
+                                checked: _vm._q(_vm.review.result, "accepted")
+                              },
+                              on: {
+                                change: function($event) {
+                                  return _vm.$set(
+                                    _vm.review,
+                                    "result",
+                                    "accepted"
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(
+                              "\n                                        Accepted\n                                    "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "label",
+                          { staticClass: "btn btn-outline-secondary" },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.review.result,
+                                  expression: "review.result"
+                                }
+                              ],
+                              attrs: {
+                                type: "radio",
+                                id: "review",
+                                autocomplete: "off",
+                                value: "review"
+                              },
+                              domProps: {
+                                checked: _vm._q(_vm.review.result, "review")
+                              },
+                              on: {
+                                change: function($event) {
+                                  return _vm.$set(
+                                    _vm.review,
+                                    "result",
+                                    "review"
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(
+                              "\n                                        In Reviews\n                                    "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("label", { staticClass: "btn btn-outline-danger" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.review.result,
+                                expression: "review.result"
+                              }
+                            ],
+                            attrs: {
+                              type: "radio",
+                              id: "rejected",
+                              autocomplete: "off",
+                              value: "rejected"
+                            },
+                            domProps: {
+                              checked: _vm._q(_vm.review.result, "rejected")
+                            },
+                            on: {
+                              change: function($event) {
+                                return _vm.$set(
+                                  _vm.review,
+                                  "result",
+                                  "rejected"
+                                )
+                              }
+                            }
+                          }),
+                          _vm._v(
+                            "\n                                        Rejected\n                                    "
+                          )
+                        ])
+                      ]
+                    )
+                  ])
+                ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "row pt-3" }, [
                   _c("div", { staticClass: "col-md-12 col-xs-12 center" }, [
@@ -65179,14 +65373,8 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row pt-3" }, [
-      _c("div", { staticClass: "col-md-12 col-xs-12 center" }, [
-        _c("div", { staticClass: "form-group" }, [
-          _c("label", { staticClass: "form__label" }, [
-            _vm._v("Write a Review (optional):")
-          ])
-        ])
-      ])
+    return _c("div", { staticClass: "col-md-6 col-sm-12" }, [
+      _c("span", { staticClass: "text-bold" }, [_vm._v(" Result:")])
     ])
   }
 ]

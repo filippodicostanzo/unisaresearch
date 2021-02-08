@@ -18,6 +18,7 @@ class Review extends Model
         'field_1',
         'field_2',
         'field_3',
+        'result',
         'review',
         'post',
         'supervisor',

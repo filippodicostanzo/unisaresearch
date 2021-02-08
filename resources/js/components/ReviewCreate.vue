@@ -48,7 +48,8 @@
                     <div class="card-body no-padding">
                         <div class="row pt-3">
                             <div class="col-md-6 col-sm-12"><span class="text-bold">Tags: </span>{{rendered.tags}}</div>
-                            <div class="col-md-6 col-sm-12" v-show="true"><span class="text-bold">Download PDF: </span><a
+                            <div class="col-md-6 col-sm-12" v-show="true"><span
+                                class="text-bold">Download PDF: </span><a
                                 :href="rendered.pdf" class="btn btn-primary" target="_blank">Download</a></div>
                         </div>
                     </div>
@@ -136,6 +137,33 @@
                             </div>
 
                             <div class="row pt-3">
+                                <div class="col-md-6 col-sm-12">
+                                    <span class="text-bold"> Result:</span>
+                                </div>
+
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                        <label class="btn btn-outline-success active">
+                                            <input type="radio" id="accepted" autocomplete="off"
+                                                   v-model="review.result" value="accepted">
+                                            Accepted
+                                        </label>
+                                        <label class="btn btn-outline-secondary">
+                                            <input type="radio" id="review" autocomplete="off"
+                                                   v-model="review.result" value="review">
+                                            In Reviews
+                                        </label>
+                                        <label class="btn btn-outline-danger">
+                                            <input type="radio" id="rejected" autocomplete="off"
+                                                   v-model="review.result" value="rejected">
+                                            Rejected
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row pt-3">
                                 <div class="col-md-12 col-xs-12 center">
                                     <div class="form-group">
                                         <label class="form__label">Write a Review (optional):</label>
@@ -161,6 +189,7 @@
                             </div>
 
                         </form>
+
                     </div>
                 </div>
             </div>
@@ -184,6 +213,7 @@
                     field_1: 0,
                     field_2: 0,
                     field_3: 0,
+                    result: '',
                     review: ''
                 },
                 nameFields: [],
@@ -222,8 +252,10 @@
 
             submit() {
                 this.review.post = this.rendered.id;
+                this.submitStatus='PENDING';
                 console.log(this.rendered);
                 console.log(this.review);
+
                 this.$http
                     .post("/admin/reviews", this.review)
                     .then(response => {
@@ -232,8 +264,11 @@
                         }
                     })
                     .catch(error => {
+                        this.submitStatus='ERROR';
                         this.errors = error.response.data.errors;
                     });
+
+
             },
 
 
@@ -310,6 +345,16 @@
     .rating > label:hover ~ input:checked ~ label, /* lighten current selection */
     .rating > input:checked ~ label:hover ~ label {
         color: #FFED85;
+    }
+
+    .typo__p{
+        text-align: center;
+        margin-top: 30px;
+        width: 200px;
+        margin: 30px auto;
+        background: lightgray;
+        padding: 20px;
+        border-radius: 50px;
     }
 
 </style>
