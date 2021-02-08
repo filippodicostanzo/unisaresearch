@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Author;
+use App\Models\Edition;
 use App\Models\Post;
 use App\Models\Review;
 use App\Models\User;
@@ -197,12 +198,13 @@ class ReviewController extends Controller
     public function count() {
 
         $supervisors = User::whereRoleIs('supervisor')->orderBy('id', 'ASC')->get();
+        $edition = Edition::where('active',1)->first();
 
 
         foreach ($supervisors as $supervisor) {
 
             $count = DB::table("posts")
-                ->select("posts.*")
+                ->select("posts.*")->where('edition',$edition->id)
                 ->whereRaw("find_in_set('".$supervisor->id."',posts.supervisors)")
                 ->count();
 

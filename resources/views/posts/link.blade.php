@@ -7,6 +7,7 @@
 
 @php
     use App\Models\Author;
+    use App\Models\Edition;
     use App\Models\Post;
     use App\Models\Category;
     use App\Models\Status;use App\Models\Template;
@@ -244,8 +245,9 @@
 
                             @foreach ($supervisors as $supervisor)
                                 @php
+                                    $edition = Edition::where('active',1)->first();
                                     $count = DB::table("posts")
-                                    ->select("posts.*")
+                                    ->select("posts.*")->where('edition',$edition->id)
                                       ->whereRaw("find_in_set('".$supervisor->id."',posts.supervisors)")
                                         ->count();
                                 @endphp
