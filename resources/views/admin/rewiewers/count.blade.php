@@ -10,7 +10,7 @@
             </div>
         @endif
     </div>
-    <review-table title="{{$title}}" items="{{json_encode($items)}}"></review-table>
+    <reviewers-table title="{{$title}}" items="{{json_encode($items)}}"></reviewers-table>
 
 @stop
 

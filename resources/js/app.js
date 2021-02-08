@@ -55,6 +55,7 @@ import PostValidate from "./components/PostValidate";
 import EditionCreate from "./components/EditionCreate";
 import EditionTable from "./components/EditionTable";
 import EditionShow from "./components/EditionShow";
+import ReviewersTable from "./components/ReviewersTable";
 
 window.route = route;
 window.Ziggy = Ziggy;
@@ -99,6 +100,7 @@ const app = new Vue({
         'post-validate': PostValidate,
         'review-table': ReviewTable,
         'review-create': ReviewCreate,
+        'reviewers-table': ReviewersTable,
         'status-table': StatusTable,
         'status-create': StatusCreate,
         'status-show': StatusShow,

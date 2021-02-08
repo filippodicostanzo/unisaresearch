@@ -87,6 +87,13 @@ class AppServiceProvider extends ServiceProvider
                     'label' => Post::where('edition', $edition->id)->count(),
                     'label_color' => 'success',
                 ],
+                [
+                    'text' => 'supervisors',
+                    'url' => 'admin/reviewers/count',
+                    'icon' => 'fas fa-fw fa-at',
+                    'label' => User::whereRoleIs('supervisor')->count(),
+                    'label_color' => 'success',
+                ],
             ];
             $event->menu->addAfter('admin_settings', ...$array);
         });

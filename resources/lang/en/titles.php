@@ -20,7 +20,8 @@ return [
     'users' => 'Users',
     'templates' => 'Templates',
     'profile' => 'Profile',
-    'editions' => 'Editions'
+    'editions' => 'Editions',
+    'reviews' => 'Reviews'
 
 
 

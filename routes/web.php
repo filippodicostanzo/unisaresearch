@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\PostController;
 use App\Http\Controllers\Auth\ProfileController;
+use App\Http\Controllers\Auth\ReviewController;
 use App\Http\Controllers\Auth\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -88,6 +89,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
 
     Route::get('/profile', [ProfileController::class, 'edit']);
     Route::patch('/profile/{id}', [UserController::class, 'update'])->middleware('verified');
+
+    Route::get('reviewers/count',[ReviewController::class,'count']);
 
 });
 

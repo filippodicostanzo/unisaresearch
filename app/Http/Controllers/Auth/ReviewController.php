@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Author;
 use App\Models\Post;
 use App\Models\Review;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class ReviewController extends Controller
@@ -188,5 +190,26 @@ class ReviewController extends Controller
     public function destroy(Review $review)
     {
         //
+    }
+
+
+    public function count() {
+
+        $supervisors = User::whereRoleIs('supervisor')->orderBy('id', 'ASC')->get();
+
+
+        foreach ($supervisors as $supervisor) {
+
+            $count = DB::table("posts")
+                ->select("posts.*")
+                ->whereRaw("find_in_set('".$supervisor->id."',posts.supervisors)")
+                ->count();
+
+            $supervisor->count = $count;
+        }
+
+        $items=$supervisors;
+
+        return view('admin.rewiewers.count', ['items' => $items, 'title' => $this->title]);
     }
 }
