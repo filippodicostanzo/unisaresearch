@@ -6,34 +6,77 @@
                 <div class="card">
                     <div class="card-header">
                         <h1 class="m0 text-dark card-title text-xl">
-                            {{this.rendered.title}}
+                            {{this.rendered.title}} <span v-if="rendered.state_fk"
+                                                          :style="`background-color:${rendered.state_fk.color}`">{{rendered.state_fk.name}}</span>
+                        </h1>
+
+                        <div class="card-action">
+                            <a :href="route('posts.index')">
+                                <i class="fa fa-arrow-circle-left fa-3x fa-fw" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="card-body no-padding">
+                        <div class="row pt-3">
+                            <div class="col-md-6 col-sm-12"><span class="text-bold">Submitted By: </span>
+                                {{rendered.user_fk.name}} {{rendered.user_fk.surname}}
+                            </div>
+                            <div class="col-md-6 col-sm-12"><span class="text-bold">Co Authors: </span>
+                                <span
+                                    v-for="(author, index) in this.rendered.authors">{{author.firstname}} {{author.lastname}} <span
+                                    v-if="index+1 != rendered.authors.length">-&nbsp;</span></span>
+                            </div>
+
+                            <div class="col-md-6 col-sm-12"><span class="text-bold">Template: </span>
+                                {{rendered.template_fk.name}}
+                            </div>
+                            <div class="col-md-6 col-sm-12" v-if="rendered.category_fk"><span
+                                class="text-bold">Topic:</span>
+                                {{rendered.category_fk.name}}
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card" v-for="(field, index) in nameFields">
+                    <div class="card-header">
+                        <h1 class="m0 text-dark card-title text-xl">
+                            {{field.name}}
                         </h1>
                     </div>
 
                     <div class="card-body no-padding">
                         <div class="row pt-3">
-                            <div class="col-md-6 col-sm-12"><span class="text-bold">Template:</span>
-                                {{this.rendered.template_fk.name}}
-                            </div>
-                            <div class="col-md-6 col-sm-12"><span class="text-bold">Topic:</span>
-                                {{this.rendered.category_fk.name}}
-                            </div>
-                        </div>
-
-                        <div class="row pt-3" v-for="(field, index) in nameFields">
-                            <div class="col-md-12 col-sm-12"><span class="text-bold">{{field.name}}:</span></div>
                             <div class="col-md-12 col-sm-12">
                                 <div v-html="`${fields[index]}`"></div>
                             </div>
                         </div>
 
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="m0 text-dark card-title text-xl">
+                            Extra
+                        </h1>
+                    </div>
+
+                    <div class="card-body no-padding">
                         <div class="row pt-3">
-                            <div class="col-md-6 col-sm-12"><span class="text-bold">Tags: </span>{{rendered.tags}}</div>
+                            <div class="col-md-6 col-sm-12"><span class="text-bold">Tags: </span>{{rendered.tags}}
+                            </div>
                             <div class="col-md-6 col-sm-12" v-show="true"><span class="text-bold">PDF: </span><a
-                                :href="rendered.pdf" class="btn button btn-primary" target="_blank">Download</a></div>
+                                :href="rendered.pdf" class="btn button btn-primary" target="_blank">Download</a>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+
             </div>
         </div>
 
@@ -251,6 +294,7 @@
                 rendered: {
                     template_fk: {},
                     category_fk: {},
+                    user_fk: {},
                     comment: ''
                 },
                 review: {
@@ -346,7 +390,7 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     .rating {
         border: none;
         float: left;
@@ -384,6 +428,18 @@
     .rating > label:hover ~ input:checked ~ label, /* lighten current selection */
     .rating > input:checked ~ label:hover ~ label {
         color: #FFED85;
+    }
+
+    h1 {
+        span {
+            font-size: 10px;
+            padding: 5px 8px;
+            background: green;
+            color: white;
+            border-radius: 7px;
+            display: inline-block;
+            align-items: end;
+        }
     }
 
 </style>

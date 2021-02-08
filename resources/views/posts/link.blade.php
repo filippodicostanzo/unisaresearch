@@ -42,7 +42,7 @@
 @endphp
 
 @section('content')
-    <div class="container post-form">
+    <div class="post-form">
         <div class="row">
 
             <div class="col-lg-12 margin-tb">
@@ -50,7 +50,8 @@
 
                     <div class="card-header">
                         <h1 class="m0 text-dark card-title text-xl">
-                            Assign Paper {{$item->title}} to Supervisors
+                            Assign Paper {{$item->title}} to Supervisors <span class="state-label" style="background-color:{{$item->state_fk->color}}">{{$item->state_fk->name}}</span>
+                        </h1>
                         </h1>
                         <div class="card-action">
                             <a href="{{ route('posts.index') }}">

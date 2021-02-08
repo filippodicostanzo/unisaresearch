@@ -31298,6 +31298,16 @@ select.invalid {
   letter-spacing: 0.2pt;
 }
 
+.state-label {
+  font-size: 10px;
+  padding: 5px 8px;
+  background: green;
+  color: white;
+  border-radius: 7px;
+  display: inline-block;
+  align-items: end;
+}
+
 @-webkit-keyframes loading-frame {
   0% {
     border-color: #3acfd5;
