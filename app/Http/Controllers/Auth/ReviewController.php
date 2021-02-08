@@ -123,7 +123,7 @@ class ReviewController extends Controller
      */
     public function store(Request $request)
     {
-
+        $administrators = User::whereRoleIs('superadministrator')->get();
 
         $review = new Review($request->all());
 
@@ -139,8 +139,9 @@ class ReviewController extends Controller
             $res = $review->save();
         }
 
-        Mail::to('filippo@localidautore.it')->send(new \App\Mail\SupervisorReview($review->user_fk, $review->post_fk));
-
+        foreach ($administrators as $admin) {
+            Mail::to($admin->email)->send(new \App\Mail\SupervisorReview($review->user_fk, $review->post_fk));
+        }
 
         $message = $res ? 'The Review has been saved' : 'The Review was not saved';
         session()->flash('message', $message);

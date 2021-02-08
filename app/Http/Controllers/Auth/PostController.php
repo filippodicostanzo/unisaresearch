@@ -9,6 +9,7 @@ use App\Models\Edition;
 use App\Models\Post;
 use App\Models\Review;
 use App\Models\Status;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -85,6 +86,7 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        $administrators = User::whereRoleIs('superadministrator')->get();
 
         $post = new Post($request->all());
 
@@ -117,7 +119,10 @@ class PostController extends Controller
 
         // SEND MAIL FOR PAPER SUBMITTED
         if ($request->state === '2') {
-            Mail::to('filippo@localidautore.it')->send(new \App\Mail\NewPaperEmail($post));
+            foreach ($administrators as $admin) {
+                Mail::to($admin->email)->send(new \App\Mail\NewPaperEmail($post));
+            }
+
             foreach ($auts as $aut) {
                 Mail::to($aut->email)->send(new \App\Mail\AddAuthorEmail($aut, $authors_post));
             }
@@ -183,6 +188,8 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
+        $administrators = User::whereRoleIs('superadministrator')->get();
+
 
         $authors = $request->input('authors');
         $authors_array = $request->input('authors');
@@ -209,7 +216,9 @@ class PostController extends Controller
 
         // SEND MAIL FOR PAPER SUBMITTED
         if ($data['state'] === '2') {
-            Mail::to('filippo@localidautore.it')->send(new \App\Mail\NewPaperEmail($post));
+            foreach ($administrators as $admin) {
+                Mail::to($admin->email)->send(new \App\Mail\NewPaperEmail($post));
+            }
             foreach ($auts as $aut) {
                 Mail::to($aut->email)->send(new \App\Mail\AddAuthorEmail($aut, $authors_post));
             }
