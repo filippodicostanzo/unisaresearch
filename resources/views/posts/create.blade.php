@@ -42,6 +42,7 @@
                         <input type="hidden" id="count_fields" value="{{count($fields)}}">
                     {!! Form::open(array('route' => 'posts.store','method'=>'POST', 'enctype' => 'multipart/form-data', 'id'=>'regForm')) !!}
                     @csrf
+
                     <!-- One "tab" for each step in the form: -->
                         <div class="tab">
 
@@ -171,7 +172,7 @@
                                         Amongst other rules, it is expected that abstracts must be anonymous when sent
                                         to reviewer.
                                         Consequently, we inform you don’t have to include in your text any direct
-                                        references to to authors. Otherwise, the abstract will not be accepted for
+                                        references to authors. Otherwise, the abstract will not be accepted for
                                         evaluation.</p>
                                 </div>
                                 <div class="input-group">
@@ -269,9 +270,9 @@
 
         var options = {
             filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
-            filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token=',
+            filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token={{csrf_token()}}',
             filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
-            filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
+            filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token={{csrf_token()}}'
         };
 
         $.ajaxSetup({headers: {'csrftoken': '{{ csrf_token() }}'}});
@@ -537,5 +538,6 @@
     </script>
 
 @endpush
+
 
 

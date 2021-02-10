@@ -790,3 +790,10 @@ input.invalid, select.invalid {
     display: inline-block;
     align-items: end;
 }
+
+// REMOVE UPLOAD BUTTON FROM CK EDITOR
+ .cke_dialog_tabs {
+     a:nth-child(3) {
+         display: none;
+     }
+ }
