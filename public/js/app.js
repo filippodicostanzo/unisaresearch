@@ -86419,8 +86419,8 @@ var Ziggy = {
       "domain": null
     }
   },
-  baseUrl: 'http://unisaresearch.local/',
-  baseProtocol: 'http',
+  baseUrl: 'https://unisaresearch.local/',
+  baseProtocol: 'https',
   baseDomain: 'unisaresearch.local',
   basePort: false,
   defaultParameters: []

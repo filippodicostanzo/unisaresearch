@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'AdminLTE')
+@section('title', 'The Naples Fos')
 
 @php
     use App\Models\Post;

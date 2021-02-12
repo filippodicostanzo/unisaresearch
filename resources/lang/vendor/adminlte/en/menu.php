@@ -19,7 +19,7 @@ return [
     'dashboard'                     => 'Dashboard',
     'templates'                     => 'Templates',
     'categories'                    => 'Categories',
-    'statuses'                      => 'Status',
+    'statuses'                      => 'Paper Status',
     'editions'                      => 'Editions',
     'posts'                         => 'Posts',
     'papers'                        => 'Papers',

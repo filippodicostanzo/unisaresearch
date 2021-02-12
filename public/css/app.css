@@ -31308,6 +31308,10 @@ select.invalid {
   align-items: end;
 }
 
+.cke_dialog_tabs a:nth-child(3) {
+  display: none;
+}
+
 @-webkit-keyframes loading-frame {
   0% {
     border-color: #3acfd5;
