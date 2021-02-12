@@ -30,6 +30,11 @@ class SendRegistrationMail
     public function handle(Verified $event)
     {
         $user = User::whereNotNull('email_verified_at')->get()->last();
-        Mail::to('filippo@localidautore.it')->send(new \App\Mail\RegistrationEmail($user));
+        $administrators = User::whereRoleIs('superadministrator')->get();
+
+        foreach ($administrators as $admin) {
+            Mail::to($admin->email)->send(new \App\Mail\RegistrationEmail($user));
+        }
+
     }
 }
