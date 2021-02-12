@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\PostController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\ReviewController;
 use App\Http\Controllers\Auth\UserController;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use UniSharp\LaravelFilemanager\Lfm;
@@ -40,7 +41,11 @@ Route::get('send-mail', function () {
 //Route::get('/authors/search',[\App\Http\Controllers\Auth\AuthorController::class, 'search']);
 
 Route::get('/home', function () {
-    return view('home');
+    if (Auth::user()->hasRole('superadministrator')) {
+        return view('admin.home.index');
+    } else {
+        return view('home');
+    }
 })->middleware('verified');
 
 
