@@ -51,7 +51,7 @@ class PostController extends Controller
         $edition = Edition::where('active',1)->first();
 
         if ($this->user->hasRole('superadministrator|administrator')) {
-            $items = Post::where('edition', $edition->id)->where('state', '!=', 1)->orderBy('id', 'ASC')->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->get();
+            $items = Post::where('edition', $edition->id)->where('state', '!=', 1)->orderBy('id', 'ASC')->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users','user_fk')->get();
             return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews, 'statuses' => $statuses]);
         } else if ($this->user->hasRole('supervisor')) {
             $items = Post::whereHas('users', function ($q) {
@@ -63,7 +63,7 @@ class PostController extends Controller
             return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews, 'statuses' => $statuses]);
         } else {
 
-            $items = Post::where('edition', $edition->id)->where('created', Auth::id())->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->get();
+            $items = Post::where('edition', $edition->id)->where('created', Auth::id())->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users','user_fk')->get();
             return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews, 'statuses' => $statuses]);
         }
     }
@@ -159,9 +159,7 @@ class PostController extends Controller
     {
         $item = $post;
 
-        if ($this->user->hasRole('superadministrator|administrator')) {
-            return view('posts.edit', ['title' => $this->title, 'item' => $item]);
-        } else {
+
             if ($item->created === Auth::id() && $item->state === '1') {
 
 
@@ -174,7 +172,7 @@ class PostController extends Controller
 
                 abort(403);
             }
-        }
+
 
 
     }
@@ -226,7 +224,7 @@ class PostController extends Controller
 
 
 
-        $message = $res ? 'The Post ' . $data['title'] . ' has been saved' : 'The Post ' . $data['title'] . ' was not saved';
+        $message = $res ? 'The Paper ' . $data['title'] . ' has been saved' : 'The Paper ' . $data['title'] . ' was not saved';
         session()->flash('message', $message);
         return redirect()->route('posts.index');
     }
@@ -324,7 +322,7 @@ class PostController extends Controller
             }
         }
 
-        $message = $res ? 'The Post ' . $post->title . ' has been saved' : 'The Post ' . $post->title . ' was not saved';
+        $message = $res ? 'The Paper ' . $post->title . ' has been saved' : 'The Paper ' . $post->title . ' was not saved';
         session()->flash('message', $message);
         return redirect()->route('posts.index');
     }
@@ -398,7 +396,7 @@ class PostController extends Controller
             Mail::to($post->user_fk->email)->send(new \App\Mail\RejectedPaper($post));
         }
 
-        $message = $res ? 'The Post ' . $post->title . ' has been saved' : 'The Post ' . $post->title . ' was not saved';
+        $message = $res ? 'The Paper ' . $post->title . ' has been saved' : 'The Paper ' . $post->title . ' was not saved';
         session()->flash('message', $message);
 
     }

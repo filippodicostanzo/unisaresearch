@@ -28,6 +28,7 @@
                         <div class="row" v-if="!profile">
                             <div class="col-md-12 col-xs-12">
                                 <div class="form-group">
+                                    <label class="form__label">Choose Type Of User <span v-show="this.source==='edit'">(use this for approve a User)</span></label>
                                     <select name="role" @change="selectChange($event)" v-model="key"
                                             class="form-control">
                                         <option value="">Choose Type Of User</option>
@@ -164,14 +165,9 @@
                             </div>
 
                             <div class="col-md-6 col-xs-12">
-                                <div class="form-group" :class="{ 'form-group--error': $v.user.disciplinary.$error }">
+                                <div class="form-group">
                                     <label class="form__label">Disciplinary</label>
-                                    <input class="form__input" v-model="$v.user.disciplinary.$model"/>
-                                </div>
-                                <div class="error" v-if="!$v.user.affiliation.required">Disciplinary is required</div>
-                                <div class="error" v-if="!$v.user.disciplinary.minLength">Disciplinary must have at
-                                    least
-                                    {{$v.user.disciplinary.$params.minLength.min}} letters.
+                                    <input class="form__input" v-model="user.disciplinary"/>
                                 </div>
                             </div>
 
@@ -327,11 +323,11 @@
                 user: {
                     name: {
                         required,
-                        minLength: minLength(4)
+                        minLength: minLength(3)
                     },
                     surname: {
                         required,
-                        minLength: minLength(4)
+                        minLength: minLength(3)
                     },
                     email: {
                         required,
@@ -359,10 +355,6 @@
                         required,
                         minLength: minLength(4),
                     },
-                    disciplinary: {
-                        required,
-                        minLength: minLength(4),
-                    }
 
                 },
                 key: {
@@ -406,10 +398,6 @@
                         required,
                         minLength: minLength(4),
                     },
-                    disciplinary: {
-                        required,
-                        minLength: minLength(4),
-                    }
 
                 },
                 key: {

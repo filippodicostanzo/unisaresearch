@@ -51,9 +51,10 @@
 
                     <div class="card-header">
                         <h1 class="m0 text-dark card-title text-xl">
-                            Assign Paper {{$item->title}} to Reviewer <span class="state-label" style="background-color:{{$item->state_fk->color}}">{{$item->state_fk->name}}</span>
+                            Assign Paper {{$item->title}} to Reviewer <span class="state-label"
+                                                                            style="background-color:{{$item->state_fk->color}}">{{$item->state_fk->name}}</span>
                         </h1>
-                        </h1>
+
                         <div class="card-action">
                             <a href="{{ route('posts.index') }}">
                                 <i class="fas fa-arrow-circle-left fa-3x fa-fw" aria-hidden="true"></i>
@@ -206,10 +207,12 @@
                                 {{$item->tags}}
                             </div>
 
-                            <div class="col-md-6 col-sm-12">
-                                <span class="text-bold"> Pdf Document: </span>
-                                <a href="{{$item->pdf}}" class="btn btn-primary">Download</a>
-                            </div>
+                            @if($item->pdf!='')
+                                <div class="col-md-6 col-sm-12">
+                                    <span class="text-bold"> Pdf Document: </span>
+                                    <a href="{{$item->pdf}}" class="btn btn-primary">Download</a>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -232,10 +235,12 @@
                             <select id="statuses-selected" name="state" class="form-control">
                                 <option value="" data-type="">Choose</option>
                                 @foreach($statuses as $status)
-                                    <option value="{{$status->id}}"
-                                            data-type="{{$status->id}}" {{$item->state == $status->id ? 'selected="selected"' : ''}}>
-                                        {{$status->name}}
-                                    </option>
+                                    @if($status->id !='1')
+                                        <option value="{{$status->id}}"
+                                                data-type="{{$status->id}}" {{$item->state == $status->id ? 'selected="selected"' : ''}}>
+                                            {{$status->name}}
+                                        </option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>

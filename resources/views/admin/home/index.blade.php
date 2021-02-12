@@ -9,21 +9,24 @@
 @php
 
     use App\Models\Post;
+    use App\Models\User;
     $items=Post::where('state','!=', '1')->orderBy('id', 'DESC')->limit(20)->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->get();
     $user=Auth::user();
     $roles = $user->roles()->first();
+
+
 
 @endphp
 
 @section('content')
     <div class="row">
         <div class="col-4">
-            <card-widget title="Total Users" type="users" data="{{App\Models\User::all()}}"
-                         count="{{DB::table('users')->count()}}" icon="user"></card-widget>
+            <card-widget title="Users to Approve" type="users" data="{{App\Models\User::all()}}"
+                         count="{{User::whereRoleIs('user')->count()}}" icon="user"></card-widget>
         </div>
         <div class="col-4">
-            <card-widget title="Total Paper" type="posts" data="{{App\Models\Post::all()}}"
-                         count="{{DB::table('posts')->count()}}" icon="file-alt"></card-widget>
+            <card-widget title="Total Paper Submitted" type="posts" data="{{App\Models\Post::where('state', '!=', '1')->get()}}"
+                         count="{{Post::where('state', '!=', '1')->count()}}" icon="file-alt"></card-widget>
         </div>
         <div class="col-4">
             <card-widget title="Total Topics" type="categories" data="{{App\Models\Category::all()}}"

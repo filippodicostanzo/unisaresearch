@@ -69,7 +69,7 @@
                         <div class="row pt-3">
                             <div class="col-md-6 col-sm-12"><span class="text-bold">Tags: </span>{{rendered.tags}}
                             </div>
-                            <div class="col-md-6 col-sm-12" v-show="true"><span class="text-bold">PDF: </span><a
+                            <div class="col-md-6 col-sm-12" v-show="rendered.pdf!=''"><span class="text-bold">PDF: </span><a
                                 :href="rendered.pdf" class="btn button btn-primary" target="_blank">Download</a>
                             </div>
                         </div>
@@ -262,8 +262,8 @@
                             <div class="row pt-3">
                                 <div class="col-12 col-sm-12">
                                     <select id="statuses-selected" name="state" class="form-control"
-                                            v-model="rendered.state">>
-                                        <option v-for="status in json_status" :value="status.id">
+                                            v-model="rendered.state">
+                                        <option v-for="status in json_status" :value="status.id" v-show="status.id!='1'">
                                             {{status.name}}
                                         </option>
                                     </select>

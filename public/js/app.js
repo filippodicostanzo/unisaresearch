@@ -3488,6 +3488,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -5567,10 +5573,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "UserCreate",
@@ -5680,11 +5682,11 @@ __webpack_require__.r(__webpack_exports__);
       user: {
         name: {
           required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"],
-          minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["minLength"])(4)
+          minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["minLength"])(3)
         },
         surname: {
           required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"],
-          minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["minLength"])(4)
+          minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["minLength"])(3)
         },
         email: {
           required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"],
@@ -5709,10 +5711,6 @@ __webpack_require__.r(__webpack_exports__);
           minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["minLength"])(3)
         },
         affiliation: {
-          required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"],
-          minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["minLength"])(4)
-        },
-        disciplinary: {
           required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"],
           minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["minLength"])(4)
         }
@@ -5755,10 +5753,6 @@ __webpack_require__.r(__webpack_exports__);
           minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["minLength"])(3)
         },
         affiliation: {
-          required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"],
-          minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["minLength"])(4)
-        },
-        disciplinary: {
           required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"],
           minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["minLength"])(4)
         }
@@ -63194,8 +63188,8 @@ var render = function() {
                     {
                       name: "show",
                       rawName: "v-show",
-                      value: true,
-                      expression: "true"
+                      value: _vm.rendered.pdf != "",
+                      expression: "rendered.pdf!=''"
                     }
                   ],
                   staticClass: "col-md-6 col-sm-12"
@@ -63347,6 +63341,11 @@ var render = function() {
                     _vm._v(" "),
                     _c("th", [_vm._v("Title")]),
                     _vm._v(" "),
+                    _vm.json_role.name === "superadministrator" ||
+                    _vm.json_role.name === "administrator"
+                      ? _c("th", [_vm._v("Authors")])
+                      : _vm._e(),
+                    _vm._v(" "),
                     _c("th", [_vm._v("Topic")]),
                     _vm._v(" "),
                     _c("th", [_vm._v("Template")]),
@@ -63379,6 +63378,50 @@ var render = function() {
                         _c("td", [_vm._v(_vm._s(item.id))]),
                         _vm._v(" "),
                         _c("td", [_vm._v(_vm._s(item.title))]),
+                        _vm._v(" "),
+                        _vm.json_role.name === "superadministrator" ||
+                        _vm.json_role.name === "administrator"
+                          ? _c(
+                              "td",
+                              [
+                                _vm._v(
+                                  "\n                                " +
+                                    _vm._s(item.user_fk.name) +
+                                    " " +
+                                    _vm._s(item.user_fk.surname) +
+                                    " "
+                                ),
+                                _c(
+                                  "span",
+                                  {
+                                    directives: [
+                                      {
+                                        name: "show",
+                                        rawName: "v-show",
+                                        value: item.authors,
+                                        expression: "item.authors"
+                                      }
+                                    ]
+                                  },
+                                  [_vm._v(" - ")]
+                                ),
+                                _vm._l(item.authors, function(author, index) {
+                                  return _c("span", [
+                                    _vm._v(
+                                      _vm._s(author.firstname) +
+                                        " " +
+                                        _vm._s(author.lastname) +
+                                        " "
+                                    ),
+                                    index + 1 != item.authors.length
+                                      ? _c("span", [_vm._v("- ")])
+                                      : _vm._e()
+                                  ])
+                                })
+                              ],
+                              2
+                            )
+                          : _vm._e(),
                         _vm._v(" "),
                         _c("td", [_vm._v(_vm._s(item.category_fk.name))]),
                         _vm._v(" "),
@@ -63804,8 +63847,8 @@ var render = function() {
                       {
                         name: "show",
                         rawName: "v-show",
-                        value: true,
-                        expression: "true"
+                        value: _vm.rendered.pdf != "",
+                        expression: "rendered.pdf!=''"
                       }
                     ],
                     staticClass: "col-md-6 col-sm-12"
@@ -64433,23 +64476,30 @@ var render = function() {
                           }
                         }
                       },
-                      [
-                        _vm._v(">\n                                    "),
-                        _vm._l(_vm.json_status, function(status) {
-                          return _c(
-                            "option",
-                            { domProps: { value: status.id } },
-                            [
-                              _vm._v(
-                                "\n                                        " +
-                                  _vm._s(status.name) +
-                                  "\n                                    "
-                              )
-                            ]
-                          )
-                        })
-                      ],
-                      2
+                      _vm._l(_vm.json_status, function(status) {
+                        return _c(
+                          "option",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: status.id != "1",
+                                expression: "status.id!='1'"
+                              }
+                            ],
+                            domProps: { value: status.id }
+                          },
+                          [
+                            _vm._v(
+                              "\n                                        " +
+                                _vm._s(status.name) +
+                                "\n                                    "
+                            )
+                          ]
+                        )
+                      }),
+                      0
                     )
                   ])
                 ]),
@@ -66841,6 +66891,24 @@ var render = function() {
                 ? _c("div", { staticClass: "row" }, [
                     _c("div", { staticClass: "col-md-12 col-xs-12" }, [
                       _c("div", { staticClass: "form-group" }, [
+                        _c("label", { staticClass: "form__label" }, [
+                          _vm._v("Choose Type Of User "),
+                          _c(
+                            "span",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: this.source === "edit",
+                                  expression: "this.source==='edit'"
+                                }
+                              ]
+                            },
+                            [_vm._v("(use this for approve a User)")]
+                          )
+                        ]),
+                        _vm._v(" "),
                         _c(
                           "select",
                           {
@@ -67501,65 +67569,36 @@ var render = function() {
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-6 col-xs-12" }, [
-                      _c(
-                        "div",
-                        {
-                          staticClass: "form-group",
-                          class: {
-                            "form-group--error": _vm.$v.user.disciplinary.$error
-                          }
-                        },
-                        [
-                          _c("label", { staticClass: "form__label" }, [
-                            _vm._v("Disciplinary")
-                          ]),
-                          _vm._v(" "),
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.$v.user.disciplinary.$model,
-                                expression: "$v.user.disciplinary.$model"
-                              }
-                            ],
-                            staticClass: "form__input",
-                            domProps: {
-                              value: _vm.$v.user.disciplinary.$model
-                            },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  _vm.$v.user.disciplinary,
-                                  "$model",
-                                  $event.target.value
-                                )
-                              }
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { staticClass: "form__label" }, [
+                          _vm._v("Disciplinary")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.user.disciplinary,
+                              expression: "user.disciplinary"
                             }
-                          })
-                        ]
-                      ),
-                      _vm._v(" "),
-                      !_vm.$v.user.affiliation.required
-                        ? _c("div", { staticClass: "error" }, [
-                            _vm._v("Disciplinary is required")
-                          ])
-                        : _vm._e(),
-                      _vm._v(" "),
-                      !_vm.$v.user.disciplinary.minLength
-                        ? _c("div", { staticClass: "error" }, [
-                            _vm._v(
-                              "Disciplinary must have at\n                                least\n                                " +
-                                _vm._s(
-                                  _vm.$v.user.disciplinary.$params.minLength.min
-                                ) +
-                                " letters.\n                            "
-                            )
-                          ])
-                        : _vm._e()
+                          ],
+                          staticClass: "form__input",
+                          domProps: { value: _vm.user.disciplinary },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.user,
+                                "disciplinary",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        })
+                      ])
                     ])
                   ])
                 : _vm._e(),

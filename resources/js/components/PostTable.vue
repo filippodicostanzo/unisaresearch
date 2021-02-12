@@ -31,6 +31,7 @@
                             <tr>
                                 <th>Id</th>
                                 <th>Title</th>
+                                <th v-if="json_role.name==='superadministrator' || json_role.name==='administrator'">Authors</th>
                                 <th>Topic</th>
                                 <th>Template</th>
                                 <th>Submitted</th>
@@ -51,6 +52,11 @@
 
                                 <td>{{item.id}}</td>
                                 <td>{{item.title}}</td>
+                                <td v-if="json_role.name==='superadministrator' || json_role.name==='administrator'">
+                                    {{item.user_fk.name}} {{item.user_fk.surname}} <span v-show="item.authors"> - </span><span
+                                    v-for="(author, index) in item.authors">{{author.firstname}} {{author.lastname}} <span
+                                    v-if="index+1 != item.authors.length">-&nbsp;</span></span>
+                                </td>
                                 <td>{{item.category_fk.name}}</td>
                                 <td>{{item.template_fk.name}}</td>
                                 <td> {{ format(new Date(item.created_at), 'dd/MM/yyyy') }}</td>

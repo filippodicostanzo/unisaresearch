@@ -192,6 +192,8 @@ class UserController extends Controller
          *
          */
 
+        if (isset($user->id)) {
+
         $roles = Role::all()->sortBy('name');
         $role = $user->getRoles();
         $role_id = Role::where('name', $role)->first();
@@ -201,8 +203,6 @@ class UserController extends Controller
                 Mail::to($user->email)->send(new \App\Mail\ChangeUserRole($user));
         }
 
-
-        if (isset($user->id)) {
 
             DB::table('role_user')
                 ->where('user_id',$user->id)
@@ -215,8 +215,6 @@ class UserController extends Controller
         else {
             $res = User::find($request->id)->update($data);
         }
-
-
 
 
         $message = $res ? 'User ' . $user->name .' '. $user->surname . ' has been saved' : 'User ' . $user->name .' '. $user->surname .' was not saved';
