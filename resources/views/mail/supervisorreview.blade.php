@@ -60,7 +60,7 @@
 
 
                                     <p style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">
-                                        The supervisor <b>{{$supervisor->name}} {{$supervisor->surname}}</b> completed the review of the paper <b>{{$post->title}}</b>
+                                        The Reviewer <b>{{$supervisor->name}} {{$supervisor->surname}}</b> completed the review of the paper <b>{{$post->title}}</b>
                                     </p>
 
                                     <p style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">With our Best regards,

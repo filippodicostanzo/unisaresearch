@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class ChangeUserRole extends Mailable
+class ApprovedAccount extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -16,10 +16,9 @@ class ChangeUserRole extends Mailable
      *
      * @return void
      */
-    public function __construct($user, $role)
+    public function __construct($details)
     {
-        $this->user = $user;
-        $this->role = $role;
+        $this->details = $details;
     }
 
     /**
@@ -29,7 +28,10 @@ class ChangeUserRole extends Mailable
      */
     public function build()
     {
-        return $this->subject('The Naples Fos')
-            ->view('mail.changeuserrole')->with('user', $this->user)->with('role', $this->role);;
+
+            return $this->subject('The Naples Fos')
+                ->view('mail.approvedaccount')->with('user', $this->details);
+
+
     }
 }
