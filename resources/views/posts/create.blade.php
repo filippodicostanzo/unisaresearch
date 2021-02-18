@@ -33,7 +33,7 @@
                             Create New Submission
                         </h1>
                         <div class="card-action">
-                            <a href="{{ route('posts.index') }}">
+                            <a href="{{ route('posts.author') }}">
                                 <i class="fas fa-arrow-circle-left fa-3x fa-fw" aria-hidden="true"></i>
                             </a>
                         </div>
@@ -182,7 +182,7 @@
                                             <i class="fa fa-picture-o"></i> Choose
                                         </a>
                                         </span>
-                                    {!! Form::text('pdf', null, array('placeholder' => 'PDF','class' => 'form-control file-src','id' => 'thumbnail')) !!}
+                                    {!! Form::text('pdf', null, array('placeholder' => 'PDF','class' => 'form-control file-src','id' => 'pdf')) !!}
 
                                 </div>
 
@@ -217,7 +217,8 @@
                             <span class="step"></span>
                         </div>
 
-                        <div class="modal fade" id="modalSubmit" tabindex="-1" role="dialog" aria-labelledby="modalSubmitLabel" aria-hidden="true">
+                        <div class="modal fade" id="modalSubmit" tabindex="-1" role="dialog"
+                             aria-labelledby="modalSubmitLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -227,10 +228,12 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        Are you sure to <b>submit the paper for review?</b><br> By doing so, you will no longer be able to modify it.
+                                        Are you sure to <b>submit the paper for review?</b><br> By doing so, you will no
+                                        longer be able to modify it.
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                                        </button>
                                         <button type="button" class="btn btn-primary" id="confirmSubmit">Submit</button>
                                     </div>
                                 </div>
@@ -242,9 +245,9 @@
                         {{ Form::hidden('edit', $user) }}
                         {{ Form::hidden('source', null, array('id'=>'source')) }}
 
-                        @role('researcher')
+
                         {{ Form::hidden('state', 1, array('id'=>'post_state')) }}
-                        @endrole
+
 
                         {!! Form::close() !!}
                     </div>
@@ -260,7 +263,9 @@
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
             crossorigin="anonymous"></script>
 
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
 
     <script src="../../ckeditor/ckeditor.js"></script>
 
@@ -414,15 +419,13 @@
 
             if (!template.value) {
                 template.className += ' invalid';
-            }
-            else {
+            } else {
                 template.classList.remove('invalid');
             }
 
             if (!title.value) {
                 title.className += ' invalid';
-            }
-            else {
+            } else {
                 title.classList.remove('invalid');
             }
 
@@ -486,6 +489,21 @@
         function validateFormReview() {
             let input_textarea = document.getElementById('regForm').getElementsByTagName("textarea");
             let input_field = document.getElementById('regForm').getElementsByTagName("input");
+            let pdf = document.getElementById('pdf');
+
+
+            var inputsWeActuallyWant = [];
+            for (var j = (input_field.length - 1); j >= 0; j--) {
+
+                if (input_field[j].id !== "pdf") {
+                    inputsWeActuallyWant.push(input_field[j]);
+                }
+            }
+            input_field = inputsWeActuallyWant;
+
+            //or images[i].remove();
+            //you can also decrement i by one with each delete, more than one way to skin a cat as they say.
+
 
             let valid = true;
             let i;
@@ -500,8 +518,7 @@
                     input_textarea[i].className += " invalid";
                     // and set the current valid status to false:
                     valid = false;
-                }
-                else {
+                } else {
                     input_textarea[i].classList.remove("invalid");
                 }
 
@@ -514,9 +531,7 @@
                     input_field[i].className += " invalid";
                     // and set the current valid status to false:
                     valid = false;
-                }
-
-                else {
+                } else {
                     input_field[i].classList.remove("invalid");
                 }
             }
@@ -531,6 +546,7 @@
                     document.getElementById("regForm").submit();
                 })
             }
+
 
         }
 

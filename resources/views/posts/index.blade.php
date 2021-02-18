@@ -14,10 +14,12 @@
     use Illuminate\Support\Facades\Auth;
         $user = Auth::user();
         $roles = $user->roles()->first();
-
     @endphp
 
-    <post-table title="{{$title}}" items="{{json_encode($items)}}" role="{{json_encode($roles)}}" reviews="{{json_encode($reviews)}}" user="{{json_encode($user)}}" statuses="{{json_encode($statuses)}}"></post-table>
+
+    <post-table title="{{$title}}" items="{{json_encode($items)}}" role="{{json_encode($roles)}}" reviews="{{json_encode($reviews)}}" user="{{json_encode($user)}}" statuses="{{json_encode($statuses)}}" source="{{$source}}"></post-table>
+
+
 
 @stop
 @push('js')

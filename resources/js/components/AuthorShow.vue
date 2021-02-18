@@ -8,7 +8,11 @@
                         {{this.rendered.firstname}} {{this.rendered.lastname}}
                     </h1>
                     <div class="card-action">
-                        <a :href="route('authors.index')">
+                        <a :href="route('authors.index')" v-if="source==='author'">
+                            <i class="fa fa-arrow-circle-left fa-3x fa-fw" aria-hidden="true"></i>
+                        </a>
+
+                        <a :href="route('authors.admin')" v-if="source==='admin'">
                             <i class="fa fa-arrow-circle-left fa-3x fa-fw" aria-hidden="true"></i>
                         </a>
                     </div>
@@ -30,7 +34,7 @@
 
     export default {
         name: "CategoryShow",
-        props: ['item'],
+        props: ['item', 'source'],
         data: () => {
             return {
                 rendered: {},

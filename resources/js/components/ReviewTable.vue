@@ -36,7 +36,7 @@
                                 <td>{{item.category_fk.name}}</td>
                                 <td> {{item.template_fk.name}}</td>
                                 <td class="text-right">
-                                    <a class="btn btn-default btn-xs" :href="'reviews/create?id='+ item.id">
+                                    <a class="btn btn-default btn-xs" :href="'../../reviews/create?id='+ item.id">
                                         <i class="fas fa-eye fa-1x fa-lg" aria-hidden="true"></i>
                                     </a>
 

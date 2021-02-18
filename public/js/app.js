@@ -2122,9 +2122,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "CategoryShow",
-  props: ['item'],
+  props: ['item', 'source'],
   data: function data() {
     return {
       rendered: {}
@@ -2220,7 +2224,7 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     'vue-pagination': vue_pagination_2__WEBPACK_IMPORTED_MODULE_0___default.a
   },
-  props: ['title', 'items'],
+  props: ['title', 'items', 'source'],
   data: function data() {
     return {
       rendered: {},
@@ -3279,7 +3283,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PostShow",
-  props: ['item', 'role'],
+  props: ['item', 'role', 'source'],
   data: function data() {
     return {
       rendered: {
@@ -3494,6 +3498,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3501,7 +3508,7 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     'vue-pagination': vue_pagination_2__WEBPACK_IMPORTED_MODULE_0___default.a
   },
-  props: ['title', 'items', 'role', 'reviews', 'user', 'statuses'],
+  props: ['title', 'items', 'role', 'reviews', 'user', 'statuses', 'source'],
   data: function data() {
     return {
       rendered: {},
@@ -3530,6 +3537,9 @@ __webpack_require__.r(__webpack_exports__);
     this.paginateData(this.page - 1, this.perpage);
     this.checkedReviews(this.rendered, this.json_reviews);
     console.log(this.rendered); //jquery('#cover').filemanager('image', '', false);
+
+    console.log(Ziggy.namedRoutes);
+    console.log(this.source);
   },
   methods: {
     deleteItem: function deleteItem(id, e) {
@@ -3976,7 +3986,7 @@ __webpack_require__.r(__webpack_exports__);
       console.log(this.rendered.state);
       this.$http.patch("/admin/posts/" + this.rendered.id + '/validate', this.rendered).then(function (response) {
         if (response.status === 200) {
-          window.location.href = route('posts.index');
+          window.location.href = route('posts.admin');
         }
       })["catch"](function (error) {
         _this.errors = error.response.data.errors;
@@ -4296,7 +4306,7 @@ __webpack_require__.r(__webpack_exports__);
       console.log(this.review);
       this.$http.post("/admin/reviews", this.review).then(function (response) {
         if (response.status === 200) {
-          window.location.href = route('posts.index');
+          window.location.href = route('posts.reviewer');
         }
       })["catch"](function (error) {
         _this.submitStatus = 'ERROR';
@@ -5724,7 +5734,7 @@ __webpack_require__.r(__webpack_exports__);
       user: {
         name: {
           required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"],
-          minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["minLength"])(4)
+          minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["minLength"])(3)
         },
         surname: {
           required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"],
@@ -61567,12 +61577,23 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-action" }, [
-            _c("a", { attrs: { href: _vm.route("authors.index") } }, [
-              _c("i", {
-                staticClass: "fa fa-arrow-circle-left fa-3x fa-fw",
-                attrs: { "aria-hidden": "true" }
-              })
-            ])
+            _vm.source === "author"
+              ? _c("a", { attrs: { href: _vm.route("authors.index") } }, [
+                  _c("i", {
+                    staticClass: "fa fa-arrow-circle-left fa-3x fa-fw",
+                    attrs: { "aria-hidden": "true" }
+                  })
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.source === "admin"
+              ? _c("a", { attrs: { href: _vm.route("authors.admin") } }, [
+                  _c("i", {
+                    staticClass: "fa fa-arrow-circle-left fa-3x fa-fw",
+                    attrs: { "aria-hidden": "true" }
+                  })
+                ])
+              : _vm._e()
           ])
         ]),
         _vm._v(" "),
@@ -61627,14 +61648,28 @@ var render = function() {
             )
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "card-action" }, [
-            _c("a", { attrs: { href: _vm.route("authors.create") } }, [
-              _c("i", {
-                staticClass: "fa fa-plus-circle fa-3x fa-fw",
-                attrs: { "aria-hidden": "true" }
-              })
-            ])
-          ])
+          _c(
+            "div",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.source === "author",
+                  expression: "source==='author'"
+                }
+              ],
+              staticClass: "card-action"
+            },
+            [
+              _c("a", { attrs: { href: _vm.route("authors.create") } }, [
+                _c("i", {
+                  staticClass: "fa fa-plus-circle fa-3x fa-fw",
+                  attrs: { "aria-hidden": "true" }
+                })
+              ])
+            ]
+          )
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "card-body no-padding" }, [
@@ -61663,7 +61698,9 @@ var render = function() {
                           {
                             staticClass: "btn btn-default btn-xs",
                             attrs: {
-                              href: _vm.route("authors.show", { id: item.id })
+                              href: _vm
+                                .route("authors.show", item.id)
+                                .withQuery({ source: _vm.source })
                             }
                           },
                           [
@@ -63067,12 +63104,18 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "card-action" }, [
-              _c("a", { attrs: { href: _vm.route("posts.index") } }, [
-                _c("i", {
-                  staticClass: "fa fa-arrow-circle-left fa-3x fa-fw",
-                  attrs: { "aria-hidden": "true" }
-                })
-              ])
+              _vm.source
+                ? _c(
+                    "a",
+                    { attrs: { href: _vm.route("posts." + _vm.source) } },
+                    [
+                      _c("i", {
+                        staticClass: "fa fa-arrow-circle-left fa-3x fa-fw",
+                        attrs: { "aria-hidden": "true" }
+                      })
+                    ]
+                  )
+                : _vm._e()
             ])
           ]),
           _vm._v(" "),
@@ -63188,8 +63231,8 @@ var render = function() {
                     {
                       name: "show",
                       rawName: "v-show",
-                      value: _vm.rendered.pdf != "",
-                      expression: "rendered.pdf!=''"
+                      value: _vm.rendered.pdf != "" && _vm.rendered.pdf != null,
+                      expression: "rendered.pdf!='' && rendered.pdf!=null"
                     }
                   ],
                   staticClass: "col-md-6 col-sm-12"
@@ -63259,7 +63302,7 @@ var render = function() {
             )
           ]),
           _vm._v(" "),
-          this.json_role.name === "researcher"
+          _vm.source === "author"
             ? _c("div", { staticClass: "card-action" }, [
                 _c("a", { attrs: { href: _vm.route("posts.create") } }, [
                   _c("i", {
@@ -63270,63 +63313,77 @@ var render = function() {
               ])
             : _vm._e(),
           _vm._v(" "),
-          _c("div", { staticClass: "card-action" }, [
-            _c("span", [_vm._v("Filter By State: ")]),
-            _vm._v(" "),
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.state,
-                    expression: "state"
-                  }
-                ],
-                staticClass: "form-group",
-                attrs: { name: "status" },
-                on: {
-                  change: [
-                    function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.state = $event.target.multiple
-                        ? $$selectedVal
-                        : $$selectedVal[0]
-                    },
-                    function($event) {
-                      return _vm.onChange()
-                    }
-                  ]
+          _c(
+            "div",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.source !== "author",
+                  expression: "source!=='author'"
                 }
-              },
-              [
-                _c("option", { attrs: { value: "" } }, [_vm._v("All")]),
-                _vm._v(" "),
-                _vm._l(_vm.json_statuses, function(status) {
-                  return _c(
-                    "option",
-                    { key: status.id, domProps: { value: status.id } },
-                    [
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(status.name) +
-                          "\n                        "
-                      )
-                    ]
-                  )
-                })
               ],
-              2
-            )
-          ])
+              staticClass: "card-action"
+            },
+            [
+              _c("span", [_vm._v("Filter By State: ")]),
+              _vm._v(" "),
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.state,
+                      expression: "state"
+                    }
+                  ],
+                  staticClass: "form-group",
+                  attrs: { name: "status" },
+                  on: {
+                    change: [
+                      function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.state = $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      },
+                      function($event) {
+                        return _vm.onChange()
+                      }
+                    ]
+                  }
+                },
+                [
+                  _c("option", { attrs: { value: "" } }, [_vm._v("All")]),
+                  _vm._v(" "),
+                  _vm._l(_vm.json_statuses, function(status) {
+                    return _c(
+                      "option",
+                      { key: status.id, domProps: { value: status.id } },
+                      [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(status.name) +
+                            "\n                        "
+                        )
+                      ]
+                    )
+                  })
+                ],
+                2
+              )
+            ]
+          )
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "card-body no-padding" }, [
@@ -63341,10 +63398,20 @@ var render = function() {
                     _vm._v(" "),
                     _c("th", [_vm._v("Title")]),
                     _vm._v(" "),
-                    _vm.json_role.name === "superadministrator" ||
-                    _vm.json_role.name === "administrator"
-                      ? _c("th", [_vm._v("Authors")])
-                      : _vm._e(),
+                    _c(
+                      "th",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.source == "admin",
+                            expression: "source=='admin'"
+                          }
+                        ]
+                      },
+                      [_vm._v("Authors")]
+                    ),
                     _vm._v(" "),
                     _c("th", [_vm._v("Topic")]),
                     _vm._v(" "),
@@ -63354,9 +63421,7 @@ var render = function() {
                     _vm._v(" "),
                     _c("th", [_vm._v("Status")]),
                     _vm._v(" "),
-                    _vm.json_role.name === "superadministrator" ||
-                    _vm.json_role.name === "administrator" ||
-                    _vm.json_role.name === "supervisor"
+                    _vm.source === "admin" || _vm.source === "reviewer"
                       ? _c("th", [
                           _vm._v(
                             "\n                                Reviews\n                            "
@@ -63379,49 +63444,56 @@ var render = function() {
                         _vm._v(" "),
                         _c("td", [_vm._v(_vm._s(item.title))]),
                         _vm._v(" "),
-                        _vm.json_role.name === "superadministrator" ||
-                        _vm.json_role.name === "administrator"
-                          ? _c(
-                              "td",
-                              [
+                        _c(
+                          "td",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: _vm.source == "admin",
+                                expression: "source=='admin'"
+                              }
+                            ]
+                          },
+                          [
+                            _vm._v(
+                              "\n                                " +
+                                _vm._s(item.user_fk.name) +
+                                " " +
+                                _vm._s(item.user_fk.surname) +
+                                " "
+                            ),
+                            _c(
+                              "span",
+                              {
+                                directives: [
+                                  {
+                                    name: "show",
+                                    rawName: "v-show",
+                                    value: item.authors,
+                                    expression: "item.authors"
+                                  }
+                                ]
+                              },
+                              [_vm._v(" - ")]
+                            ),
+                            _vm._l(item.authors, function(author, index) {
+                              return _c("span", [
                                 _vm._v(
-                                  "\n                                " +
-                                    _vm._s(item.user_fk.name) +
+                                  _vm._s(author.firstname) +
                                     " " +
-                                    _vm._s(item.user_fk.surname) +
+                                    _vm._s(author.lastname) +
                                     " "
                                 ),
-                                _c(
-                                  "span",
-                                  {
-                                    directives: [
-                                      {
-                                        name: "show",
-                                        rawName: "v-show",
-                                        value: item.authors,
-                                        expression: "item.authors"
-                                      }
-                                    ]
-                                  },
-                                  [_vm._v(" - ")]
-                                ),
-                                _vm._l(item.authors, function(author, index) {
-                                  return _c("span", [
-                                    _vm._v(
-                                      _vm._s(author.firstname) +
-                                        " " +
-                                        _vm._s(author.lastname) +
-                                        " "
-                                    ),
-                                    index + 1 != item.authors.length
-                                      ? _c("span", [_vm._v("- ")])
-                                      : _vm._e()
-                                  ])
-                                })
-                              ],
-                              2
-                            )
-                          : _vm._e(),
+                                index + 1 != item.authors.length
+                                  ? _c("span", [_vm._v("- ")])
+                                  : _vm._e()
+                              ])
+                            })
+                          ],
+                          2
+                        ),
                         _vm._v(" "),
                         _c("td", [_vm._v(_vm._s(item.category_fk.name))]),
                         _vm._v(" "),
@@ -63450,8 +63522,7 @@ var render = function() {
                           )
                         ]),
                         _vm._v(" "),
-                        _vm.json_role.name === "superadministrator" ||
-                        _vm.json_role.name === "administrator"
+                        _vm.source == "admin"
                           ? _c(
                               "td",
                               _vm._l(item.users, function(reviews) {
@@ -63485,7 +63556,7 @@ var render = function() {
                             )
                           : _vm._e(),
                         _vm._v(" "),
-                        _vm.json_role.name === "supervisor"
+                        _vm.source == "reviewer"
                           ? _c(
                               "td",
                               _vm._l(item.users, function(reviews) {
@@ -63533,7 +63604,9 @@ var render = function() {
                             {
                               staticClass: "btn btn-default btn-xs",
                               attrs: {
-                                href: _vm.route("posts.show", { id: item.id })
+                                href: _vm
+                                  .route("posts.show", item.id)
+                                  .withQuery({ source: _vm.source })
                               }
                             },
                             [
@@ -63544,13 +63617,13 @@ var render = function() {
                             ]
                           ),
                           _vm._v(" "),
-                          _vm.json_role.name === "supervisor" && item.state == 3
+                          _vm.source === "reviewer" && item.state == 3
                             ? _c(
                                 "a",
                                 {
                                   staticClass: "btn btn-default btn-xs",
                                   attrs: {
-                                    href: "reviews/create?id=" + item.id
+                                    href: "../reviews/create?id=" + item.id
                                   }
                                 },
                                 [
@@ -63563,8 +63636,7 @@ var render = function() {
                               )
                             : _vm._e(),
                           _vm._v(" "),
-                          _vm.json_role.name === "superadministrator" ||
-                          _vm.json_role.name === "administrator"
+                          _vm.source === "admin"
                             ? _c(
                                 "a",
                                 {
@@ -63584,8 +63656,7 @@ var render = function() {
                               )
                             : _vm._e(),
                           _vm._v(" "),
-                          _vm.json_role.name === "superadministrator" ||
-                          _vm.json_role.name === "administrator"
+                          _vm.source === "admin"
                             ? _c(
                                 "a",
                                 {
@@ -63606,7 +63677,7 @@ var render = function() {
                               )
                             : _vm._e(),
                           _vm._v(" "),
-                          _vm.json_role.name === "researcher" && item.state == 1
+                          _vm.source === "author" && item.state == 1
                             ? _c(
                                 "a",
                                 {
@@ -63627,9 +63698,7 @@ var render = function() {
                               )
                             : _vm._e(),
                           _vm._v(" "),
-                          _vm.json_role.name === "superadministrator" ||
-                          _vm.json_role.name === "administrator" ||
-                          item.state == 1
+                          _vm.source === "admin" || item.state == 1
                             ? _c(
                                 "a",
                                 {
@@ -63728,7 +63797,7 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "card-action" }, [
-                _c("a", { attrs: { href: _vm.route("posts.index") } }, [
+                _c("a", { attrs: { href: _vm.route("posts.admin") } }, [
                   _c("i", {
                     staticClass: "fa fa-arrow-circle-left fa-3x fa-fw",
                     attrs: { "aria-hidden": "true" }
@@ -63847,8 +63916,9 @@ var render = function() {
                       {
                         name: "show",
                         rawName: "v-show",
-                        value: _vm.rendered.pdf != "",
-                        expression: "rendered.pdf!=''"
+                        value:
+                          _vm.rendered.pdf != "" && _vm.rendered.pdf != null,
+                        expression: "rendered.pdf!='' && rendered.pdf!=null"
                       }
                     ],
                     staticClass: "col-md-6 col-sm-12"
@@ -65496,7 +65566,9 @@ var render = function() {
                           "a",
                           {
                             staticClass: "btn btn-default btn-xs",
-                            attrs: { href: "reviews/create?id=" + item.id }
+                            attrs: {
+                              href: "../../reviews/create?id=" + item.id
+                            }
                           },
                           [
                             _c("i", {
@@ -83873,7 +83945,8 @@ Vue.use(ckeditor4_vue__WEBPACK_IMPORTED_MODULE_4___default.a);
 Vue.mixin({
   methods: {
     route: function route(name, params, absolute) {
-      return ziggy_js__WEBPACK_IMPORTED_MODULE_5___default()(name, params, absolute, _ziggy__WEBPACK_IMPORTED_MODULE_6__["Ziggy"]);
+      var config = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : _ziggy__WEBPACK_IMPORTED_MODULE_6__["Ziggy"];
+      return ziggy_js__WEBPACK_IMPORTED_MODULE_5___default()(name, params, absolute, config);
     }
   }
 });
@@ -86112,39 +86185,9 @@ var Ziggy = {
       "methods": ["GET", "HEAD"],
       "domain": null
     },
-    "posts.index": {
-      "uri": "admin\/posts",
+    "authors.admin": {
+      "uri": "admin\/authors\/all",
       "methods": ["GET", "HEAD"],
-      "domain": null
-    },
-    "posts.create": {
-      "uri": "admin\/posts\/create",
-      "methods": ["GET", "HEAD"],
-      "domain": null
-    },
-    "posts.store": {
-      "uri": "admin\/posts",
-      "methods": ["POST"],
-      "domain": null
-    },
-    "posts.show": {
-      "uri": "admin\/posts\/{post}",
-      "methods": ["GET", "HEAD"],
-      "domain": null
-    },
-    "posts.edit": {
-      "uri": "admin\/posts\/{post}\/edit",
-      "methods": ["GET", "HEAD"],
-      "domain": null
-    },
-    "posts.update": {
-      "uri": "admin\/posts\/{post}",
-      "methods": ["PUT", "PATCH"],
-      "domain": null
-    },
-    "posts.destroy": {
-      "uri": "admin\/posts\/{post}",
-      "methods": ["DELETE"],
       "domain": null
     },
     "templates.index": {
@@ -86392,6 +86435,11 @@ var Ziggy = {
       "methods": ["DELETE"],
       "domain": null
     },
+    "posts.admin": {
+      "uri": "admin\/posts\/all",
+      "methods": ["GET", "HEAD"],
+      "domain": null
+    },
     "posts.link": {
       "uri": "admin\/posts\/{post}\/link",
       "methods": ["PATCH"],
@@ -86400,6 +86448,46 @@ var Ziggy = {
     "posts.valid": {
       "uri": "admin\/posts\/{post}\/validate",
       "methods": ["PATCH"],
+      "domain": null
+    },
+    "posts.reviewer": {
+      "uri": "admin\/posts\/review",
+      "methods": ["GET", "HEAD"],
+      "domain": null
+    },
+    "posts.author": {
+      "uri": "admin\/posts",
+      "methods": ["GET", "HEAD"],
+      "domain": null
+    },
+    "posts.create": {
+      "uri": "admin\/posts\/create",
+      "methods": ["GET", "HEAD"],
+      "domain": null
+    },
+    "posts.store": {
+      "uri": "admin\/posts",
+      "methods": ["POST"],
+      "domain": null
+    },
+    "posts.show": {
+      "uri": "admin\/posts\/{post}",
+      "methods": ["GET", "HEAD"],
+      "domain": null
+    },
+    "posts.edit": {
+      "uri": "admin\/posts\/{post}\/edit",
+      "methods": ["GET", "HEAD"],
+      "domain": null
+    },
+    "posts.update": {
+      "uri": "admin\/posts\/{post}",
+      "methods": ["PUT", "PATCH"],
+      "domain": null
+    },
+    "posts.destroy": {
+      "uri": "admin\/posts\/{post}",
+      "methods": ["DELETE"],
       "domain": null
     },
     "login": {
@@ -86458,8 +86546,8 @@ var Ziggy = {
       "domain": null
     }
   },
-  baseUrl: 'https://unisaresearch.local/',
-  baseProtocol: 'https',
+  baseUrl: 'http://unisaresearch.local/',
+  baseProtocol: 'http',
   baseDomain: 'unisaresearch.local',
   basePort: false,
   defaultParameters: []

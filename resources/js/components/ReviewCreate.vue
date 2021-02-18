@@ -260,7 +260,7 @@
                     .post("/admin/reviews", this.review)
                     .then(response => {
                         if (response.status === 200) {
-                            window.location.href = route('posts.index')
+                            window.location.href = route('posts.reviewer')
                         }
                     })
                     .catch(error => {

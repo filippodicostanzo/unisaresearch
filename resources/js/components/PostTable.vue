@@ -7,15 +7,15 @@
                     <h1 class="m0 text-dark card-title text-xl">
                         {{this.title}}
                     </h1>
-                    <div class="card-action" v-if="this.json_role.name==='researcher'">
+                    <div class="card-action" v-if="source==='author'">
                         <a :href="route('posts.create')">
                             <i class="fa fa-plus-circle fa-3x fa-fw" aria-hidden="true"></i>
                         </a>
 
                     </div>
-                    <div class="card-action">
+                    <div class="card-action" v-show="source!=='author'">
                         <span>Filter By State: </span>
-                        <select name="status"  v-model="state" @change="onChange()" class="form-group">
+                        <select name="status" v-model="state" @change="onChange()" class="form-group">
                             <option value="">All</option>
                             <option v-for="status in json_statuses" :key="status.id" :value="status.id">
                                 {{status.name}}
@@ -31,12 +31,12 @@
                             <tr>
                                 <th>Id</th>
                                 <th>Title</th>
-                                <th v-if="json_role.name==='superadministrator' || json_role.name==='administrator'">Authors</th>
+                                <th v-show="source=='admin'">Authors</th>
                                 <th>Topic</th>
                                 <th>Template</th>
                                 <th>Submitted</th>
                                 <th>Status</th>
-                                <th v-if="json_role.name==='superadministrator' || json_role.name==='administrator'|| json_role.name==='supervisor'">
+                                <th v-if="source==='admin' ||source==='reviewer'">
                                     Reviews
                                 </th>
                                 <th class="text-right">Options</th>
@@ -52,8 +52,9 @@
 
                                 <td>{{item.id}}</td>
                                 <td>{{item.title}}</td>
-                                <td v-if="json_role.name==='superadministrator' || json_role.name==='administrator'">
-                                    {{item.user_fk.name}} {{item.user_fk.surname}} <span v-show="item.authors"> - </span><span
+                                <td v-show="source=='admin'">
+                                    {{item.user_fk.name}} {{item.user_fk.surname}} <span
+                                    v-show="item.authors"> - </span><span
                                     v-for="(author, index) in item.authors">{{author.firstname}} {{author.lastname}} <span
                                     v-if="index+1 != item.authors.length">-&nbsp;</span></span>
                                 </td>
@@ -62,7 +63,7 @@
                                 <td> {{ format(new Date(item.created_at), 'dd/MM/yyyy') }}</td>
                                 <td><span :style="`background-color:${item.state_fk.color}`" class="post-status">{{item.state_fk.name}}</span>
                                 </td>
-                                <td v-if="json_role.name==='superadministrator' || json_role.name==='administrator'">
+                                <td v-if="source=='admin'">
 
                                     <span v-for="reviews in item.users">
 
@@ -73,7 +74,7 @@
                                            data-placement="top" :title="reviews.name+' '+ reviews.surname"></i></span>
                                 </td>
 
-                                <td v-if="json_role.name==='supervisor'">
+                                <td v-if="source=='reviewer'">
 
                                     <span v-for="reviews in item.users">
                                         <span v-if="reviews.id === json_user.id">
@@ -87,36 +88,38 @@
                                 </td>
 
                                 <td class="text-right">
-                                    <a class="btn btn-default btn-xs" :href="route('posts.show', {id: item.id})">
+                                    <a class="btn btn-default btn-xs"
+                                       :href="route('posts.show', item.id).withQuery({ source: source })">
+
                                         <i class="fas fa-eye fa-1x fa-lg" aria-hidden="true"></i>
                                     </a>
 
-                                    <a class="btn btn-default btn-xs" :href="'reviews/create?id='+ item.id"
-                                       v-if="json_role.name==='supervisor' && item.state ==3">
+                                    <a class="btn btn-default btn-xs" :href="'../reviews/create?id='+ item.id"
+                                       v-if="source==='reviewer' && item.state ==3">
                                         <i class="fas fa-pencil-alt fa-1x fa-lg" aria-hidden="true"></i>
                                     </a>
 
                                     <a class="btn btn-default btn-xs"
                                        :href="route('posts.link', {id: item.id})"
-                                       v-if="json_role.name==='superadministrator' || json_role.name==='administrator'">
+                                       v-if="source==='admin'">
                                         <i class="fas fa-link fa-1x fa-lg" aria-hidden="true"></i>
                                     </a>
 
                                     <a class="btn btn-default btn-xs"
                                        :href="route('posts.valid', {id: item.id})"
-                                       v-if="json_role.name==='superadministrator' || json_role.name==='administrator'">
+                                       v-if="source==='admin'">
                                         <i class="fas fa-clipboard-check fa-1x fa-lg" aria-hidden="true"></i>
                                     </a>
 
                                     <a class="btn btn-default btn-xs"
                                        :href="route('posts.edit', {id: item.id})"
-                                       v-if="json_role.name==='researcher' && item.state == 1">
+                                       v-if="source==='author' && item.state == 1">
                                         <i class="fas fa-pencil-alt fa-1x fa-lg" aria-hidden="true"></i>
                                     </a>
 
 
                                     <a class="btn btn-danger btn-xs" v-on:click="deleteItem(item.id, $event)"
-                                       v-if="json_role.name==='superadministrator' || json_role.name==='administrator' || item.state ==1">
+                                       v-if="source==='admin' || item.state ==1">
                                         <i class="fas fa-minus-circle fa-1x fa-lg" aria-hidden="true"></i>
                                     </a>
                                 </td>
@@ -148,7 +151,7 @@
         components: {
             'vue-pagination': Pagination
         },
-        props: ['title', 'items', 'role', 'reviews', 'user', 'statuses'],
+        props: ['title', 'items', 'role', 'reviews', 'user', 'statuses', 'source'],
         data: () => {
             return {
                 rendered: {},
@@ -160,7 +163,7 @@
                 json_role: {},
                 json_reviews: [],
                 json_user: {},
-                json_statuses:{},
+                json_statuses: {},
                 state: '',
                 format,
             }
@@ -179,6 +182,8 @@
             this.checkedReviews(this.rendered, this.json_reviews)
             console.log(this.rendered);
             //jquery('#cover').filemanager('image', '', false);
+            console.log(Ziggy.namedRoutes);
+            console.log(this.source);
 
         },
         methods: {
@@ -225,7 +230,7 @@
             onChange() {
 
                 this.rendered = this.backup_filter;
-                if (this.state!='') {
+                if (this.state != '') {
 
                     this.rendered = this.rendered.filter(item => item.state == this.state);
                 }

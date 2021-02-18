@@ -40,16 +40,14 @@ class AuthorController extends Controller
      */
     public function index()
     {
-        if ($this->user->hasRole('superadministrator|administrator')) {
-            $items = Author::orderBy('id', 'ASC')->get();
-            return view('authors.index', ['items' => $items, 'title' => $this->title]);
-        } else {
+        $source='author';
+
             $items= Author::whereHas('users', function($q) {
                 $q->where('users.id', Auth::id());
             })->orderBy('id', 'ASC')->get();
 
-            return view('authors.index', ['items' => $items, 'title' => $this->title]);
-        }
+            return view('authors.index', ['items' => $items, 'title' => $this->title, 'source'=>$source]);
+
 
     }
 
@@ -132,12 +130,14 @@ class AuthorController extends Controller
      * @param \App\Models\Author $author
      * @return \Illuminate\Http\Response
      */
-    public function show(Author $author)
+    public function show(Author $author, Request $request)
     {
+
+        $source= $request['source'];
 
         if ($this->user->hasRole('superadministrator|administrator')) {
             $item = $author;
-            return view('authors.show', ['item' => $item,  'title' => $this->title]);
+            return view('authors.show', ['item' => $item,  'title' => $this->title, 'source'=>$source]);
         }
 
         else {
@@ -149,7 +149,7 @@ class AuthorController extends Controller
 
             if (in_array($author->toArray(), $items)) {
                 $item = $author;
-                return view('authors.show', ['item' => $item,  'title' => $this->title]);
+                return view('authors.show', ['item' => $item,  'title' => $this->title, 'source'=>$source]);
             }
             else {
                 abort( 403) ;
@@ -281,6 +281,13 @@ class AuthorController extends Controller
             return Response($output);
         }
 
+    }
+
+
+    public function authorsadmin() {
+        $source = 'admin';
+        $items = Author::orderBy('id', 'ASC')->get();
+        return view('authors.index', ['items' => $items, 'title' => $this->title, 'source'=>$source]);
     }
 
 }

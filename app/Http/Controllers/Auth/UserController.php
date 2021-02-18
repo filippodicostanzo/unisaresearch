@@ -198,9 +198,16 @@ class UserController extends Controller
         $role = $user->getRoles();
         $role_id = Role::where('name', $role)->first();
 
+        $new_role = Role::where('id', $data['role'])->first();
 
         if ($role_id['id'] !== $data['role']) {
-                Mail::to($user->email)->send(new \App\Mail\ChangeUserRole($user));
+
+            if ($role_id['id']=='5' && $data['role']=='4') {
+                Mail::to($user->email)->send(new \App\Mail\ApprovedAccount($user));
+            }
+            else {
+                Mail::to($user->email)->send(new \App\Mail\ChangeUserRole($user, $new_role['name']));
+            }
         }
 
 

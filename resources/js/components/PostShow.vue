@@ -10,7 +10,7 @@
                     </h1>
 
                     <div class="card-action">
-                        <a :href="route('posts.index')">
+                        <a :href="route('posts.'+source)" v-if="source">
                             <i class="fa fa-arrow-circle-left fa-3x fa-fw" aria-hidden="true"></i>
                         </a>
                     </div>
@@ -70,7 +70,7 @@
                     <div class="row pt-3">
                         <div class="col-md-6 col-sm-12"><span class="text-bold">Tags: </span>{{rendered.tags}}
                         </div>
-                        <div class="col-md-6 col-sm-12" v-show="rendered.pdf!=''"><span class="text-bold">PDF: </span><a
+                        <div class="col-md-6 col-sm-12"  v-show="rendered.pdf!='' && rendered.pdf!=null"><span class="text-bold">PDF: </span><a
                             :href="rendered.pdf" class="btn button btn-primary" target="_blank">Download</a>
                         </div>
                     </div>
@@ -85,7 +85,7 @@
 
     export default {
         name: "PostShow",
-        props: ['item', 'role'],
+        props: ['item', 'role', 'source'],
         data: () => {
             return {
                 rendered: {
@@ -105,6 +105,7 @@
             this.nameFields = JSON.parse(this.rendered.template_fk.fields);
             this.createFields();
             console.log(this.rendered);
+
         },
         methods: {
             createFields() {
@@ -137,7 +138,8 @@
                 }
 
 
-            }
+            },
+
         },
     }
 </script>

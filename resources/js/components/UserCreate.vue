@@ -366,7 +366,7 @@
                 user: {
                     name: {
                         required,
-                        minLength: minLength(4)
+                        minLength: minLength(3)
                     },
                     surname: {
                         required,

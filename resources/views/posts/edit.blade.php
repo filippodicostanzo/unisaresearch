@@ -41,7 +41,7 @@
                             Edit {{$title}}
                         </h1>
                         <div class="card-action">
-                            <a href="{{ route('posts.index') }}">
+                            <a href="{{ route('posts.author') }}">
                                 <i class="fas fa-arrow-circle-left fa-3x fa-fw" aria-hidden="true"></i>
                             </a>
                         </div>
@@ -114,46 +114,6 @@
                             </div>
 
 
-                            @role('superadministrator|administrator|supervisor')
-                            <div class="form-group">
-
-                                <div class="col-12"><label>Status</label></div>
-
-                                <select id="statuses-selected" name="state" class="form-control">
-                                    <option value="" data-type="">Choose</option>
-                                    @foreach($statuses as $status)
-                                        <option value="{{$status->id}}"
-                                                data-type="{{$status->id}}" {{$item->state == $status->id ? 'selected="selected"' : ''}}>
-                                            {{$status->name}}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            @endrole
-
-                            @role('superadministrator|administrator')
-                            <div class="form-group">
-
-                                <div class="col-12"><label>Supervisor</label></div>
-
-                                @foreach ($supervisors as $supervisor)
-
-                                    <div class="item col-md-6 col-xs-6 mb-3">
-                                        <div class="form-check">
-                                            <input type="checkbox" id="{{$supervisor->id}}"
-                                                   name="authors[]"
-                                                   value="{{$supervisor->id}}" {{ in_array($supervisor->id, $sup) ? 'checked' : ''}}>
-                                            <label class="form-check-label"
-                                                   for="exampleCheck1">{{$supervisor->name}} {{$supervisor->surname}}</label>
-                                        </div>
-                                    </div>
-
-                                @endforeach
-
-                            </div>
-
-                            @endrole
-
 
                         </div>
 
@@ -193,7 +153,7 @@
                                             <i class="fa fa-picture-o"></i> Choose
                                         </a>
                                         </span>
-                                    {!! Form::text('pdf', null, array('placeholder' => 'PDF','class' => 'form-control file-src','id' => 'thumbnail')) !!}
+                                    {!! Form::text('pdf', null, array('placeholder' => 'PDF','class' => 'form-control file-src','id' => 'pdf')) !!}
 
                                 </div>
 
@@ -247,10 +207,8 @@
 
                         {{ Form::hidden('created', $user) }}
                         {{ Form::hidden('edit', $user) }}
-
-                        @role('researcher')
                         {{ Form::hidden('state', 1, array('id'=>'post_state')) }}
-                        @endrole
+
 
 
                         {!! Form::close() !!}
@@ -450,6 +408,17 @@
 
             let valid = true;
             let i;
+
+            var inputsWeActuallyWant = [];
+            for (var j = (input_field.length - 1) ; j >= 0; j--) {
+
+                if (input_field[j].id !== "pdf") {
+                    inputsWeActuallyWant.push(input_field[j]);
+                }
+            }
+            input_field = inputsWeActuallyWant;
+
+            console.log(input_field);
 
             for (i = 0; i < input_textarea.length; i++) {
                 var id = input_textarea[i].getAttribute('id');

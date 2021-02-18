@@ -265,9 +265,9 @@ return [
 
         ['header' => 'users_settings', 'role' => 'superadministrator|administrator', 'key'=>'users_settings' ],
 
-        ['header'=>'posts_settings', 'role'=>'researcher|supervisor', 'key'=>'posts_settings'],
+        ['header'=>'reviewers_settings', 'role'=>'superadministrator|administrator|supervisor', 'key'=>'reviewers_settings'],
 
-
+        ['header'=>'authors_settings', 'role'=>'superadministrator|administrator|researcher|supervisor', 'key'=>'authors_settings'],
 
         ['header' => 'account_settings'],
         [

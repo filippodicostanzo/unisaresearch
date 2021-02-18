@@ -37,6 +37,8 @@
     $sup = explode(",", $item->supervisors);
     $statuses = Status::orderBy('id')->get();
     $supervisors = User::whereRoleIs('supervisor')->get();
+    $administrators= User::whereRoleIs('superadministrator')->get();
+
 
 
 
@@ -56,7 +58,7 @@
                         </h1>
 
                         <div class="card-action">
-                            <a href="{{ route('posts.index') }}">
+                            <a href="{{ route('posts.admin') }}">
                                 <i class="fas fa-arrow-circle-left fa-3x fa-fw" aria-hidden="true"></i>
                             </a>
                         </div>
@@ -235,7 +237,7 @@
                             <select id="statuses-selected" name="state" class="form-control">
                                 <option value="" data-type="">Choose</option>
                                 @foreach($statuses as $status)
-                                    @if($status->id !='1')
+                                    @if($status->id !='1'&&$status->id !='4'&&$status->id !='5')
                                         <option value="{{$status->id}}"
                                                 data-type="{{$status->id}}" {{$item->state == $status->id ? 'selected="selected"' : ''}}>
                                             {{$status->name}}
@@ -247,6 +249,8 @@
 
                         <div class="row pt-3">
                             <div class="col-12"><label>Reviewer</label></div>
+
+
 
                             @foreach ($supervisors as $supervisor)
                                 @php
@@ -268,10 +272,35 @@
                                 </div>
 
                             @endforeach
+
+                            @foreach ($administrators as $administrator)
+                                @php
+                                    $edition = Edition::where('active',1)->first();
+                                    $count = DB::table("posts")
+                                    ->select("posts.*")->where('edition',$edition->id)
+                                      ->whereRaw("find_in_set('".$administrator->id."',posts.supervisors)")
+                                        ->count();
+                                @endphp
+                                <div class="item col-md-6 col-xs-6 mb-3">
+                                    <div class="form-check">
+                                        <input type="checkbox" id="{{$administrator->id}}"
+                                               name="supervisors[]"
+                                               value="{{$administrator->id}}" {{ in_array($administrator->id, $sup) ? 'checked' : ''}}>
+                                        <label class="form-check-label"
+                                               for="exampleCheck1">{{$administrator->name}} {{$administrator->surname}}
+                                            ({{$count}})</label>
+                                    </div>
+                                </div>
+
+                            @endforeach
+                        </div>
+
+                        <div class="error pt-3" style="display: none">
+
                         </div>
 
                         <div class="row pt-3">
-                            <button type="submit" class="btn btn-primary btn-lg btn-block">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block" id="savelink">
                                 <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
                             </button>
                         </div>
@@ -319,110 +348,37 @@
             }
 
             $('#document').filemanager('file', '', false);
+
+            $('#savelink').on('click', function (e) {
+                //
+                e.preventDefault();
+
+                if ($('#statuses-selected').val()=='3') {
+                    var ck_box = $('input[type="checkbox"]:checked').length;
+
+                    // return in firefox or chrome console
+                    // the number of checkbox checked
+
+
+                    if(ck_box > 0){
+                        $('.error').fadeOut();
+                        document.getElementById("regForm").submit();
+                    }
+                    else {
+                        $('.error').fadeIn();
+                        $('.error').html('<p class="text-danger text-center"> You must select at least one Reviewer</p>');
+                    }
+                }
+
+                else {
+                    document.getElementById("regForm").submit();
+                }
+
+            })
+
         });
 
-        var currentTab = 0; // Current tab is set to be the first tab (0)
-        showTab(currentTab); // Display the current tab
 
-        function showTab(n) {
-            // This function will display the specified tab of the form ...
-            var x = document.getElementsByClassName("tab");
-            x[n].style.display = "block";
-            // ... and fix the Previous/Next buttons:
-            if (n == 0) {
-                document.getElementById("prevBtn").style.display = "none";
-            } else {
-                document.getElementById("prevBtn").style.display = "inline";
-            }
-            if (n == (x.length - 1)) {
-                document.getElementById("nextBtn").innerHTML = "Submit";
-            } else {
-                document.getElementById("nextBtn").innerHTML = "Next";
-            }
-            // ... and run a function that displays the correct step indicator:
-            fixStepIndicator(n)
-        }
-
-        function nextPrev(n) {
-            // This function will figure out which tab to display
-            var x = document.getElementsByClassName("tab");
-            // Exit the function if any field in the current tab is invalid:
-            if (n == 1 && !validateForm()) return false;
-            // Hide the current tab:
-            x[currentTab].style.display = "none";
-            // Increase or decrease the current tab by 1:
-            currentTab = currentTab + n;
-            // if you have reached the end of the form... :
-            if (currentTab >= x.length) {
-
-                document.getElementById('loader').style.display = "block";
-                document.getElementById("prevBtn").style.display = "none";
-                document.getElementById("nextBtn").style.display = "none";
-
-                //...the form gets submitted:
-                document.getElementById("regForm").submit();
-                return false;
-            }
-            // Otherwise, display the correct tab:
-            showTab(currentTab);
-        }
-
-        function validateForm() {
-            // This function deals with validation of the form fields
-            var x, y, i, z, k, valid = true;
-            x = document.getElementsByClassName("tab");
-            y = x[currentTab].getElementsByTagName("input");
-            z = x[currentTab].getElementsByTagName("textarea");
-
-
-            var checkbox = document.querySelector('input[name="authors[]"]:checked');
-            if (!checkbox) {
-                document.getElementById('author_error').innerHTML = '<p class="text-danger">Please select an author</p>'
-                valid = false;
-            } else {
-                document.getElementById('author_error').innerHTML = '';
-                valid = true;
-            }
-
-            // A loop that checks every input field in the current tab:
-            for (i = 0; i < y.length; i++) {
-                // If a field is empty...
-                if (y[i].value == "") {
-                    // add an "invalid" class to the field:
-                    y[i].className += " invalid";
-                    // and set the current valid status to false:
-                    valid = false;
-                }
-
-            }
-
-            for (i = 0; i < z.length; i++) {
-                var id = z[i].getAttribute('id');
-
-                if (CKEDITOR.instances[id].getData() === "") {
-                    z[i].className += " invalid";
-                    // and set the current valid status to false:
-                    valid = false;
-                } else {
-                    z[i].classList.remove('invalid');
-                }
-            }
-            // If the valid status is true, mark the step as finished and valid:
-            if (valid) {
-                document.getElementsByClassName("step")[currentTab].className += " finish";
-            }
-            return valid; // return the valid status
-        }
-
-        function fixStepIndicator(n) {
-            // This function removes the "active" class of all steps...
-            var i, x = document.getElementsByClassName("step");
-            for (i = 0; i < x.length; i++) {
-                x[i].className = x[i].className.replace(" active", "");
-            }
-            //... and adds the "active" class to the current step:
-            x[n].className += " active";
-        }
     </script>
 
 @endpush

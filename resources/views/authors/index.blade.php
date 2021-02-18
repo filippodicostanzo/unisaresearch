@@ -10,5 +10,5 @@
             </div>
         @endif
     </div>
-    <author-table title="{{$title}}" items="{{json_encode($items)}}"></author-table>
+    <author-table title="{{$title}}" items="{{json_encode($items)}}" source="{{$source}}"></author-table>
 @stop

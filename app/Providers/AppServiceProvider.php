@@ -75,14 +75,14 @@ class AppServiceProvider extends ServiceProvider
                 ],
                 [
                     'text' => 'coauthors',
-                    'url' => 'admin/authors',
+                    'url' => 'admin/authors/all',
                     'icon' => 'fas fa-fw fa-user',
                     'label' => Author::count(),
                     'label_color' => 'success',
                 ],
                 [
                     'text' => 'papers',
-                    'url' => 'admin/posts',
+                    'url' => 'admin/posts/all',
                     'icon' => 'fas fa-fw fa-file',
                     'label' => Post::where('edition', $edition->id)->count(),
                     'label_color' => 'success',
@@ -139,16 +139,34 @@ class AppServiceProvider extends ServiceProvider
             $event->menu->addAfter('users_settings', ...$array);
         });
 
+
         $events->listen(BuildingMenu::class, function (BuildingMenu $event) {
 
-            if (Auth::user()->hasRole('supervisor')) {
+
                 $postcount = Post::whereHas('users', function ($q) {
                     $q->where('users.id', Auth::id());
                 })->count();
 
-            } else {
+
+
+            $array = [
+                [
+                    'text' => 'assigned_papers',
+                    'url' => 'admin/posts/review',
+                    'icon' => 'fas fa-fw fa-user-cog',
+                    'label' => $postcount,
+                    'label_color' => 'success',
+                ],
+            ];
+            $event->menu->addAfter('reviewers_settings', ...$array);
+        });
+
+
+        $events->listen(BuildingMenu::class, function (BuildingMenu $event) {
+
+
                 $postcount = Post::where('created', Auth::id())->count();
-            }
+
 
             $array = [
 
@@ -160,7 +178,6 @@ class AppServiceProvider extends ServiceProvider
                         $q->where('users.id', Auth::id());
                     })->count(),
                     'label_color' => 'success',
-                    'role' => 'researcher'
                 ],
                 [
                     'text' => 'my_papers',
@@ -170,7 +187,7 @@ class AppServiceProvider extends ServiceProvider
                     'label_color' => 'success',
                 ],
             ];
-            $event->menu->addAfter('posts_settings', ...$array);
+            $event->menu->addAfter('authors_settings', ...$array);
         });
 
 

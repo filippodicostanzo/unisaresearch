@@ -7,7 +7,7 @@
                     <h1 class="m0 text-dark card-title text-xl">
                         {{this.title}}
                     </h1>
-                    <div class="card-action">
+                    <div class="card-action" v-show="source==='author'">
                         <a :href="route('authors.create')">
                             <i class="fa fa-plus-circle fa-3x fa-fw" aria-hidden="true"></i>
                         </a>
@@ -34,7 +34,7 @@
                                 <td>{{item.lastname}}</td>
                                 <td>{{item.email}}</td>
                                 <td class="text-right">
-                                    <a class="btn btn-default btn-xs" :href="route('authors.show', {id: item.id})">
+                                    <a class="btn btn-default btn-xs" :href="route('authors.show', (item.id)).withQuery({ source: source })">
                                         <i class="fas fa-eye fa-1x fa-lg" aria-hidden="true"></i>
                                     </a>
                                     <a class="btn btn-default btn-xs"
@@ -71,7 +71,7 @@
         components: {
             'vue-pagination': Pagination
         },
-        props: ['title', 'items'],
+        props: ['title', 'items', 'source'],
         data: () => {
             return {
                 rendered: {},

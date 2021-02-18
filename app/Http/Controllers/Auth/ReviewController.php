@@ -197,7 +197,7 @@ class ReviewController extends Controller
 
     public function count() {
 
-        $supervisors = User::whereRoleIs('supervisor')->orderBy('id', 'ASC')->get();
+        $supervisors = User::whereRoleIs(['supervisor', 'superadministrator'])->orderBy('id', 'ASC')->get();
         $edition = Edition::where('active',1)->first();
 
 

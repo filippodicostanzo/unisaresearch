@@ -67,7 +67,7 @@ Vue.use( CKEditor );
 
 Vue.mixin({
     methods: {
-        route: (name, params, absolute) => route(name, params, absolute, Ziggy),
+        route: (name, params, absolute, config = Ziggy) => route(name, params, absolute, config),
     },
 });
 

@@ -48,24 +48,12 @@ class PostController extends Controller
     {
         $reviews = Review::all();
         $statuses = Status::all();
-        $edition = Edition::where('active',1)->first();
+        $edition = Edition::where('active', 1)->first();
+        $source = 'author';
 
-        if ($this->user->hasRole('superadministrator|administrator')) {
-            $items = Post::where('edition', $edition->id)->where('state', '!=', 1)->orderBy('id', 'ASC')->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users','user_fk')->get();
-            return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews, 'statuses' => $statuses]);
-        } else if ($this->user->hasRole('supervisor')) {
-            $items = Post::whereHas('users', function ($q) {
-                $q->where('users.id', Auth::id());
-            })
-                ->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->where('edition',$edition->id)
-                ->get();
+        $items = Post::where('edition', $edition->id)->where('created', Auth::id())->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users', 'user_fk')->get();
+        return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews, 'statuses' => $statuses, 'source' => $source]);
 
-            return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews, 'statuses' => $statuses]);
-        } else {
-
-            $items = Post::where('edition', $edition->id)->where('created', Auth::id())->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users','user_fk')->get();
-            return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews, 'statuses' => $statuses]);
-        }
     }
 
     /**
@@ -86,11 +74,19 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+
+
+
         $administrators = User::whereRoleIs('superadministrator')->get();
 
         $post = new Post($request->all());
 
-        $edition = Edition::where('active',1)->first();
+        //Check consistency of input hidden STATE
+        if ($post['state'] != '1' && $post['state'] != '2') {
+            abort(403);
+        }
+
+        $edition = Edition::where('active', 1)->first();
 
         $authors_array = $request->input('authors');
         $authors = $request->input('authors');
@@ -102,6 +98,7 @@ class PostController extends Controller
         $post['authors'] = $authors;
         $post['latest_modify'] = Carbon::now();
         $post['created'] = Auth::id();
+        $post['edit'] = Auth::id();
         $post['edition'] = $edition->id;
 
 
@@ -113,7 +110,7 @@ class PostController extends Controller
 
 
         // SEND MAIL FOR PAPER SUBMITTED
-        $authors_post = Post::where('id',$post->id)->with('authors')->first();
+        $authors_post = Post::where('id', $post->id)->with('authors')->first();
         $auts = $authors_post->authors()->get();
         $authors_post->authors_fk = $auts;
 
@@ -128,9 +125,9 @@ class PostController extends Controller
             }
         }
 
-        $message = $res ? 'The Post ' . $post->title . ' has been saved' : 'The Post ' . $post->title . ' was not saved';
+        $message = $res ? 'The Paper ' . $post->title . ' has been saved' : 'The Paper ' . $post->title . ' was not saved';
         session()->flash('message', $message);
-        return redirect()->route('posts.index');
+        return redirect()->route('posts.author');
     }
 
     /**
@@ -139,14 +136,15 @@ class PostController extends Controller
      * @param \App\Models\Post $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
+    public function show(Post $post, Request $request)
     {
 
+        $source = $request['source'];
         $item = Post::with('state_fk', 'category_fk', 'template_fk', 'authors', 'user_fk', 'users')->where('id', $post->id)->first();
         $user = Auth::user();
         $roles = $user->roles()->first();
 
-        return view('posts.show', ['item' => $item, 'role' => $roles, 'title' => $this->title]);
+        return view('posts.show', ['item' => $item, 'role' => $roles, 'title' => $this->title, 'source' => $source]);
     }
 
     /**
@@ -160,19 +158,18 @@ class PostController extends Controller
         $item = $post;
 
 
-            if ($item->created === Auth::id() && $item->state === '1') {
+        if ($item->created === Auth::id() && $item->state === '1') {
 
 
-                return view('posts.edit', ['title' => $this->title, 'item' => $item]);
-            }
+            return view('posts.edit', ['title' => $this->title, 'item' => $item]);
+        }
 
-            if ($item->supervisor === Auth::id()) {
-                return view('posts.edit', ['title' => $this->title, 'item' => $item]);
-            } else {
+        if ($item->supervisor === Auth::id()) {
+            return view('posts.edit', ['title' => $this->title, 'item' => $item]);
+        } else {
 
-                abort(403);
-            }
-
+            abort(403);
+        }
 
 
     }
@@ -189,6 +186,7 @@ class PostController extends Controller
         $administrators = User::whereRoleIs('superadministrator')->get();
 
 
+
         $authors = $request->input('authors');
         $authors_array = $request->input('authors');
 
@@ -198,6 +196,15 @@ class PostController extends Controller
 
 
         $data = $request->all();
+
+        //Check consistency of input hidden STATE
+        if ($data['state'] != '1' && $data['state'] != '2') {
+            abort(403);
+        }
+        $data['created'] = Auth::id();
+        $data['edit'] = Auth::id();
+
+
         $data['authors'] = $authors;
         $data['latest_modify'] = Carbon::now();
 
@@ -208,7 +215,7 @@ class PostController extends Controller
         }
 
 
-        $authors_post = Post::where('id',$post->id)->with('authors')->first();
+        $authors_post = Post::where('id', $post->id)->with('authors')->first();
         $auts = $authors_post->authors()->get();
         $authors_post->authors_fk = $auts;
 
@@ -223,10 +230,9 @@ class PostController extends Controller
         }
 
 
-
         $message = $res ? 'The Paper ' . $data['title'] . ' has been saved' : 'The Paper ' . $data['title'] . ' was not saved';
         session()->flash('message', $message);
-        return redirect()->route('posts.index');
+        return redirect()->route('posts.author');
     }
 
     /**
@@ -314,8 +320,10 @@ class PostController extends Controller
 
 
         //SEND EMAIL TO SUPERVISORS & ADMIN
-        $supervisors_post = Post::where('id',$post->id)->with('users')->first();
-        if ($data['state'] === '3') {
+
+
+        $supervisors_post = Post::where('id', $post->id)->with('users')->first();
+        if ($data['state'] === '3' && $post->state != '3') {
             Mail::to($post->user_fk->email)->send(new \App\Mail\ReviewPaper($post));
             foreach ($supervisors_post->users as $supervisor) {
                 Mail::to($supervisor->email)->send(new \App\Mail\SupervisorPaper($supervisor, $supervisors_post));
@@ -324,7 +332,7 @@ class PostController extends Controller
 
         $message = $res ? 'The Paper ' . $post->title . ' has been saved' : 'The Paper ' . $post->title . ' was not saved';
         session()->flash('message', $message);
-        return redirect()->route('posts.index');
+        return redirect()->route('posts.admin');
     }
 
     /**
@@ -375,8 +383,7 @@ class PostController extends Controller
                 $cmt = Comment::find($post_comment->id);
                 $cmt->comment = $request['comment'];
                 $cmt->save();
-            }
-            else {
+            } else {
                 $comment = new Comment();
                 $comment['comment'] = $request['comment'];
                 $comment['user_id'] = Auth::id();
@@ -401,5 +408,37 @@ class PostController extends Controller
 
     }
 
+    function postsadmin()
+    {
+        $reviews = Review::all();
+        $statuses = Status::all();
+        $edition = Edition::where('active', 1)->first();
+        $source = 'admin';
+
+        $items = Post::where('edition', $edition->id)->where('state', '!=', 1)->orderBy('id', 'ASC')->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users', 'user_fk')->get();
+        return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews, 'statuses' => $statuses, 'source' => $source]);
+
+    }
+
+    function postsreviewer()
+    {
+
+        $reviews = Review::all();
+        $statuses = Status::all();
+        $edition = Edition::where('active', 1)->first();
+        $source = 'reviewer';
+
+
+        $items = Post::whereHas('users', function ($q) {
+            $q->where('users.id', Auth::id());
+        })
+            ->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users', 'user_fk')->where('edition', $edition->id)
+            ->get();
+
+
+        return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews, 'statuses' => $statuses, 'source' => $source]);
+
+
+    }
 
 }
