@@ -44,6 +44,7 @@ class AppServiceProvider extends ServiceProvider
 
             $edition = Edition::where('active', 1)->first();
 
+
             $array = [
                 [
                     'text' => 'editions',
@@ -91,7 +92,7 @@ class AppServiceProvider extends ServiceProvider
                     'text' => 'supervisors',
                     'url' => 'admin/reviewers/count',
                     'icon' => 'fas fa-fw fa-at',
-                    'label' => User::whereRoleIs('supervisor')->count(),
+                    'label' => User::whereRoleIs('supervisor')->orWhereRoleIs('superadministrator')->count(),
                     'label_color' => 'success',
                 ],
             ];
