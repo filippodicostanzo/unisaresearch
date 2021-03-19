@@ -14,6 +14,9 @@
         @yield('content_top_nav_left')
     </ul>
 
+    <ul  class="navbar-nav">
+        <li> <a href="#" target="_blank"><button class="btn btn-primary">Back to Forum WebSite </button></a></li>
+    </ul>
     {{-- Navbar right links --}}
     <ul class="navbar-nav ml-auto">
         {{-- Custom right links --}}

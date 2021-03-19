@@ -12,5 +12,5 @@
     </div>
     <reviewers-table title="{{$title}}" items="{{json_encode($items)}}"></reviewers-table>
 
-@stop
 
+@stop

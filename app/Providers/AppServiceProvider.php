@@ -92,7 +92,7 @@ class AppServiceProvider extends ServiceProvider
                     'text' => 'supervisors',
                     'url' => 'admin/reviewers/count',
                     'icon' => 'fas fa-fw fa-at',
-                    'label' => User::whereRoleIs('supervisor')->orWhereRoleIs('superadministrator')->count(),
+                    'label' => User::whereRoleIs('superadministrator')->orWhereRoleIs('supervisor')->count(),
                     'label_color' => 'success',
                 ],
             ];
