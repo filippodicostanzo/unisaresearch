@@ -56,6 +56,7 @@ import EditionCreate from "./components/EditionCreate";
 import EditionTable from "./components/EditionTable";
 import EditionShow from "./components/EditionShow";
 import ReviewersTable from "./components/ReviewersTable";
+import Modal from "./components/Modal";
 
 window.route = route;
 window.Ziggy = Ziggy;
@@ -106,7 +107,8 @@ const app = new Vue({
         'status-show': StatusShow,
         'user-table': UserTable,
         'user-create': UserCreate,
-        'user-show': UserShow
+        'user-show': UserShow,
+        'modal': Modal
     }
 });
 

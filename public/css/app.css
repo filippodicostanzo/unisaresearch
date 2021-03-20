@@ -31312,6 +31312,14 @@ select.invalid {
   display: none;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
+.modal-body {
+  overflow: auto;
+}
+
 @-webkit-keyframes loading-frame {
   0% {
     border-color: #3acfd5;
