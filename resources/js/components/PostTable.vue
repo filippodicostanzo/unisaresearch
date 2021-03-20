@@ -6,6 +6,11 @@
                 <div class="card-header">
                     <h1 class="m0 text-dark card-title text-xl">
                         {{this.title}}
+                        <i
+                            class="fa fa-info-circle fa-fw pointer"
+                            aria-hidden="true"
+                            @click="showModal"
+                            v-if="source==='admin' ||source==='reviewer'" ></i>
                     </h1>
                     <div class="card-action" v-if="source==='author'">
                         <a :href="route('posts.create')">
@@ -137,6 +142,7 @@
                 </div>
             </div>
         </div>
+        <modal v-show="isModalVisible" :data="modalHTML" @close="closeModal" />
     </div>
 </template>
 
@@ -145,11 +151,13 @@
 
     import Pagination from 'vue-pagination-2';
     import {format} from 'date-fns';
+    import Modal from "./Modal";
 
     export default {
         name: "PostTable",
         components: {
-            'vue-pagination': Pagination
+            'vue-pagination': Pagination,
+            'modal': Modal
         },
         props: ['title', 'items', 'role', 'reviews', 'user', 'statuses', 'source'],
         data: () => {
@@ -166,6 +174,20 @@
                 json_statuses: {},
                 state: '',
                 format,
+                isModalVisible: false,
+                modalHTML: {
+                    title: "Papers Guide",
+                    body: `<div>
+                        <p>In questa sezione è possibile gestire i papers.</p>
+                        <p>Nella tabella presente al centro della pagina è possibile, per ogni item, effetuare delle operazioni.</p>
+                        <p>Il pulsante <i aria-hidden="true" class="fas fa-eye fa-1x fa-lg"></i> permette di vedere i dettagli di questo item.</p>
+                        <p>Il pulsante <i aria-hidden="true" class="fas fa-link fa-1x fa-lg"></i> permette agli amministratori di assegnare questo paper ai reviewers.</p>
+                        <p>Il pulsante <i aria-hidden="true" class="fas fa-clipboard-check fa-1x fa-lg"></i> permette agli amministratore di leggere le reviews e di accettare o rifiutare il paper.</p>
+                        <p>Il pulsante <i aria-hidden="true" class="fas fa-pencil-alt fa-1x fa-lg"></i> permette ai reviewers di scrivere una review.</p>
+                        <p>Il pulsante <i aria-hidden="true" class="fas fa-minus-circle fa-1x fa-lg"></i> permette di cancellare questo item.</p>
+                        </div>
+                    `
+                }
             }
         },
         mounted() {
@@ -268,8 +290,13 @@
                     })
                 });
 
+            },
+            showModal() {
+                this.isModalVisible = true;
+            },
+            closeModal() {
+                this.isModalVisible = false;
             }
-
 
         },
     }

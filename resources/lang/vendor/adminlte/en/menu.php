@@ -18,7 +18,7 @@ return [
     'information'                   => 'Information',
     'dashboard'                     => 'Dashboard',
     'templates'                     => 'Templates',
-    'categories'                    => 'Categories',
+    'categories'                    => 'Topics',
     'statuses'                      => 'Paper Status',
     'editions'                      => 'Editions',
     'posts'                         => 'Posts',

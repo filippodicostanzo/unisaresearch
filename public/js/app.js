@@ -2154,6 +2154,13 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_pagination_2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-pagination-2 */ "./node_modules/vue-pagination-2/compiled/main.js");
 /* harmony import */ var vue_pagination_2__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_pagination_2__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Modal */ "./resources/js/components/Modal.vue");
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2219,10 +2226,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AuthorTable",
   components: {
-    'vue-pagination': vue_pagination_2__WEBPACK_IMPORTED_MODULE_0___default.a
+    'vue-pagination': vue_pagination_2__WEBPACK_IMPORTED_MODULE_0___default.a,
+    'modal': _Modal__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   props: ['title', 'items', 'source'],
   data: function data() {
@@ -2231,7 +2240,12 @@ __webpack_require__.r(__webpack_exports__);
       pages: 0,
       perpage: 20,
       page: 1,
-      renderedPaginate: []
+      renderedPaginate: [],
+      isModalVisible: false,
+      modalHTML: {
+        title: "Co Authors Guide",
+        body: "<div>\n                    <p>In questa sezione \xE8 possibile gestire i co-autori dei paper.</p>\n                    <p>Cliccando sul pulsante  <i class=\"fa fa-info-circle fa-fw\"></i> \xE8 possibile aggiungere un nuovo co-autore.</p>\n                    <p>Nella tabella presente al centro della pagina \xE8 possibile, per ogni item, effetuare delle operazioni.</p>\n                    <p>Il pulsante <i aria-hidden=\"true\" class=\"fas fa-eye fa-1x fa-lg\"></i> permette di vedere i dettagli di questo item.</p>\n                    <p>Il pulsante <i aria-hidden=\"true\" class=\"fas fa-pencil-alt fa-1x fa-lg\"></i> permette di modificare questo item.</p>\n                    <p>Il pulsante <i aria-hidden=\"true\" class=\"fas fa-minus-circle fa-1x fa-lg\"></i> permette di cancellare questo item.</p>\n                    </div>\n                "
+      }
     };
   },
   mounted: function mounted() {
@@ -2272,6 +2286,12 @@ __webpack_require__.r(__webpack_exports__);
     },
     paginateData: function paginateData(start, end) {
       this.renderedPaginate = this.rendered.slice(start, end);
+    },
+    showModal: function showModal() {
+      this.isModalVisible = true;
+    },
+    closeModal: function closeModal() {
+      this.isModalVisible = false;
     }
   }
 });
@@ -2721,6 +2741,13 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_pagination_2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-pagination-2 */ "./node_modules/vue-pagination-2/compiled/main.js");
 /* harmony import */ var vue_pagination_2__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_pagination_2__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Modal */ "./resources/js/components/Modal.vue");
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2784,10 +2811,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "CategoryTable",
   components: {
-    'vue-pagination': vue_pagination_2__WEBPACK_IMPORTED_MODULE_0___default.a
+    'vue-pagination': vue_pagination_2__WEBPACK_IMPORTED_MODULE_0___default.a,
+    'modal': _Modal__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   props: ['title', 'items'],
   data: function data() {
@@ -2797,7 +2826,12 @@ __webpack_require__.r(__webpack_exports__);
       pages: 0,
       perpage: 20,
       page: 1,
-      renderedPaginate: []
+      renderedPaginate: [],
+      isModalVisible: false,
+      modalHTML: {
+        title: "Topic Guide",
+        body: "<div>\n                    <p>In questa sezione \xE8 possibile gestire i topic per i paper.</p>\n                    <p>Cliccando sul pulsante  <i class=\"fa fa-info-circle fa-fw\"></i> \xE8 possibile aggiungere un nuovo topic.</p>\n                    <p>Nella tabella presente al centro della pagina \xE8 possibile, per ogni item, effetuare delle operazioni.</p>\n                    <p>Il pulsante <i aria-hidden=\"true\" class=\"fas fa-eye fa-1x fa-lg\"></i> permette di vedere i dettagli di questo item.</p>\n                    <p>Il pulsante <i aria-hidden=\"true\" class=\"fas fa-pencil-alt fa-1x fa-lg\"></i> permette di modificare questo item.</p>\n                    <p>Il pulsante <i aria-hidden=\"true\" class=\"fas fa-minus-circle fa-1x fa-lg\"></i> permette di cancellare questo item.</p>\n                    <p>I topic possono essere attivati e disattivati a seconda delle edizioni.</p>\n                    </div>\n                "
+      }
     };
   },
   mounted: function mounted() {
@@ -2839,6 +2873,12 @@ __webpack_require__.r(__webpack_exports__);
     },
     paginateData: function paginateData(start, end) {
       this.renderedPaginate = this.rendered.slice(start, end);
+    },
+    showModal: function showModal() {
+      this.isModalVisible = true;
+    },
+    closeModal: function closeModal() {
+      this.isModalVisible = false;
     }
   }
 });
@@ -3156,18 +3196,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3188,7 +3216,7 @@ __webpack_require__.r(__webpack_exports__);
       isModalVisible: false,
       modalHTML: {
         title: "Edition Guide",
-        body: "<div>\n                        <p>In questa sezione \xE8 possibile gestire le varie edizioni del forum.</p>\n                        <p>Cliccando sul pulsante  <i class=\"fa fa-info-circle fa-fw\"></i> \xE8 possibile aggiungere una nuova edizione.</p>\n                        <p>Nella tabella presente al centro della pagina, \xE8 possibile per ogni item, effetuare delle operazioni.</p>\n                        <p>Il pulsante <i aria-hidden=\"true\" class=\"fas fa-eye fa-1x fa-lg\"></i> permette di vedere i dettagli di questo item</p>\n                        <p>Il pulsante <i aria-hidden=\"true\" class=\"fas fa-pencil-alt fa-1x fa-lg\"></i> permette di modificare questo item.</p>\n                        <p>Il pulsante <i aria-hidden=\"true\" class=\"fas fa-minus-circle fa-1x fa-lg\"></i> permette di cancellare questo item</p>\n                        <p>\xC8 importante specificare che ci puo essere un'unica edizione attiva. Nel momento che un'edizione viene resa attiva tutte le altre vengono disattivate</p>\n                        </div>\n                    "
+        body: "<div>\n                        <p>In questa sezione \xE8 possibile gestire le varie edizioni del forum.</p>\n                        <p>Cliccando sul pulsante  <i class=\"fa fa-info-circle fa-fw\"></i> \xE8 possibile aggiungere una nuova edizione.</p>\n                        <p>Nella tabella presente al centro della pagina \xE8 possibile, per ogni item, effetuare delle operazioni.</p>\n                        <p>Il pulsante <i aria-hidden=\"true\" class=\"fas fa-eye fa-1x fa-lg\"></i> permette di vedere i dettagli di questo item</p>\n                        <p>Il pulsante <i aria-hidden=\"true\" class=\"fas fa-pencil-alt fa-1x fa-lg\"></i> permette di modificare questo item.</p>\n                        <p>Il pulsante <i aria-hidden=\"true\" class=\"fas fa-minus-circle fa-1x fa-lg\"></i> permette di cancellare questo item</p>\n                        <p>\xC8 importante specificare che ci puo essere un'unica edizione attiva. Nel momento che un'edizione viene resa attiva tutte le altre vengono disattivate</p>\n                        </div>\n                    "
       }
     };
   },
@@ -3252,10 +3280,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
 //
 //
 //
@@ -3468,6 +3492,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_pagination_2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-pagination-2 */ "./node_modules/vue-pagination-2/compiled/main.js");
 /* harmony import */ var vue_pagination_2__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_pagination_2__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/esm/index.js");
+/* harmony import */ var _Modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Modal */ "./resources/js/components/Modal.vue");
 //
 //
 //
@@ -3611,12 +3636,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PostTable",
   components: {
-    'vue-pagination': vue_pagination_2__WEBPACK_IMPORTED_MODULE_0___default.a
+    'vue-pagination': vue_pagination_2__WEBPACK_IMPORTED_MODULE_0___default.a,
+    'modal': _Modal__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   props: ['title', 'items', 'role', 'reviews', 'user', 'statuses', 'source'],
   data: function data() {
@@ -3632,7 +3665,12 @@ __webpack_require__.r(__webpack_exports__);
       json_user: {},
       json_statuses: {},
       state: '',
-      format: date_fns__WEBPACK_IMPORTED_MODULE_1__["format"]
+      format: date_fns__WEBPACK_IMPORTED_MODULE_1__["format"],
+      isModalVisible: false,
+      modalHTML: {
+        title: "Papers Guide",
+        body: "<div>\n                    <p>In questa sezione \xE8 possibile gestire i papers.</p>\n                    <p>Nella tabella presente al centro della pagina \xE8 possibile, per ogni item, effetuare delle operazioni.</p>\n                    <p>Il pulsante <i aria-hidden=\"true\" class=\"fas fa-eye fa-1x fa-lg\"></i> permette di vedere i dettagli di questo item.</p>\n                    <p>Il pulsante <i aria-hidden=\"true\" class=\"fas fa-link fa-1x fa-lg\"></i> permette agli amministratori di assegnare questo paper ai reviewers.</p>\n                    <p>Il pulsante <i aria-hidden=\"true\" class=\"fas fa-clipboard-check fa-1x fa-lg\"></i> permette agli amministratore di leggere le reviews e di accettare o rifiutare il paper.</p>\n                    <p>Il pulsante <i aria-hidden=\"true\" class=\"fas fa-pencil-alt fa-1x fa-lg\"></i> permette ai reviewers di scrivere una review.</p>\n                    <p>Il pulsante <i aria-hidden=\"true\" class=\"fas fa-minus-circle fa-1x fa-lg\"></i> permette di cancellare questo item.</p>\n                    </div>\n                "
+      }
     };
   },
   mounted: function mounted() {
@@ -3726,6 +3764,12 @@ __webpack_require__.r(__webpack_exports__);
           });
         });
       });
+    },
+    showModal: function showModal() {
+      this.isModalVisible = true;
+    },
+    closeModal: function closeModal() {
+      this.isModalVisible = false;
     }
   }
 });
@@ -4949,6 +4993,13 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_pagination_2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-pagination-2 */ "./node_modules/vue-pagination-2/compiled/main.js");
 /* harmony import */ var vue_pagination_2__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_pagination_2__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Modal */ "./resources/js/components/Modal.vue");
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -5014,10 +5065,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "StatusTable",
   components: {
-    'vue-pagination': vue_pagination_2__WEBPACK_IMPORTED_MODULE_0___default.a
+    'vue-pagination': vue_pagination_2__WEBPACK_IMPORTED_MODULE_0___default.a,
+    'modal': _Modal__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   props: ['title', 'items'],
   data: function data() {
@@ -5027,7 +5080,12 @@ __webpack_require__.r(__webpack_exports__);
       pages: 0,
       perpage: 20,
       page: 1,
-      renderedPaginate: []
+      renderedPaginate: [],
+      isModalVisible: false,
+      modalHTML: {
+        title: "Status Guide",
+        body: "<div>\n                    <p>In questa sezione \xE8 possibile gestire gli stati dei paper.</p>\n                    <p>Cliccando sul pulsante  <i class=\"fa fa-info-circle fa-fw\"></i> \xE8 possibile aggiungere un nuovo stato.</p>\n                    <p>Nella tabella presente al centro della pagina \xE8 possibile, per ogni item, effetuare delle operazioni.</p>\n                    <p>Il pulsante <i aria-hidden=\"true\" class=\"fas fa-eye fa-1x fa-lg\"></i> permette di vedere i dettagli di questo item.</p>\n                    <p>Il pulsante <i aria-hidden=\"true\" class=\"fas fa-pencil-alt fa-1x fa-lg\"></i> permette di modificare questo item.</p>\n                    <p>Il pulsante <i aria-hidden=\"true\" class=\"fas fa-minus-circle fa-1x fa-lg\"></i> permette di cancellare questo item.</p>\n                    <p>Gli stati sono molto importanti ed \xE8 possibile attivarli e disattivarli oltre a definire un colore per ogni singolo stato.</p>\n                    </div>\n                "
+      }
     };
   },
   mounted: function mounted() {
@@ -5067,6 +5125,12 @@ __webpack_require__.r(__webpack_exports__);
     },
     paginateData: function paginateData(start, end) {
       this.renderedPaginate = this.rendered.slice(start, end);
+    },
+    showModal: function showModal() {
+      this.isModalVisible = true;
+    },
+    closeModal: function closeModal() {
+      this.isModalVisible = false;
     }
   }
 });
@@ -5338,6 +5402,11 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_pagination_2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-pagination-2 */ "./node_modules/vue-pagination-2/compiled/main.js");
 /* harmony import */ var vue_pagination_2__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_pagination_2__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Modal */ "./resources/js/components/Modal.vue");
+//
+//
+//
+//
 //
 //
 //
@@ -5401,10 +5470,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "TemplateTable",
   components: {
-    'vue-pagination': vue_pagination_2__WEBPACK_IMPORTED_MODULE_0___default.a
+    'vue-pagination': vue_pagination_2__WEBPACK_IMPORTED_MODULE_0___default.a,
+    'modal': _Modal__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   props: ['title', 'items'],
   data: function data() {
@@ -5413,7 +5484,12 @@ __webpack_require__.r(__webpack_exports__);
       pages: 0,
       perpage: 20,
       page: 1,
-      renderedPaginate: []
+      renderedPaginate: [],
+      isModalVisible: false,
+      modalHTML: {
+        title: "Template Guide",
+        body: "<div>\n                    <p>In questa sezione \xE8 possibile gestire i template per la sottomissione dei paper.</p>\n                    <p>Cliccando sul pulsante  <i class=\"fa fa-info-circle fa-fw\"></i> \xE8 possibile aggiungere una nuovo template.</p>\n                    <p>Nella tabella presente al centro della pagina \xE8 possibile, per ogni item, effetuare delle operazioni.</p>\n                    <p>Il pulsante <i aria-hidden=\"true\" class=\"fas fa-eye fa-1x fa-lg\"></i> permette di vedere i dettagli di questo item</p>\n                    <p>Il pulsante <i aria-hidden=\"true\" class=\"fas fa-pencil-alt fa-1x fa-lg\"></i> permette di modificare questo item.</p>\n                    <p>Il pulsante <i aria-hidden=\"true\" class=\"fas fa-minus-circle fa-1x fa-lg\"></i> permette di cancellare questo item</p>\n                    <p>I template sono importanti perch\xE8 definiscono quali campi devono compilare gli autori dei paper.</p>\n                    </div>\n                "
+      }
     };
   },
   mounted: function mounted() {
@@ -5452,6 +5528,12 @@ __webpack_require__.r(__webpack_exports__);
     },
     paginateData: function paginateData(start, end) {
       this.renderedPaginate = this.rendered.slice(start, end);
+    },
+    showModal: function showModal() {
+      this.isModalVisible = true;
+    },
+    closeModal: function closeModal() {
+      this.isModalVisible = false;
     }
   }
 });
@@ -61795,143 +61877,168 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "row" }, [
-    _c("div", { staticClass: "col-lg-12 margin-tb" }, [
-      _c("div", { staticClass: "card" }, [
-        _c("div", { staticClass: "card-header" }, [
-          _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
-            _vm._v(
-              "\n                    " +
-                _vm._s(this.title) +
-                "\n                "
+  return _c(
+    "div",
+    { staticClass: "row" },
+    [
+      _c("div", { staticClass: "col-lg-12 margin-tb" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
+              _vm._v(
+                "\n                    " +
+                  _vm._s(this.title) +
+                  "\n                    "
+              ),
+              _vm.source === "admin"
+                ? _c("i", {
+                    staticClass: "fa fa-info-circle fa-fw pointer",
+                    attrs: { "aria-hidden": "true" },
+                    on: { click: _vm.showModal }
+                  })
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.source === "author",
+                    expression: "source==='author'"
+                  }
+                ],
+                staticClass: "card-action"
+              },
+              [
+                _c("a", { attrs: { href: _vm.route("authors.create") } }, [
+                  _c("i", {
+                    staticClass: "fa fa-plus-circle fa-3x fa-fw",
+                    attrs: { "aria-hidden": "true" }
+                  })
+                ])
+              ]
             )
           ]),
           _vm._v(" "),
-          _c(
-            "div",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: _vm.source === "author",
-                  expression: "source==='author'"
-                }
-              ],
-              staticClass: "card-action"
-            },
-            [
-              _c("a", { attrs: { href: _vm.route("authors.create") } }, [
-                _c("i", {
-                  staticClass: "fa fa-plus-circle fa-3x fa-fw",
-                  attrs: { "aria-hidden": "true" }
-                })
-              ])
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "card-body no-padding" }, [
-          _c(
-            "div",
-            { staticClass: "table-responsive" },
-            [
-              _c("table", { staticClass: "table card-table table-striped" }, [
-                _vm._m(0),
-                _vm._v(" "),
-                _c(
-                  "tbody",
-                  _vm._l(_vm.renderedPaginate, function(item, k) {
-                    return _c("tr", { key: k }, [
-                      _c("td", [_vm._v(_vm._s(item.id))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(item.firstname))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(item.lastname))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(item.email))]),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "text-right" }, [
-                        _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-default btn-xs",
-                            attrs: {
-                              href: _vm
-                                .route("authors.show", item.id)
-                                .withQuery({ source: _vm.source })
-                            }
-                          },
-                          [
-                            _c("i", {
-                              staticClass: "fas fa-eye fa-1x fa-lg",
-                              attrs: { "aria-hidden": "true" }
-                            })
-                          ]
-                        ),
+          _c("div", { staticClass: "card-body no-padding" }, [
+            _c(
+              "div",
+              { staticClass: "table-responsive" },
+              [
+                _c("table", { staticClass: "table card-table table-striped" }, [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.renderedPaginate, function(item, k) {
+                      return _c("tr", { key: k }, [
+                        _c("td", [_vm._v(_vm._s(item.id))]),
                         _vm._v(" "),
-                        _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-default btn-xs",
-                            attrs: {
-                              href: _vm.route("authors.edit", { id: item.id })
-                            }
-                          },
-                          [
-                            _c("i", {
-                              staticClass: "fas fa-pencil-alt fa-1x fa-lg",
-                              attrs: { "aria-hidden": "true" }
-                            })
-                          ]
-                        ),
+                        _c("td", [_vm._v(_vm._s(item.firstname))]),
                         _vm._v(" "),
-                        _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-danger btn-xs",
-                            on: {
-                              click: function($event) {
-                                return _vm.deleteItem(item.id, $event)
+                        _c("td", [_vm._v(_vm._s(item.lastname))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(item.email))]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-right" }, [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "btn btn-default btn-xs",
+                              attrs: {
+                                href: _vm
+                                  .route("authors.show", item.id)
+                                  .withQuery({ source: _vm.source })
                               }
-                            }
-                          },
-                          [
-                            _c("i", {
-                              staticClass: "fas fa-minus-circle fa-1x fa-lg",
-                              attrs: { "aria-hidden": "true" }
-                            })
-                          ]
-                        )
+                            },
+                            [
+                              _c("i", {
+                                staticClass: "fas fa-eye fa-1x fa-lg",
+                                attrs: { "aria-hidden": "true" }
+                              })
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "a",
+                            {
+                              staticClass: "btn btn-default btn-xs",
+                              attrs: {
+                                href: _vm.route("authors.edit", { id: item.id })
+                              }
+                            },
+                            [
+                              _c("i", {
+                                staticClass: "fas fa-pencil-alt fa-1x fa-lg",
+                                attrs: { "aria-hidden": "true" }
+                              })
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "a",
+                            {
+                              staticClass: "btn btn-danger btn-xs",
+                              on: {
+                                click: function($event) {
+                                  return _vm.deleteItem(item.id, $event)
+                                }
+                              }
+                            },
+                            [
+                              _c("i", {
+                                staticClass: "fas fa-minus-circle fa-1x fa-lg",
+                                attrs: { "aria-hidden": "true" }
+                              })
+                            ]
+                          )
+                        ])
                       ])
-                    ])
-                  }),
-                  0
-                )
-              ]),
-              _vm._v(" "),
-              _c("vue-pagination", {
-                attrs: { "per-page": _vm.perpage, records: _vm.pages },
-                on: {
-                  input: function($event) {
-                    return _vm.callbackPagination(_vm.page)
-                  }
-                },
-                model: {
-                  value: _vm.page,
-                  callback: function($$v) {
-                    _vm.page = $$v
+                    }),
+                    0
+                  )
+                ]),
+                _vm._v(" "),
+                _c("vue-pagination", {
+                  attrs: { "per-page": _vm.perpage, records: _vm.pages },
+                  on: {
+                    input: function($event) {
+                      return _vm.callbackPagination(_vm.page)
+                    }
                   },
-                  expression: "page"
-                }
-              })
-            ],
-            1
-          )
+                  model: {
+                    value: _vm.page,
+                    callback: function($$v) {
+                      _vm.page = $$v
+                    },
+                    expression: "page"
+                  }
+                })
+              ],
+              1
+            )
+          ])
         ])
-      ])
-    ])
-  ])
+      ]),
+      _vm._v(" "),
+      _c("modal", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.isModalVisible,
+            expression: "isModalVisible"
+          }
+        ],
+        attrs: { data: _vm.modalHTML },
+        on: { close: _vm.closeModal }
+      })
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function() {
@@ -62598,130 +62705,153 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "row" }, [
-    _c("div", { staticClass: "col-lg-12 margin-tb" }, [
-      _c("div", { staticClass: "card" }, [
-        _c("div", { staticClass: "card-header" }, [
-          _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
-            _vm._v(
-              "\n                    " +
-                _vm._s(this.title) +
-                "\n                "
-            )
+  return _c(
+    "div",
+    { staticClass: "row" },
+    [
+      _c("div", { staticClass: "col-lg-12 margin-tb" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
+              _vm._v(
+                "\n                    " +
+                  _vm._s(this.title) +
+                  "\n                    "
+              ),
+              _c("i", {
+                staticClass: "fa fa-info-circle fa-fw pointer",
+                attrs: { "aria-hidden": "true" },
+                on: { click: _vm.showModal }
+              })
+            ]),
+            _vm._v(" "),
+            _vm._m(0)
           ]),
           _vm._v(" "),
-          _vm._m(0)
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "card-body no-padding" }, [
-          _c(
-            "div",
-            { staticClass: "table-responsive" },
-            [
-              _c("table", { staticClass: "table card-table table-striped" }, [
-                _vm._m(1),
-                _vm._v(" "),
-                _c(
-                  "tbody",
-                  _vm._l(_vm.renderedPaginate, function(item, k) {
-                    return _c("tr", { key: k }, [
-                      _c("td", [_vm._v(_vm._s(item.id))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(item.name))]),
-                      _vm._v(" "),
-                      _c("td", [
-                        item.visible == 1
-                          ? _c("span", [
-                              _c("i", { staticClass: "fa fas fa-check" })
-                            ])
-                          : _c("span", [
-                              _c("i", { staticClass: "fa fas fa-close" })
-                            ])
-                      ]),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "text-right" }, [
-                        _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-default btn-xs",
-                            attrs: {
-                              href: _vm.route("categories.show", {
-                                id: item.id
-                              })
-                            }
-                          },
-                          [
-                            _c("i", {
-                              staticClass: "fas fa-eye fa-1x fa-lg",
-                              attrs: { "aria-hidden": "true" }
-                            })
-                          ]
-                        ),
+          _c("div", { staticClass: "card-body no-padding" }, [
+            _c(
+              "div",
+              { staticClass: "table-responsive" },
+              [
+                _c("table", { staticClass: "table card-table table-striped" }, [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.renderedPaginate, function(item, k) {
+                      return _c("tr", { key: k }, [
+                        _c("td", [_vm._v(_vm._s(item.id))]),
                         _vm._v(" "),
-                        _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-default btn-xs",
-                            attrs: {
-                              href: _vm.route("categories.edit", {
-                                id: item.id
-                              })
-                            }
-                          },
-                          [
-                            _c("i", {
-                              staticClass: "fas fa-pencil-alt fa-1x fa-lg",
-                              attrs: { "aria-hidden": "true" }
-                            })
-                          ]
-                        ),
+                        _c("td", [_vm._v(_vm._s(item.name))]),
                         _vm._v(" "),
-                        _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-danger btn-xs",
-                            on: {
-                              click: function($event) {
-                                return _vm.deleteItem(item.id, $event)
+                        _c("td", [
+                          item.visible == 1
+                            ? _c("span", [
+                                _c("i", { staticClass: "fa fas fa-check" })
+                              ])
+                            : _c("span", [
+                                _c("i", { staticClass: "fa fas fa-close" })
+                              ])
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-right" }, [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "btn btn-default btn-xs",
+                              attrs: {
+                                href: _vm.route("categories.show", {
+                                  id: item.id
+                                })
                               }
-                            }
-                          },
-                          [
-                            _c("i", {
-                              staticClass: "fas fa-minus-circle fa-1x fa-lg",
-                              attrs: { "aria-hidden": "true" }
-                            })
-                          ]
-                        )
+                            },
+                            [
+                              _c("i", {
+                                staticClass: "fas fa-eye fa-1x fa-lg",
+                                attrs: { "aria-hidden": "true" }
+                              })
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "a",
+                            {
+                              staticClass: "btn btn-default btn-xs",
+                              attrs: {
+                                href: _vm.route("categories.edit", {
+                                  id: item.id
+                                })
+                              }
+                            },
+                            [
+                              _c("i", {
+                                staticClass: "fas fa-pencil-alt fa-1x fa-lg",
+                                attrs: { "aria-hidden": "true" }
+                              })
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "a",
+                            {
+                              staticClass: "btn btn-danger btn-xs",
+                              on: {
+                                click: function($event) {
+                                  return _vm.deleteItem(item.id, $event)
+                                }
+                              }
+                            },
+                            [
+                              _c("i", {
+                                staticClass: "fas fa-minus-circle fa-1x fa-lg",
+                                attrs: { "aria-hidden": "true" }
+                              })
+                            ]
+                          )
+                        ])
                       ])
-                    ])
-                  }),
-                  0
-                )
-              ]),
-              _vm._v(" "),
-              _c("vue-pagination", {
-                attrs: { "per-page": _vm.perpage, records: _vm.pages },
-                on: {
-                  input: function($event) {
-                    return _vm.callbackPagination(_vm.page)
-                  }
-                },
-                model: {
-                  value: _vm.page,
-                  callback: function($$v) {
-                    _vm.page = $$v
+                    }),
+                    0
+                  )
+                ]),
+                _vm._v(" "),
+                _c("vue-pagination", {
+                  attrs: { "per-page": _vm.perpage, records: _vm.pages },
+                  on: {
+                    input: function($event) {
+                      return _vm.callbackPagination(_vm.page)
+                    }
                   },
-                  expression: "page"
-                }
-              })
-            ],
-            1
-          )
+                  model: {
+                    value: _vm.page,
+                    callback: function($$v) {
+                      _vm.page = $$v
+                    },
+                    expression: "page"
+                  }
+                })
+              ],
+              1
+            )
+          ])
         ])
-      ])
-    ])
-  ])
+      ]),
+      _vm._v(" "),
+      _c("modal", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.isModalVisible,
+            expression: "isModalVisible"
+          }
+        ],
+        attrs: { data: _vm.modalHTML },
+        on: { close: _vm.closeModal }
+      })
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function() {
@@ -63548,464 +63678,495 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "row" }, [
-    _c("div", { staticClass: "col-lg-12 margin-tb" }, [
-      _c("div", { staticClass: "card" }, [
-        _c("div", { staticClass: "card-header" }, [
-          _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
-            _vm._v(
-              "\n                    " +
-                _vm._s(this.title) +
-                "\n                "
-            )
-          ]),
-          _vm._v(" "),
-          _vm.source === "author"
-            ? _c("div", { staticClass: "card-action" }, [
-                _c("a", { attrs: { href: _vm.route("posts.create") } }, [
-                  _c("i", {
-                    staticClass: "fa fa-plus-circle fa-3x fa-fw",
-                    attrs: { "aria-hidden": "true" }
+  return _c(
+    "div",
+    { staticClass: "row" },
+    [
+      _c("div", { staticClass: "col-lg-12 margin-tb" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
+              _vm._v(
+                "\n                    " +
+                  _vm._s(this.title) +
+                  "\n                    "
+              ),
+              _vm.source === "admin" || _vm.source === "reviewer"
+                ? _c("i", {
+                    staticClass: "fa fa-info-circle fa-fw pointer",
+                    attrs: { "aria-hidden": "true" },
+                    on: { click: _vm.showModal }
                   })
-                ])
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: _vm.source !== "author",
-                  expression: "source!=='author'"
-                }
-              ],
-              staticClass: "card-action"
-            },
-            [
-              _c("span", [_vm._v("Filter By State: ")]),
-              _vm._v(" "),
-              _c(
-                "select",
-                {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.state,
-                      expression: "state"
-                    }
-                  ],
-                  staticClass: "form-group",
-                  attrs: { name: "status" },
-                  on: {
-                    change: [
-                      function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.state = $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
-                      },
-                      function($event) {
-                        return _vm.onChange()
-                      }
-                    ]
-                  }
-                },
-                [
-                  _c("option", { attrs: { value: "" } }, [_vm._v("All")]),
-                  _vm._v(" "),
-                  _vm._l(_vm.json_statuses, function(status) {
-                    return _c(
-                      "option",
-                      { key: status.id, domProps: { value: status.id } },
-                      [
-                        _vm._v(
-                          "\n                            " +
-                            _vm._s(status.name) +
-                            "\n                        "
-                        )
-                      ]
-                    )
-                  })
-                ],
-                2
-              )
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "card-body no-padding" }, [
-          _c(
-            "div",
-            { staticClass: "table-responsive" },
-            [
-              _c("table", { staticClass: "table card-table table-striped" }, [
-                _c("thead", [
-                  _c("tr", [
-                    _c("th", [_vm._v("Id")]),
-                    _vm._v(" "),
-                    _c("th", [_vm._v("Title")]),
-                    _vm._v(" "),
-                    _c(
-                      "th",
-                      {
-                        directives: [
-                          {
-                            name: "show",
-                            rawName: "v-show",
-                            value: _vm.source == "admin",
-                            expression: "source=='admin'"
-                          }
-                        ]
-                      },
-                      [_vm._v("Authors")]
-                    ),
-                    _vm._v(" "),
-                    _c("th", [_vm._v("Topic")]),
-                    _vm._v(" "),
-                    _c("th", [_vm._v("Template")]),
-                    _vm._v(" "),
-                    _c("th", [_vm._v("Submitted")]),
-                    _vm._v(" "),
-                    _c("th", [_vm._v("Status")]),
-                    _vm._v(" "),
-                    _vm.source === "admin" || _vm.source === "reviewer"
-                      ? _c("th", [
-                          _vm._v(
-                            "\n                                Reviews\n                            "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c("th", { staticClass: "text-right" }, [_vm._v("Options")])
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _vm.source === "author"
+              ? _c("div", { staticClass: "card-action" }, [
+                  _c("a", { attrs: { href: _vm.route("posts.create") } }, [
+                    _c("i", {
+                      staticClass: "fa fa-plus-circle fa-3x fa-fw",
+                      attrs: { "aria-hidden": "true" }
+                    })
                   ])
-                ]),
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.source !== "author",
+                    expression: "source!=='author'"
+                  }
+                ],
+                staticClass: "card-action"
+              },
+              [
+                _c("span", [_vm._v("Filter By State: ")]),
                 _vm._v(" "),
                 _c(
-                  "tbody",
-                  [
-                    _c("div"),
-                    _vm._v(" "),
-                    _vm._l(_vm.renderedPaginate, function(item, k) {
-                      return _c("tr", { key: k }, [
-                        _c("td", [_vm._v(_vm._s(item.id))]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(item.title))]),
-                        _vm._v(" "),
-                        _c(
-                          "td",
-                          {
-                            directives: [
-                              {
-                                name: "show",
-                                rawName: "v-show",
-                                value: _vm.source == "admin",
-                                expression: "source=='admin'"
-                              }
-                            ]
-                          },
-                          [
-                            _vm._v(
-                              "\n                                " +
-                                _vm._s(item.user_fk.name) +
-                                " " +
-                                _vm._s(item.user_fk.surname) +
-                                " "
-                            ),
-                            _c(
-                              "span",
-                              {
-                                directives: [
-                                  {
-                                    name: "show",
-                                    rawName: "v-show",
-                                    value: item.authors,
-                                    expression: "item.authors"
-                                  }
-                                ]
-                              },
-                              [_vm._v(" - ")]
-                            ),
-                            _vm._l(item.authors, function(author, index) {
-                              return _c("span", [
-                                _vm._v(
-                                  _vm._s(author.firstname) +
-                                    " " +
-                                    _vm._s(author.lastname) +
-                                    " "
-                                ),
-                                index + 1 != item.authors.length
-                                  ? _c("span", [_vm._v("- ")])
-                                  : _vm._e()
-                              ])
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.state,
+                        expression: "state"
+                      }
+                    ],
+                    staticClass: "form-group",
+                    attrs: { name: "status" },
+                    on: {
+                      change: [
+                        function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
                             })
-                          ],
-                          2
-                        ),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(item.category_fk.name))]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(item.template_fk.name))]),
-                        _vm._v(" "),
-                        _c("td", [
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.state = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        },
+                        function($event) {
+                          return _vm.onChange()
+                        }
+                      ]
+                    }
+                  },
+                  [
+                    _c("option", { attrs: { value: "" } }, [_vm._v("All")]),
+                    _vm._v(" "),
+                    _vm._l(_vm.json_statuses, function(status) {
+                      return _c(
+                        "option",
+                        { key: status.id, domProps: { value: status.id } },
+                        [
                           _vm._v(
-                            " " +
-                              _vm._s(
-                                _vm.format(
-                                  new Date(item.created_at),
-                                  "dd/MM/yyyy"
-                                )
-                              )
+                            "\n                            " +
+                              _vm._s(status.name) +
+                              "\n                        "
                           )
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _c(
-                            "span",
-                            {
-                              staticClass: "post-status",
-                              style: "background-color:" + item.state_fk.color
-                            },
-                            [_vm._v(_vm._s(item.state_fk.name))]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _vm.source == "admin"
-                          ? _c(
-                              "td",
-                              _vm._l(item.users, function(reviews) {
-                                return _c("span", [
-                                  !reviews.checked
-                                    ? _c("i", {
-                                        staticClass: "far fa-circle",
-                                        attrs: {
-                                          "data-toggle": "tooltip",
-                                          "data-placement": "top",
-                                          title:
-                                            reviews.name + " " + reviews.surname
-                                        }
-                                      })
-                                    : _vm._e(),
-                                  _vm._v(" "),
-                                  reviews.checked
-                                    ? _c("i", {
-                                        staticClass: "fas fa-circle",
-                                        attrs: {
-                                          "data-toggle": "tooltip",
-                                          "data-placement": "top",
-                                          title:
-                                            reviews.name + " " + reviews.surname
-                                        }
-                                      })
-                                    : _vm._e()
-                                ])
-                              }),
-                              0
-                            )
-                          : _vm._e(),
-                        _vm._v(" "),
-                        _vm.source == "reviewer"
-                          ? _c(
-                              "td",
-                              _vm._l(item.users, function(reviews) {
-                                return _c("span", [
-                                  reviews.id === _vm.json_user.id
-                                    ? _c("span", [
-                                        !reviews.checked
-                                          ? _c("i", {
-                                              staticClass: "far fa-circle",
-                                              attrs: {
-                                                "data-toggle": "tooltip",
-                                                "data-placement": "top",
-                                                title:
-                                                  reviews.name +
-                                                  " " +
-                                                  reviews.surname
-                                              }
-                                            })
-                                          : _vm._e(),
-                                        _vm._v(" "),
-                                        reviews.checked
-                                          ? _c("i", {
-                                              staticClass: "fas fa-circle",
-                                              attrs: {
-                                                "data-toggle": "tooltip",
-                                                "data-placement": "top",
-                                                title:
-                                                  reviews.name +
-                                                  " " +
-                                                  reviews.surname
-                                              }
-                                            })
-                                          : _vm._e()
-                                      ])
-                                    : _vm._e()
-                                ])
-                              }),
-                              0
-                            )
-                          : _vm._e(),
-                        _vm._v(" "),
-                        _c("td", { staticClass: "text-right" }, [
-                          _c(
-                            "a",
-                            {
-                              staticClass: "btn btn-default btn-xs",
-                              attrs: {
-                                href: _vm
-                                  .route("posts.show", item.id)
-                                  .withQuery({ source: _vm.source })
-                              }
-                            },
-                            [
-                              _c("i", {
-                                staticClass: "fas fa-eye fa-1x fa-lg",
-                                attrs: { "aria-hidden": "true" }
-                              })
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _vm.source === "reviewer" && item.state == 3
-                            ? _c(
-                                "a",
-                                {
-                                  staticClass: "btn btn-default btn-xs",
-                                  attrs: {
-                                    href: "../reviews/create?id=" + item.id
-                                  }
-                                },
-                                [
-                                  _c("i", {
-                                    staticClass:
-                                      "fas fa-pencil-alt fa-1x fa-lg",
-                                    attrs: { "aria-hidden": "true" }
-                                  })
-                                ]
-                              )
-                            : _vm._e(),
-                          _vm._v(" "),
-                          _vm.source === "admin"
-                            ? _c(
-                                "a",
-                                {
-                                  staticClass: "btn btn-default btn-xs",
-                                  attrs: {
-                                    href: _vm.route("posts.link", {
-                                      id: item.id
-                                    })
-                                  }
-                                },
-                                [
-                                  _c("i", {
-                                    staticClass: "fas fa-link fa-1x fa-lg",
-                                    attrs: { "aria-hidden": "true" }
-                                  })
-                                ]
-                              )
-                            : _vm._e(),
-                          _vm._v(" "),
-                          _vm.source === "admin"
-                            ? _c(
-                                "a",
-                                {
-                                  staticClass: "btn btn-default btn-xs",
-                                  attrs: {
-                                    href: _vm.route("posts.valid", {
-                                      id: item.id
-                                    })
-                                  }
-                                },
-                                [
-                                  _c("i", {
-                                    staticClass:
-                                      "fas fa-clipboard-check fa-1x fa-lg",
-                                    attrs: { "aria-hidden": "true" }
-                                  })
-                                ]
-                              )
-                            : _vm._e(),
-                          _vm._v(" "),
-                          _vm.source === "author" && item.state == 1
-                            ? _c(
-                                "a",
-                                {
-                                  staticClass: "btn btn-default btn-xs",
-                                  attrs: {
-                                    href: _vm.route("posts.edit", {
-                                      id: item.id
-                                    })
-                                  }
-                                },
-                                [
-                                  _c("i", {
-                                    staticClass:
-                                      "fas fa-pencil-alt fa-1x fa-lg",
-                                    attrs: { "aria-hidden": "true" }
-                                  })
-                                ]
-                              )
-                            : _vm._e(),
-                          _vm._v(" "),
-                          _vm.source === "admin" || item.state == 1
-                            ? _c(
-                                "a",
-                                {
-                                  staticClass: "btn btn-danger btn-xs",
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.deleteItem(item.id, $event)
-                                    }
-                                  }
-                                },
-                                [
-                                  _c("i", {
-                                    staticClass:
-                                      "fas fa-minus-circle fa-1x fa-lg",
-                                    attrs: { "aria-hidden": "true" }
-                                  })
-                                ]
-                              )
-                            : _vm._e()
-                        ])
-                      ])
+                        ]
+                      )
                     })
                   ],
                   2
                 )
-              ]),
-              _vm._v(" "),
-              _c("vue-pagination", {
-                attrs: { "per-page": _vm.perpage, records: _vm.pages },
-                on: {
-                  input: function($event) {
-                    return _vm.callbackPagination(_vm.page)
-                  }
-                },
-                model: {
-                  value: _vm.page,
-                  callback: function($$v) {
-                    _vm.page = $$v
+              ]
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body no-padding" }, [
+            _c(
+              "div",
+              { staticClass: "table-responsive" },
+              [
+                _c("table", { staticClass: "table card-table table-striped" }, [
+                  _c("thead", [
+                    _c("tr", [
+                      _c("th", [_vm._v("Id")]),
+                      _vm._v(" "),
+                      _c("th", [_vm._v("Title")]),
+                      _vm._v(" "),
+                      _c(
+                        "th",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: _vm.source == "admin",
+                              expression: "source=='admin'"
+                            }
+                          ]
+                        },
+                        [_vm._v("Authors")]
+                      ),
+                      _vm._v(" "),
+                      _c("th", [_vm._v("Topic")]),
+                      _vm._v(" "),
+                      _c("th", [_vm._v("Template")]),
+                      _vm._v(" "),
+                      _c("th", [_vm._v("Submitted")]),
+                      _vm._v(" "),
+                      _c("th", [_vm._v("Status")]),
+                      _vm._v(" "),
+                      _vm.source === "admin" || _vm.source === "reviewer"
+                        ? _c("th", [
+                            _vm._v(
+                              "\n                                Reviews\n                            "
+                            )
+                          ])
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _c("th", { staticClass: "text-right" }, [
+                        _vm._v("Options")
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    [
+                      _c("div"),
+                      _vm._v(" "),
+                      _vm._l(_vm.renderedPaginate, function(item, k) {
+                        return _c("tr", { key: k }, [
+                          _c("td", [_vm._v(_vm._s(item.id))]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(item.title))]),
+                          _vm._v(" "),
+                          _c(
+                            "td",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: _vm.source == "admin",
+                                  expression: "source=='admin'"
+                                }
+                              ]
+                            },
+                            [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(item.user_fk.name) +
+                                  " " +
+                                  _vm._s(item.user_fk.surname) +
+                                  " "
+                              ),
+                              _c(
+                                "span",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: item.authors,
+                                      expression: "item.authors"
+                                    }
+                                  ]
+                                },
+                                [_vm._v(" - ")]
+                              ),
+                              _vm._l(item.authors, function(author, index) {
+                                return _c("span", [
+                                  _vm._v(
+                                    _vm._s(author.firstname) +
+                                      " " +
+                                      _vm._s(author.lastname) +
+                                      " "
+                                  ),
+                                  index + 1 != item.authors.length
+                                    ? _c("span", [_vm._v("- ")])
+                                    : _vm._e()
+                                ])
+                              })
+                            ],
+                            2
+                          ),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(item.category_fk.name))]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(item.template_fk.name))]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(
+                              " " +
+                                _vm._s(
+                                  _vm.format(
+                                    new Date(item.created_at),
+                                    "dd/MM/yyyy"
+                                  )
+                                )
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c(
+                              "span",
+                              {
+                                staticClass: "post-status",
+                                style: "background-color:" + item.state_fk.color
+                              },
+                              [_vm._v(_vm._s(item.state_fk.name))]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _vm.source == "admin"
+                            ? _c(
+                                "td",
+                                _vm._l(item.users, function(reviews) {
+                                  return _c("span", [
+                                    !reviews.checked
+                                      ? _c("i", {
+                                          staticClass: "far fa-circle",
+                                          attrs: {
+                                            "data-toggle": "tooltip",
+                                            "data-placement": "top",
+                                            title:
+                                              reviews.name +
+                                              " " +
+                                              reviews.surname
+                                          }
+                                        })
+                                      : _vm._e(),
+                                    _vm._v(" "),
+                                    reviews.checked
+                                      ? _c("i", {
+                                          staticClass: "fas fa-circle",
+                                          attrs: {
+                                            "data-toggle": "tooltip",
+                                            "data-placement": "top",
+                                            title:
+                                              reviews.name +
+                                              " " +
+                                              reviews.surname
+                                          }
+                                        })
+                                      : _vm._e()
+                                  ])
+                                }),
+                                0
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.source == "reviewer"
+                            ? _c(
+                                "td",
+                                _vm._l(item.users, function(reviews) {
+                                  return _c("span", [
+                                    reviews.id === _vm.json_user.id
+                                      ? _c("span", [
+                                          !reviews.checked
+                                            ? _c("i", {
+                                                staticClass: "far fa-circle",
+                                                attrs: {
+                                                  "data-toggle": "tooltip",
+                                                  "data-placement": "top",
+                                                  title:
+                                                    reviews.name +
+                                                    " " +
+                                                    reviews.surname
+                                                }
+                                              })
+                                            : _vm._e(),
+                                          _vm._v(" "),
+                                          reviews.checked
+                                            ? _c("i", {
+                                                staticClass: "fas fa-circle",
+                                                attrs: {
+                                                  "data-toggle": "tooltip",
+                                                  "data-placement": "top",
+                                                  title:
+                                                    reviews.name +
+                                                    " " +
+                                                    reviews.surname
+                                                }
+                                              })
+                                            : _vm._e()
+                                        ])
+                                      : _vm._e()
+                                  ])
+                                }),
+                                0
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _c("td", { staticClass: "text-right" }, [
+                            _c(
+                              "a",
+                              {
+                                staticClass: "btn btn-default btn-xs",
+                                attrs: {
+                                  href: _vm
+                                    .route("posts.show", item.id)
+                                    .withQuery({ source: _vm.source })
+                                }
+                              },
+                              [
+                                _c("i", {
+                                  staticClass: "fas fa-eye fa-1x fa-lg",
+                                  attrs: { "aria-hidden": "true" }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _vm.source === "reviewer" && item.state == 3
+                              ? _c(
+                                  "a",
+                                  {
+                                    staticClass: "btn btn-default btn-xs",
+                                    attrs: {
+                                      href: "../reviews/create?id=" + item.id
+                                    }
+                                  },
+                                  [
+                                    _c("i", {
+                                      staticClass:
+                                        "fas fa-pencil-alt fa-1x fa-lg",
+                                      attrs: { "aria-hidden": "true" }
+                                    })
+                                  ]
+                                )
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm.source === "admin"
+                              ? _c(
+                                  "a",
+                                  {
+                                    staticClass: "btn btn-default btn-xs",
+                                    attrs: {
+                                      href: _vm.route("posts.link", {
+                                        id: item.id
+                                      })
+                                    }
+                                  },
+                                  [
+                                    _c("i", {
+                                      staticClass: "fas fa-link fa-1x fa-lg",
+                                      attrs: { "aria-hidden": "true" }
+                                    })
+                                  ]
+                                )
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm.source === "admin"
+                              ? _c(
+                                  "a",
+                                  {
+                                    staticClass: "btn btn-default btn-xs",
+                                    attrs: {
+                                      href: _vm.route("posts.valid", {
+                                        id: item.id
+                                      })
+                                    }
+                                  },
+                                  [
+                                    _c("i", {
+                                      staticClass:
+                                        "fas fa-clipboard-check fa-1x fa-lg",
+                                      attrs: { "aria-hidden": "true" }
+                                    })
+                                  ]
+                                )
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm.source === "author" && item.state == 1
+                              ? _c(
+                                  "a",
+                                  {
+                                    staticClass: "btn btn-default btn-xs",
+                                    attrs: {
+                                      href: _vm.route("posts.edit", {
+                                        id: item.id
+                                      })
+                                    }
+                                  },
+                                  [
+                                    _c("i", {
+                                      staticClass:
+                                        "fas fa-pencil-alt fa-1x fa-lg",
+                                      attrs: { "aria-hidden": "true" }
+                                    })
+                                  ]
+                                )
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm.source === "admin" || item.state == 1
+                              ? _c(
+                                  "a",
+                                  {
+                                    staticClass: "btn btn-danger btn-xs",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.deleteItem(item.id, $event)
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _c("i", {
+                                      staticClass:
+                                        "fas fa-minus-circle fa-1x fa-lg",
+                                      attrs: { "aria-hidden": "true" }
+                                    })
+                                  ]
+                                )
+                              : _vm._e()
+                          ])
+                        ])
+                      })
+                    ],
+                    2
+                  )
+                ]),
+                _vm._v(" "),
+                _c("vue-pagination", {
+                  attrs: { "per-page": _vm.perpage, records: _vm.pages },
+                  on: {
+                    input: function($event) {
+                      return _vm.callbackPagination(_vm.page)
+                    }
                   },
-                  expression: "page"
-                }
-              })
-            ],
-            1
-          )
+                  model: {
+                    value: _vm.page,
+                    callback: function($$v) {
+                      _vm.page = $$v
+                    },
+                    expression: "page"
+                  }
+                })
+              ],
+              1
+            )
+          ])
         ])
-      ])
-    ])
-  ])
+      ]),
+      _vm._v(" "),
+      _c("modal", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.isModalVisible,
+            expression: "isModalVisible"
+          }
+        ],
+        attrs: { data: _vm.modalHTML },
+        on: { close: _vm.closeModal }
+      })
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -66344,140 +66505,167 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "row" }, [
-    _c("div", { staticClass: "col-lg-12 margin-tb" }, [
-      _c("div", { staticClass: "card" }, [
-        _c("div", { staticClass: "card-header" }, [
-          _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
-            _vm._v(
-              "\n                    " +
-                _vm._s(this.title) +
-                "\n                "
-            )
+  return _c(
+    "div",
+    { staticClass: "row" },
+    [
+      _c("div", { staticClass: "col-lg-12 margin-tb" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
+              _vm._v(
+                "\n                    " +
+                  _vm._s(this.title) +
+                  "\n                    "
+              ),
+              _c("i", {
+                staticClass: "fa fa-info-circle fa-fw pointer",
+                attrs: { "aria-hidden": "true" },
+                on: { click: _vm.showModal }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-action" }, [
+              _c("a", { attrs: { href: _vm.route("statuses.create") } }, [
+                _c("i", {
+                  staticClass: "fa fa-plus-circle fa-3x fa-fw",
+                  attrs: { "aria-hidden": "true" }
+                })
+              ])
+            ])
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "card-action" }, [
-            _c("a", { attrs: { href: _vm.route("statuses.create") } }, [
-              _c("i", {
-                staticClass: "fa fa-plus-circle fa-3x fa-fw",
-                attrs: { "aria-hidden": "true" }
-              })
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "card-body no-padding" }, [
-          _c(
-            "div",
-            { staticClass: "table-responsive" },
-            [
-              _c("table", { staticClass: "table card-table table-striped" }, [
-                _vm._m(0),
-                _vm._v(" "),
-                _c(
-                  "tbody",
-                  _vm._l(_vm.renderedPaginate, function(item, k) {
-                    return _c("tr", { key: k }, [
-                      _c("td", [_vm._v(_vm._s(item.id))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(item.name))]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _c("div", {
-                          staticClass: "box-color",
-                          style: "background-color:" + item.color
-                        })
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [
-                        item.visible == 1
-                          ? _c("span", [
-                              _c("i", { staticClass: "fa fas fa-check" })
-                            ])
-                          : _c("span", [
-                              _c("i", { staticClass: "fa fas fa-close" })
-                            ])
-                      ]),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "text-right" }, [
-                        _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-default btn-xs",
-                            attrs: {
-                              href: _vm.route("statuses.show", { id: item.id })
-                            }
-                          },
-                          [
-                            _c("i", {
-                              staticClass: "fas fa-eye fa-1x fa-lg",
-                              attrs: { "aria-hidden": "true" }
-                            })
-                          ]
-                        ),
+          _c("div", { staticClass: "card-body no-padding" }, [
+            _c(
+              "div",
+              { staticClass: "table-responsive" },
+              [
+                _c("table", { staticClass: "table card-table table-striped" }, [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.renderedPaginate, function(item, k) {
+                      return _c("tr", { key: k }, [
+                        _c("td", [_vm._v(_vm._s(item.id))]),
                         _vm._v(" "),
-                        _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-default btn-xs",
-                            attrs: {
-                              href: _vm.route("statuses.edit", { id: item.id })
-                            }
-                          },
-                          [
-                            _c("i", {
-                              staticClass: "fas fa-pencil-alt fa-1x fa-lg",
-                              attrs: { "aria-hidden": "true" }
-                            })
-                          ]
-                        ),
+                        _c("td", [_vm._v(_vm._s(item.name))]),
                         _vm._v(" "),
-                        _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-danger btn-xs",
-                            on: {
-                              click: function($event) {
-                                return _vm.deleteItem(item.id, $event)
+                        _c("td", [
+                          _c("div", {
+                            staticClass: "box-color",
+                            style: "background-color:" + item.color
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [
+                          item.visible == 1
+                            ? _c("span", [
+                                _c("i", { staticClass: "fa fas fa-check" })
+                              ])
+                            : _c("span", [
+                                _c("i", { staticClass: "fa fas fa-close" })
+                              ])
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-right" }, [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "btn btn-default btn-xs",
+                              attrs: {
+                                href: _vm.route("statuses.show", {
+                                  id: item.id
+                                })
                               }
-                            }
-                          },
-                          [
-                            _c("i", {
-                              staticClass: "fas fa-minus-circle fa-1x fa-lg",
-                              attrs: { "aria-hidden": "true" }
-                            })
-                          ]
-                        )
+                            },
+                            [
+                              _c("i", {
+                                staticClass: "fas fa-eye fa-1x fa-lg",
+                                attrs: { "aria-hidden": "true" }
+                              })
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "a",
+                            {
+                              staticClass: "btn btn-default btn-xs",
+                              attrs: {
+                                href: _vm.route("statuses.edit", {
+                                  id: item.id
+                                })
+                              }
+                            },
+                            [
+                              _c("i", {
+                                staticClass: "fas fa-pencil-alt fa-1x fa-lg",
+                                attrs: { "aria-hidden": "true" }
+                              })
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "a",
+                            {
+                              staticClass: "btn btn-danger btn-xs",
+                              on: {
+                                click: function($event) {
+                                  return _vm.deleteItem(item.id, $event)
+                                }
+                              }
+                            },
+                            [
+                              _c("i", {
+                                staticClass: "fas fa-minus-circle fa-1x fa-lg",
+                                attrs: { "aria-hidden": "true" }
+                              })
+                            ]
+                          )
+                        ])
                       ])
-                    ])
-                  }),
-                  0
-                )
-              ]),
-              _vm._v(" "),
-              _c("vue-pagination", {
-                attrs: { "per-page": _vm.perpage, records: _vm.pages },
-                on: {
-                  input: function($event) {
-                    return _vm.callbackPagination(_vm.page)
-                  }
-                },
-                model: {
-                  value: _vm.page,
-                  callback: function($$v) {
-                    _vm.page = $$v
+                    }),
+                    0
+                  )
+                ]),
+                _vm._v(" "),
+                _c("vue-pagination", {
+                  attrs: { "per-page": _vm.perpage, records: _vm.pages },
+                  on: {
+                    input: function($event) {
+                      return _vm.callbackPagination(_vm.page)
+                    }
                   },
-                  expression: "page"
-                }
-              })
-            ],
-            1
-          )
+                  model: {
+                    value: _vm.page,
+                    callback: function($$v) {
+                      _vm.page = $$v
+                    },
+                    expression: "page"
+                  }
+                })
+              ],
+              1
+            )
+          ])
         ])
-      ])
-    ])
-  ])
+      ]),
+      _vm._v(" "),
+      _c("modal", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.isModalVisible,
+            expression: "isModalVisible"
+          }
+        ],
+        attrs: { data: _vm.modalHTML },
+        on: { close: _vm.closeModal }
+      })
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function() {
@@ -66955,126 +67143,153 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "row" }, [
-    _c("div", { staticClass: "col-lg-12 margin-tb" }, [
-      _c("div", { staticClass: "card" }, [
-        _c("div", { staticClass: "card-header" }, [
-          _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
-            _vm._v(
-              "\n                    " +
-                _vm._s(this.title) +
-                "\n                "
-            )
+  return _c(
+    "div",
+    { staticClass: "row" },
+    [
+      _c("div", { staticClass: "col-lg-12 margin-tb" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _c("h1", { staticClass: "m0 text-dark card-title text-xl" }, [
+              _vm._v(
+                "\n                    " +
+                  _vm._s(this.title) +
+                  "\n                    "
+              ),
+              _c("i", {
+                staticClass: "fa fa-info-circle fa-fw pointer",
+                attrs: { "aria-hidden": "true" },
+                on: { click: _vm.showModal }
+              })
+            ]),
+            _vm._v(" "),
+            _vm._m(0)
           ]),
           _vm._v(" "),
-          _vm._m(0)
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "card-body no-padding" }, [
-          _c(
-            "div",
-            { staticClass: "table-responsive" },
-            [
-              _c("table", { staticClass: "table card-table table-striped" }, [
-                _vm._m(1),
-                _vm._v(" "),
-                _c(
-                  "tbody",
-                  _vm._l(_vm.renderedPaginate, function(item, k) {
-                    return _c("tr", { key: k }, [
-                      _c("td", [_vm._v(_vm._s(item.id))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(item.name))]),
-                      _vm._v(" "),
-                      _c("td", [
-                        item.active == 1
-                          ? _c("span", [
-                              _c("i", { staticClass: "fa fas fa-check" })
-                            ])
-                          : _c("span", [
-                              _c("i", { staticClass: "fa fas fa-close" })
-                            ])
-                      ]),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "text-right" }, [
-                        _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-default btn-xs",
-                            attrs: {
-                              href: _vm.route("templates.show", { id: item.id })
-                            }
-                          },
-                          [
-                            _c("i", {
-                              staticClass: "fas fa-eye fa-1x fa-lg",
-                              attrs: { "aria-hidden": "true" }
-                            })
-                          ]
-                        ),
+          _c("div", { staticClass: "card-body no-padding" }, [
+            _c(
+              "div",
+              { staticClass: "table-responsive" },
+              [
+                _c("table", { staticClass: "table card-table table-striped" }, [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.renderedPaginate, function(item, k) {
+                      return _c("tr", { key: k }, [
+                        _c("td", [_vm._v(_vm._s(item.id))]),
                         _vm._v(" "),
-                        _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-default btn-xs",
-                            attrs: {
-                              href: _vm.route("templates.edit", { id: item.id })
-                            }
-                          },
-                          [
-                            _c("i", {
-                              staticClass: "fas fa-pencil-alt fa-1x fa-lg",
-                              attrs: { "aria-hidden": "true" }
-                            })
-                          ]
-                        ),
+                        _c("td", [_vm._v(_vm._s(item.name))]),
                         _vm._v(" "),
-                        _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-danger btn-xs",
-                            on: {
-                              click: function($event) {
-                                return _vm.deleteItem(item.id, $event)
+                        _c("td", [
+                          item.active == 1
+                            ? _c("span", [
+                                _c("i", { staticClass: "fa fas fa-check" })
+                              ])
+                            : _c("span", [
+                                _c("i", { staticClass: "fa fas fa-close" })
+                              ])
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-right" }, [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "btn btn-default btn-xs",
+                              attrs: {
+                                href: _vm.route("templates.show", {
+                                  id: item.id
+                                })
                               }
-                            }
-                          },
-                          [
-                            _c("i", {
-                              staticClass: "fas fa-minus-circle fa-1x fa-lg",
-                              attrs: { "aria-hidden": "true" }
-                            })
-                          ]
-                        )
+                            },
+                            [
+                              _c("i", {
+                                staticClass: "fas fa-eye fa-1x fa-lg",
+                                attrs: { "aria-hidden": "true" }
+                              })
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "a",
+                            {
+                              staticClass: "btn btn-default btn-xs",
+                              attrs: {
+                                href: _vm.route("templates.edit", {
+                                  id: item.id
+                                })
+                              }
+                            },
+                            [
+                              _c("i", {
+                                staticClass: "fas fa-pencil-alt fa-1x fa-lg",
+                                attrs: { "aria-hidden": "true" }
+                              })
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "a",
+                            {
+                              staticClass: "btn btn-danger btn-xs",
+                              on: {
+                                click: function($event) {
+                                  return _vm.deleteItem(item.id, $event)
+                                }
+                              }
+                            },
+                            [
+                              _c("i", {
+                                staticClass: "fas fa-minus-circle fa-1x fa-lg",
+                                attrs: { "aria-hidden": "true" }
+                              })
+                            ]
+                          )
+                        ])
                       ])
-                    ])
-                  }),
-                  0
-                )
-              ]),
-              _vm._v(" "),
-              _c("vue-pagination", {
-                attrs: { "per-page": _vm.perpage, records: _vm.pages },
-                on: {
-                  input: function($event) {
-                    return _vm.callbackPagination(_vm.page)
-                  }
-                },
-                model: {
-                  value: _vm.page,
-                  callback: function($$v) {
-                    _vm.page = $$v
+                    }),
+                    0
+                  )
+                ]),
+                _vm._v(" "),
+                _c("vue-pagination", {
+                  attrs: { "per-page": _vm.perpage, records: _vm.pages },
+                  on: {
+                    input: function($event) {
+                      return _vm.callbackPagination(_vm.page)
+                    }
                   },
-                  expression: "page"
-                }
-              })
-            ],
-            1
-          )
+                  model: {
+                    value: _vm.page,
+                    callback: function($$v) {
+                      _vm.page = $$v
+                    },
+                    expression: "page"
+                  }
+                })
+              ],
+              1
+            )
+          ])
         ])
-      ])
-    ])
-  ])
+      ]),
+      _vm._v(" "),
+      _c("modal", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.isModalVisible,
+            expression: "isModalVisible"
+          }
+        ],
+        attrs: { data: _vm.modalHTML },
+        on: { close: _vm.closeModal }
+      })
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function() {

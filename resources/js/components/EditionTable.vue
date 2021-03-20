@@ -112,7 +112,7 @@ export default {
                 body: `<div>
                         <p>In questa sezione è possibile gestire le varie edizioni del forum.</p>
                         <p>Cliccando sul pulsante  <i class="fa fa-info-circle fa-fw"></i> è possibile aggiungere una nuova edizione.</p>
-                        <p>Nella tabella presente al centro della pagina, è possibile per ogni item, effetuare delle operazioni.</p>
+                        <p>Nella tabella presente al centro della pagina è possibile, per ogni item, effetuare delle operazioni.</p>
                         <p>Il pulsante <i aria-hidden="true" class="fas fa-eye fa-1x fa-lg"></i> permette di vedere i dettagli di questo item</p>
                         <p>Il pulsante <i aria-hidden="true" class="fas fa-pencil-alt fa-1x fa-lg"></i> permette di modificare questo item.</p>
                         <p>Il pulsante <i aria-hidden="true" class="fas fa-minus-circle fa-1x fa-lg"></i> permette di cancellare questo item</p>
