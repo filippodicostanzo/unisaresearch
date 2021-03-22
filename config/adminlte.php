@@ -263,6 +263,8 @@ return [
 
         ['header' => 'admin_settings', 'role' => 'superadministrator|administrator', 'key' => 'admin_settings'],
 
+        ['header' => 'calendar_settings', 'role' => 'superadministrator|administrator', 'key' => 'calendar_settings'],
+
         ['header' => 'users_settings', 'role' => 'superadministrator|administrator', 'key'=>'users_settings' ],
 
         ['header'=>'reviewers_settings', 'role'=>'superadministrator|administrator|supervisor', 'key'=>'reviewers_settings'],

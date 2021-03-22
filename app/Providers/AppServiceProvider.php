@@ -6,6 +6,7 @@ use App\Models\Author;
 use App\Models\Category;
 use App\Models\Edition;
 use App\Models\Post;
+use App\Models\Room;
 use App\Models\Status;
 use App\Models\Template;
 use App\Models\User;
@@ -97,6 +98,21 @@ class AppServiceProvider extends ServiceProvider
                 ],
             ];
             $event->menu->addAfter('admin_settings', ...$array);
+        });
+
+
+        $events->listen(BuildingMenu::class, function (BuildingMenu $event) {
+
+            $array = [
+                [
+                    'text' => 'rooms',
+                    'url' => 'admin/rooms',
+                    'icon' => 'far fa-fw fa-building',
+                    'label' => Room::count(),
+                    'label_color' => 'success',
+                ]];
+
+            $event->menu->addAfter('calendar_settings', ...$array);
         });
 
 

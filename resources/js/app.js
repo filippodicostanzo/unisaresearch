@@ -57,6 +57,9 @@ import EditionTable from "./components/EditionTable";
 import EditionShow from "./components/EditionShow";
 import ReviewersTable from "./components/ReviewersTable";
 import Modal from "./components/Modal";
+import RoomTable from "./components/RoomTable";
+import RoomCreate from "./components/RoomCreate";
+import RoomShow from "./components/RoomShow";
 
 window.route = route;
 window.Ziggy = Ziggy;
@@ -105,6 +108,9 @@ const app = new Vue({
         'status-table': StatusTable,
         'status-create': StatusCreate,
         'status-show': StatusShow,
+        'room-table': RoomTable,
+        'room-create': RoomCreate,
+        'room-show': RoomShow,
         'user-table': UserTable,
         'user-create': UserCreate,
         'user-show': UserShow,

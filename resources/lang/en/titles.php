@@ -17,6 +17,7 @@ return [
     'co-authors' => 'Co Authors',
     'categories' => 'Topics',
     'status' => 'Status',
+    'rooms' => 'Rooms',
     'users' => 'Users',
     'templates' => 'Templates',
     'profile' => 'Profile',

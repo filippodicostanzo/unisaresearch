@@ -75,6 +75,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
     Route::resource('users', 'UserController');
     //Route::resource('posts', 'PostController');
     Route::resource('statuses', 'StatusController');
+    Route::resource('rooms', 'RoomController');
     Route::resource('reviews', 'ReviewController');
     Route::resource('editions', 'EditionController');
 
