@@ -18,6 +18,7 @@ return [
     'categories' => 'Topics',
     'status' => 'Status',
     'rooms' => 'Rooms',
+    'events' => 'Events',
     'users' => 'Users',
     'templates' => 'Templates',
     'profile' => 'Profile',

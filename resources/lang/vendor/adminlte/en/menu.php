@@ -25,6 +25,7 @@ return [
     'posts'                         => 'Posts',
     'papers'                        => 'Papers',
     'rooms'                         => 'Rooms',
+    'events'                        => 'Events',
     'users'                         => 'Users',
     'authors'                       => 'Authors',
     'coauthors'                     => 'Co-Authors',

@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Author;
 use App\Models\Category;
 use App\Models\Edition;
+use App\Models\Event;
 use App\Models\Post;
 use App\Models\Room;
 use App\Models\Status;
@@ -110,7 +111,16 @@ class AppServiceProvider extends ServiceProvider
                     'icon' => 'far fa-fw fa-building',
                     'label' => Room::count(),
                     'label_color' => 'success',
-                ]];
+                ],
+                [
+                    'text' => 'events',
+                    'url' => 'admin/events',
+                    'icon' => 'far fa-fw fa-calendar',
+                    'label' => Event::where('active',1)->count(),
+                    'label_color' => 'success',
+                ]
+
+                ];
 
             $event->menu->addAfter('calendar_settings', ...$array);
         });

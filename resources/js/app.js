@@ -60,6 +60,9 @@ import Modal from "./components/Modal";
 import RoomTable from "./components/RoomTable";
 import RoomCreate from "./components/RoomCreate";
 import RoomShow from "./components/RoomShow";
+import EventCreate from "./components/EventCreate";
+import EventTable from "./components/EventTable";
+import EventShow from "./components/EventShow";
 
 window.route = route;
 window.Ziggy = Ziggy;
@@ -111,6 +114,9 @@ const app = new Vue({
         'room-table': RoomTable,
         'room-create': RoomCreate,
         'room-show': RoomShow,
+        'event-table': EventTable,
+        'event-create': EventCreate,
+        'event-show': EventShow,
         'user-table': UserTable,
         'user-create': UserCreate,
         'user-show': UserShow,
