@@ -110,13 +110,14 @@ export default {
             modalHTML: {
                 title: "Edition Guide",
                 body: `<div>
-                        <p>In questa sezione è possibile gestire le varie edizioni del forum.</p>
-                        <p>Cliccando sul pulsante  <i class="fa fa-info-circle fa-fw"></i> è possibile aggiungere una nuova edizione.</p>
-                        <p>Nella tabella presente al centro della pagina è possibile, per ogni item, effetuare delle operazioni.</p>
-                        <p>Il pulsante <i aria-hidden="true" class="fas fa-eye fa-1x fa-lg"></i> permette di vedere i dettagli di questo item</p>
-                        <p>Il pulsante <i aria-hidden="true" class="fas fa-pencil-alt fa-1x fa-lg"></i> permette di modificare questo item.</p>
-                        <p>Il pulsante <i aria-hidden="true" class="fas fa-minus-circle fa-1x fa-lg"></i> permette di cancellare questo item</p>
-                        <p>È importante specificare che ci puo essere un'unica edizione attiva. Nel momento che un'edizione viene resa attiva tutte le altre vengono disattivate</p>
+                        <p>In this section you can manage the various editions of the forum</p>
+                        <p>If you click on the button <i class="fa fa-info-circle fa-fw"></i>  you can add a new edition.</p>
+                        <p>In the table in the center of the page you can, for each item, carry out operations.</p>
+                        <p>The button <i aria-hidden="true" class="fas fa-eye fa-1x fa-lg"></i> allows you to see the details of this item.</p>
+                        <p>The button <i aria-hidden="true" class="fas fa-pencil-alt fa-1x fa-lg"></i> allows you to modify this item.</p>
+                        <p>The button <i aria-hidden="true" class="fas fa-minus-circle fa-1x fa-lg"></i> allows you to delete this item.</p>
+                        <p>it is important to specify that there can be only one active edition. When one edition is activated, all the
+others are deactivated</p>
                         </div>
                     `
             }

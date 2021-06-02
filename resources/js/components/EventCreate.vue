@@ -3,6 +3,8 @@
 
         <confirm-dialog v-if="modal" @dialogbox="getDialog"></confirm-dialog>
 
+        <modal v-show="isModalVisible" :data="modalHTML" @close="closeModal"/>
+
         <div class="col-lg-12 margin-tb">
 
             <div class="card">
@@ -26,19 +28,38 @@
                             <div class="col-md-12 col-sm-12"><span class="text-bold">Type Of Event:</span></div>
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group radio-button">
-                                    <input type="radio" v-model="evt.type" value="paper"
+                                    <input type="radio" v-model="evt.type" value="poster"
                                            v-on:change="checkRadio($event)">
-                                    <label class="form__label">Paper Presentation</label>
+                                    <label class="form__label">Poster Session</label>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-12">
-
+                                <div class="form-group radio-button">
+                                    <input type="radio" v-model="evt.type" value="plenary"
+                                           v-on:change="checkRadio($event)">
+                                    <label class="form__label">Plenary Session</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <div class="form-group radio-button">
+                                    <input type="radio" v-model="evt.type" value="parallel"
+                                           v-on:change="checkRadio($event)">
+                                    <label class="form__label">Parallel Session</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <div class="form-group radio-button">
+                                    <input type="radio" v-model="evt.type" value="special"
+                                           v-on:change="checkRadio($event)">
+                                    <label class="form__label">Special Session</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
                                 <div class="form-group radio-button">
                                     <input type="radio" v-model="evt.type" value="break"
                                            v-on:change="checkRadio($event)">
                                     <label class="form__label">Break</label>
                                 </div>
-
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group radio-button">
@@ -50,7 +71,7 @@
                         </div>
 
 
-                        <div class="row pt-3" v-if="evt.type=='paper'">
+                        <div class="row pt-3" v-if="evt.type=='poster'">
                             <div class="col-md-12 col-sm-12">
                                 <div class="form-group">
                                     <label class="form__label">Choose Paper</label>
@@ -74,7 +95,7 @@
                                 </div>
 
                             </div>
-                            <div class="col-md-6 cols-sm-12">
+                            <div class="col-md-6 cols-sm-12" v-if="evt.type=='poster'">
                                 <label class="form__label">Authors</label>
                                 <input class="form__input" name="authors" v-model="evt.authors">
                             </div>
@@ -82,18 +103,25 @@
 
                         <div class="row pt-3">
                             <div class="col-md-6 cols-sm-12">
-                                <div class="form-group"  :class="{ 'form-group--error': $v.evt.start.$error }">
+                                <div class="form-group" :class="{ 'form-group--error': $v.evt.start.$error }">
                                     <label class="form__label">Start</label>
-                                    <input class="form__input" type="datetime-local" name="start" v-model="$v.evt.start.$model">
+                                    <input class="form__input" type="datetime-local" name="start"
+                                           v-model="$v.evt.start.$model" :min="this.datetime_start"
+                                           :max="this.datetime_end" onkeydown="return false">
                                 </div>
                                 <div class="error" v-if="!$v.evt.start.required">Start Date is required</div>
+                                <div class="error" v-if="!$v.evt.start.minValue">Start Date is incorrect</div>
+
                             </div>
                             <div class="col-md-6 cols-sm-12">
-                                <div class="form-group"  :class="{ 'form-group--error': $v.evt.end.$error }">
+                                <div class="form-group" :class="{ 'form-group--error': $v.evt.end.$error }">
                                     <label class="form__label">End</label>
-                                    <input class="form__input" type="datetime-local" name="end" v-model="$v.evt.end.$model">
+                                    <input class="form__input" type="datetime-local" name="end"
+                                           v-model="$v.evt.end.$model" :min="this.datetime_start"
+                                           :max="this.datetime_end" onkeydown="return false">
                                 </div>
                                 <div class="error" v-if="!$v.evt.end.required">End Date is required</div>
+                                <div class="error" v-if="!$v.evt.end.isAfterDate">End Date is incorrect</div>
                             </div>
                         </div>
 
@@ -153,38 +181,56 @@
 
 <script>
 
-    import {minLength, required, minValue } from 'vuelidate/lib/validators';
+    import {minLength, required, minValue} from 'vuelidate/lib/validators';
     import ConfirmDialog from "./ConfirmDialog";
+    import Modal from './Modal';
+
+
+    const isAfterDate = (value, vm) => {
+        return new Date(value).getTime() > new Date(vm.start).getTime();
+    };
+
 
     export default {
         name: "EventCreate.vue",
-        components: {'confirm-dialog':ConfirmDialog},
-        props: ['item', 'title', 'rooms', 'posts','events'],
+        components: {
+            'confirm-dialog': ConfirmDialog,
+            'modal': Modal
+        },
+        props: ['item', 'title', 'rooms', 'posts', 'events', 'edition'],
+
 
         data: () => {
             return {
                 evt: {
-                    type: 'paper',
+                    type: 'poster',
                     title: '',
                     authors: '',
                     room: 1,
                     start: '',
                     end: '',
-                    active:true,
+                    active: true,
                     description: ''
                 },
                 rendered_posts: [],
                 rendered_rooms: [],
+                rendered_edition: {},
                 source: '',
                 submitStatus: null,
-                modal:false,
+                modal: false,
+                datetime_start: '',
+                datetime_end: '',
+                isModalVisible: false,
+                modalHTML: {
+                    title: 'Error',
+                    body: 'Attention: the selected time slot and room are not available. <br/> Please check and assign a different time and/or room at the event.'
+                },
                 editorConfig: {
                     filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
                     filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token=',
                     filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
                     filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
                 },
-
 
 
             }
@@ -202,7 +248,8 @@
                 },
                 end: {
                     required,
-                    minValue: value => value > new Date().toISOString()
+                    isAfterDate
+                    //minValue: value => value > new Date(this.evt.start).toISOString()
                 }
             },
         },
@@ -210,15 +257,23 @@
 
         mounted() {
 
+
             this.rendered_posts = JSON.parse(this.posts);
             this.rendered_rooms = JSON.parse(this.rooms);
             this.rendered_events = JSON.parse(this.events);
+            this.rendered_edition = JSON.parse(this.edition);
             console.log(this.rendered_events);
+
+            this.datetime_start = this.rendered_edition.start + 'T00:00';
+            this.datetime_end = this.rendered_edition.end + 'T23:59';
+
 
             if (this.item) {
                 this.evt = JSON.parse(this.item);
                 this.source = 'edit'
             } else {
+                this.evt.start=new Date(this.datetime_start);
+                console.log(this.evt.start);
                 this.source = 'new'
             }
 
@@ -232,7 +287,7 @@
                 let paper = this.rendered_posts.find(item => item.id == event.target.value);
 
 
-                if (paper && this.evt.type == 'paper') {
+                if (paper && this.evt.type == 'poster') {
 
                     let authors = paper.user_fk.name + ' ' + paper.user_fk.surname;
                     if (paper.authors.length > 0) {
@@ -260,7 +315,7 @@
 
             checkRadio(event) {
                 console.log(event.target.value);
-                if (event.target.value !== 'paper') {
+                if (event.target.value !== 'poster') {
                     this.evt.title = '';
                     this.evt.authors = '';
                 }
@@ -276,12 +331,11 @@
 
                             if (response.status === 200) {
 
-                                if(response.data.isValid == false){
+                                if (response.data.isValid == false) {
                                     console.log(response.data.errors);
-                                    this.submitStatus = 'BUSY'
-                                }
-
-                                else {
+                                    this.submitStatus = 'ERROR';
+                                    this.showModal();
+                                } else {
                                     this.submitStatus = 'OK'
 
                                     window.location.href = route('events.index')
@@ -299,15 +353,14 @@
                         .then(response => {
 
                             if (response.status === 200) {
-                                if(response.data.isValid == false){
+                                if (response.data.isValid == false) {
                                     console.log(response.data.errors);
-                                    this.submitStatus = 'BUSY'
-                                }
+                                    this.submitStatus = 'ERROR';
+                                    this.showModal();
+                                } else {
+                                    this.submitStatus = 'OK';
 
-                                else {
-                                    this.submitStatus = 'OK'
-
-                                    window.location.href = route('events.index')
+                                    window.location.href = route('events.index');
                                 }
                             }
 
@@ -322,21 +375,27 @@
 
 
             getDialog(value) {
-                if (value==="confirm") {
+                if (value === "confirm") {
                     this.storeData();
-                }
-                else {
+                } else {
                     this.submitStatus = null;
                 }
-                this.modal=false;
+                this.modal = false;
+            },
+
+            showModal() {
+                this.isModalVisible = true;
+            },
+            closeModal() {
+                this.isModalVisible = false;
             },
 
             submit() {
 
                 this.submitStatus = 'PENDING'
-              /*  setTimeout(() => {
-                    this.submitStatus = 'OK'
-                }, 500)*/
+                /*  setTimeout(() => {
+                      this.submitStatus = 'OK'
+                  }, 500)*/
 
 
                 this.$v.$touch()
@@ -356,10 +415,10 @@
                     }
 
 
-                    if(this.rendered_events.some(event => event.title === this.evt.title)){
-                        this.modal=true;
+                    if (this.rendered_events.some(event => event.title === this.evt.title)) {
+                        this.modal = true;
 
-                    } else{
+                    } else {
                         this.storeData();
                     }
 

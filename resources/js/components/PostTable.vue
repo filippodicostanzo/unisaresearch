@@ -178,13 +178,13 @@
                 modalHTML: {
                     title: "Papers Guide",
                     body: `<div>
-                        <p>In questa sezione è possibile gestire i papers.</p>
-                        <p>Nella tabella presente al centro della pagina è possibile, per ogni item, effetuare delle operazioni.</p>
-                        <p>Il pulsante <i aria-hidden="true" class="fas fa-eye fa-1x fa-lg"></i> permette di vedere i dettagli di questo item.</p>
-                        <p>Il pulsante <i aria-hidden="true" class="fas fa-link fa-1x fa-lg"></i> permette agli amministratori di assegnare questo paper ai reviewers.</p>
-                        <p>Il pulsante <i aria-hidden="true" class="fas fa-clipboard-check fa-1x fa-lg"></i> permette agli amministratore di leggere le reviews e di accettare o rifiutare il paper.</p>
-                        <p>Il pulsante <i aria-hidden="true" class="fas fa-pencil-alt fa-1x fa-lg"></i> permette ai reviewers di scrivere una review.</p>
-                        <p>Il pulsante <i aria-hidden="true" class="fas fa-minus-circle fa-1x fa-lg"></i> permette di cancellare questo item.</p>
+                        <p>In this section you can manage the papers.</p>
+                        <p>In the table in the center of the page you can, for each item, carry out operations.</p>
+                        <p>The button <i aria-hidden="true" class="fas fa-eye fa-1x fa-lg"></i> you to see the details of this item.</p>
+                        <p>The button <i aria-hidden="true" class="fas fa-link fa-1x fa-lg"></i> allows administrators to assign this paper to reviewers.</p>
+                        <p>The button <i aria-hidden="true" class="fas fa-clipboard-check fa-1x fa-lg"></i> allows administrators to read the reviews and to accept or reject the paper.</p>
+                        <p>The button <i aria-hidden="true" class="fas fa-pencil-alt fa-1x fa-lg"></i> allows a reviewers to write a review.</p>
+                        <p>The button <i aria-hidden="true" class="fas fa-minus-circle fa-1x fa-lg"></i> allows you to delete this item.</p>
                         </div>
                     `
                 }

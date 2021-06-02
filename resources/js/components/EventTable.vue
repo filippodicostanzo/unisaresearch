@@ -49,8 +49,8 @@
                                 <td>{{item.title}}</td>
                                 <td>{{item.room_fk.name}}</td>
                                 <td> <span v-if="item.active==1"><i class="fa fas fa-check"></i> </span> <span v-else><i class="fa fas fa-close"></i></span></td>
-                                <td>{{ format(new Date(item.start), 'dd/MM/yyyy hh:mm') }}</td>
-                                <td>{{ format(new Date(item.end), 'dd/MM/yyyy hh:mm') }}</td>
+                                <td>{{ format(new Date(item.start), 'dd/MM/yyyy HH:mm') }}</td>
+                                <td>{{ format(new Date(item.end), 'dd/MM/yyyy HH:mm') }}</td>
                                 <td class="text-right">
                                     <a class="btn btn-default btn-xs" :href="route('events.show', {id: item.id})">
                                         <i class="fas fa-eye fa-1x fa-lg" aria-hidden="true"></i>
@@ -124,6 +124,9 @@
         mounted() {
             this.currentPath = window.location.pathname;
             this.rendered = JSON.parse(this.items);
+
+
+
             if (this.rooms){
                 this.rendered_rooms = JSON.parse(this.rooms);
             }

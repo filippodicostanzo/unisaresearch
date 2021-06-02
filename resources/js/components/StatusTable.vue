@@ -36,8 +36,11 @@
 
                                 <td>{{item.id}}</td>
                                 <td>{{item.name}}</td>
-                                <td> <div class="box-color" :style="`background-color:${item.color}`"> </div></td>
-                                <td> <span v-if="item.visible==1"><i class="fa fas fa-check"></i> </span> <span v-else><i class="fa fas fa-close"></i></span></td>
+                                <td>
+                                    <div class="box-color" :style="`background-color:${item.color}`"></div>
+                                </td>
+                                <td><span v-if="item.visible==1"><i class="fa fas fa-check"></i> </span> <span v-else><i
+                                    class="fa fas fa-close"></i></span></td>
                                 <td class="text-right">
                                     <a class="btn btn-default btn-xs" :href="route('statuses.show', {id: item.id})">
                                         <i class="fas fa-eye fa-1x fa-lg" aria-hidden="true"></i>
@@ -64,7 +67,7 @@
                 </div>
             </div>
         </div>
-        <modal v-show="isModalVisible" :data="modalHTML" @close="closeModal" />
+        <modal v-show="isModalVisible" :data="modalHTML" @close="closeModal"/>
     </div>
 </template>
 
@@ -82,7 +85,7 @@
         props: ['title', 'items'],
         data: () => {
             return {
-                currentPath:'',
+                currentPath: '',
                 rendered: {},
                 pages: 0,
                 perpage: 20,
@@ -92,13 +95,14 @@
                 modalHTML: {
                     title: "Status Guide",
                     body: `<div>
-                        <p>In questa sezione è possibile gestire gli stati dei paper.</p>
-                        <p>Cliccando sul pulsante  <i class="fa fa-info-circle fa-fw"></i> è possibile aggiungere un nuovo stato.</p>
-                        <p>Nella tabella presente al centro della pagina è possibile, per ogni item, effetuare delle operazioni.</p>
-                        <p>Il pulsante <i aria-hidden="true" class="fas fa-eye fa-1x fa-lg"></i> permette di vedere i dettagli di questo item.</p>
-                        <p>Il pulsante <i aria-hidden="true" class="fas fa-pencil-alt fa-1x fa-lg"></i> permette di modificare questo item.</p>
-                        <p>Il pulsante <i aria-hidden="true" class="fas fa-minus-circle fa-1x fa-lg"></i> permette di cancellare questo item.</p>
-                        <p>Gli stati sono molto importanti ed è possibile attivarli e disattivarli oltre a definire un colore per ogni singolo stato.</p>
+                        <p>In this section you can manage the status of the papers</p>
+                        <p>If you click on the button  <i class="fa fa-info-circle fa-fw"></i> you can add a new status.</p>
+                        <p>In the table in the center of the page you can, for each item, carry out operations.</p>
+                        <p>The button <i aria-hidden="true" class="fas fa-eye fa-1x fa-lg"></i> allows you to see the details of this item.</p>
+                        <p>The button <i aria-hidden="true" class="fas fa-pencil-alt fa-1x fa-lg"></i> allows you to modify this item.</p>
+                        <p>The button <i aria-hidden="true" class="fas fa-minus-circle fa-1x fa-lg"></i> allows you to delete this item.</p>
+                        <p>the states are very important and it is possible to activate and deactivate them, as well as define a color for
+each individual state.</p>
                         </div>
                     `
                 }
@@ -161,8 +165,8 @@
 </script>
 
 <style scoped>
-.box-color {
-    width: 20px;
-    height: 20px;
-}
+    .box-color {
+        width: 20px;
+        height: 20px;
+    }
 </style>

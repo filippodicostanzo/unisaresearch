@@ -91,12 +91,12 @@
                 modalHTML: {
                     title: "Co Authors Guide",
                     body: `<div>
-                        <p>In questa sezione è possibile gestire i co-autori dei paper.</p>
-                        <p>Cliccando sul pulsante  <i class="fa fa-info-circle fa-fw"></i> è possibile aggiungere un nuovo co-autore.</p>
-                        <p>Nella tabella presente al centro della pagina è possibile, per ogni item, effetuare delle operazioni.</p>
-                        <p>Il pulsante <i aria-hidden="true" class="fas fa-eye fa-1x fa-lg"></i> permette di vedere i dettagli di questo item.</p>
-                        <p>Il pulsante <i aria-hidden="true" class="fas fa-pencil-alt fa-1x fa-lg"></i> permette di modificare questo item.</p>
-                        <p>Il pulsante <i aria-hidden="true" class="fas fa-minus-circle fa-1x fa-lg"></i> permette di cancellare questo item.</p>
+                        <p>In this section you can manage the co-authors of the papers.</p>
+                        <p>If you click on the button  <i class="fa fa-info-circle fa-fw"></i> you can add a new co-author.</p>
+                        <p>In the table in the center of the page you can, for each item, carry out operations.</p>
+                        <p>The button <i aria-hidden="true" class="fas fa-eye fa-1x fa-lg"></i> allows you to see the details of this item.</p>
+                        <p>The button <i aria-hidden="true" class="fas fa-pencil-alt fa-1x fa-lg"></i> allows you to modify this item.</p>
+                        <p>The button <i aria-hidden="true" class="fas fa-minus-circle fa-1x fa-lg"></i> allows you to delete this item.</p>
                         </div>
                     `
                 }

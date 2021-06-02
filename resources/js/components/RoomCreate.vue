@@ -59,8 +59,10 @@
                             </div>
 
                             <div class="col-md-4 col-xs-12">
+                                <div class="form-group">
                                 <label class="form__label">Visible</label>
                                 <input type="checkbox" name="visible" v-model="room.visible">
+                                </div>
                             </div>
 
 

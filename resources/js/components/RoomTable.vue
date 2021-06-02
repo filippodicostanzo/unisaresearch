@@ -25,6 +25,7 @@
                             <tr>
                                 <th>Id</th>
                                 <th>Name</th>
+                                <th>Edition</th>
                                 <th>Visible</th>
                                 <th class="text-right">Options</th>
                             </tr>
@@ -35,6 +36,7 @@
 
                                 <td>{{item.id}}</td>
                                 <td>{{item.name}}</td>
+                                <td>{{item.edition_fk.name}}</td>
                                 <td> <span v-if="item.visible==1"><i class="fa fas fa-check"></i> </span> <span v-else><i class="fa fas fa-close"></i></span></td>
                                 <td class="text-right">
                                     <a class="btn btn-default btn-xs" :href="route('rooms.show', {id: item.id})">
