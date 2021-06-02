@@ -19,6 +19,7 @@ return [
     'status' => 'Status',
     'rooms' => 'Rooms',
     'events' => 'Events',
+    'calendar'=>'Calendar',
     'users' => 'Users',
     'templates' => 'Templates',
     'profile' => 'Profile',
