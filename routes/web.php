@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\ReviewController;
 use App\Http\Controllers\Auth\TemplateController;
 use App\Http\Controllers\Auth\UserController;
+use App\Http\Controllers\CalendarController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use UniSharp\LaravelFilemanager\Lfm;
@@ -24,6 +25,8 @@ use UniSharp\LaravelFilemanager\Lfm;
 Route::get('/', function () {
     return view('auth.login');
 });
+
+Route::get('/calendar', [CalendarController::class, 'index']);
 
 
 Route::get('templates/{id}', [TemplateController::class, 'jsonTemplate']);
@@ -73,6 +76,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
     Route::resource('authors', 'AuthorController');
 
     Route::resource('users', 'UserController');
+
     //Route::resource('posts', 'PostController');
     Route::resource('statuses', 'StatusController');
     Route::resource('rooms', 'RoomController');
@@ -92,6 +96,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
 
     Route::get('reviewers/count', [ReviewController::class, 'count']);
 
+    Route::get('/calendar', [CalendarController::class, 'index']);
+
 
 });
 
@@ -101,7 +107,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
 });
 
 
-Route::group(['namespace' => 'Auth', 'middleware' => ['role:user']], function () {
+Route::group(['namespace' => 'Auth', 'middleware' => ['role:user|researcher|supervisor']], function () {
 
     Route::get('/profile', [ProfileController::class, 'edit']);
     Route::patch('/profile/{id}', [UserController::class, 'update']);

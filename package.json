@@ -26,6 +26,7 @@
     "dependencies": {
         "ckeditor4-vue": "^1.1.0",
         "date-fns": "^2.16.1",
+        "vue-cal": "^3.10.1",
         "vue-pagination-2": "^3.0.6",
         "vuelidate": "^0.7.6",
         "ziggy-js": "^0.9.4"
