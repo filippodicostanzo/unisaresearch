@@ -22,12 +22,17 @@ class CreateEventsTable extends Migration
             $table->string('end');
             $table->longText('description');
             $table->bigInteger('room')->unsigned();
+            $table->bigInteger('edition')->unsigned();
             $table->boolean('active');
             $table->timestamps();
         });
 
         Schema::table('events', function(Blueprint $table) {
             $table->foreign('room')->references('id')->on('rooms')->onDelete('cascade')->onUpdate('cascade');
+        });
+
+        Schema::table('events', function(Blueprint $table) {
+            $table->foreign('edition')->references('id')->on('editions')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

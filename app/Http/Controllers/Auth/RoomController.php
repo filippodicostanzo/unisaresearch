@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\Edition;
+use App\Models\Event;
 use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,7 +39,8 @@ class RoomController extends Controller
      */
     public function index()
     {
-        $items = Room::orderBy('id', 'ASC')->get();
+        $edition = Edition::where('active',1)->first();
+        $items = Room::where('edition',$edition['id'])->orderBy('id', 'ASC')->with('edition_fk')->get();
         return view('admin.rooms.index', ['items' => $items, 'title' => $this->title]);
     }
 
@@ -63,7 +66,11 @@ class RoomController extends Controller
             'name' => 'required',
         ]);
 
+        $edition = Edition::where('active',1)->first();
+
+
         $room = new Room($request->all());
+        $room['edition']= $edition['id'];
 
         $res = $room->save();
         $message = $res ? 'The Room ' . $room->name . ' has been saved' : 'The Room ' . $room->name . ' was not saved';
@@ -121,6 +128,17 @@ class RoomController extends Controller
      */
     public function destroy(Room $room)
     {
-        //
+        try {
+            $res = $room->delete();
+            $message = $res ? 'The Room ' . $room->name . ' has been deleted' : 'The Author ' . $room->name . ' was not deleted';
+            session()->flash('message', $message);
+            session()->flash('alert-class', 'alert-success');
+        } catch (\Exception $e) {
+            if ($e->getCode() =='23000') {
+                $message = 'The room cannot be deleted because it is present in a event';
+                session()->flash('message', $message);
+                session()->flash('alert-class', 'alert-danger');
+            }
+        }
     }
 }

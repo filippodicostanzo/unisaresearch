@@ -24,5 +24,11 @@ class Room extends Model
         'description',
         'url',
         'visible',
+        'edition'
     ];
+
+    public function edition_fk()
+    {
+        return $this->belongsTo('App\Models\Edition', 'edition', 'id');
+    }
 }

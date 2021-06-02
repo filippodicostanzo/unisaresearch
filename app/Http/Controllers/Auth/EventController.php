@@ -42,9 +42,10 @@ class EventController extends Controller
      */
     public function index()
     {
-        $items = Event::orderBy('id', 'ASC')->with('room_fk')->get();
-        $rooms = Room::where('visible',1)->orderBy('id', 'ASC')->get();
-        return view('admin.events.index', ['items' => $items, 'title' => $this->title, 'rooms'=>$rooms]);
+        $edition = Edition::where('active', 1)->first();
+        $items = Event::where('edition', $edition['id'])->orderBy('id', 'ASC')->with('room_fk')->get();
+        $rooms = Room::where('visible', 1)->orderBy('id', 'ASC')->get();
+        return view('admin.events.index', ['items' => $items, 'title' => $this->title, 'rooms' => $rooms]);
     }
 
     /**
@@ -54,11 +55,11 @@ class EventController extends Controller
      */
     public function create()
     {
-        $edition = Edition::where('active',1)->first();
-        $posts = Post::where('edition',$edition['id'])->where('state','4')->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users', 'user_fk')->get();
+        $edition = Edition::where('active', 1)->first();
+        $posts = $this->checkPaperForEvents();
         $rooms = Room::where('visible', 1)->orderBy('name', 'ASC')->get();
-        $events=Event::where('active',1)->where('type','paper')->get();
-        return view('admin.events.create', ['title' => $this->title, 'rooms' => $rooms, 'posts'=>$posts, 'events'=>$events]);
+        $events = Event::where('active', 1)->where('type', 'poster')->get();
+        return view('admin.events.create', ['title' => $this->title, 'rooms' => $rooms, 'posts' => $posts, 'events' => $events, 'edition' => $edition]);
     }
 
     /**
@@ -73,40 +74,35 @@ class EventController extends Controller
             'title' => 'required',
         ]);
 
-       // dd($first = Carbon::create($request['start']));
+        // dd($first = Carbon::create($request['start']));
 
         //dd($request);
 
-        if ($request['type'] ==='paper') {
-            $paperPresent = $this->checkPaper($request);
-        }
 
-
-        $is_valid = $this->checkDate($request,'new');
+        $is_valid = $this->checkDate($request, 'new');
 
         if ($is_valid) {
             $event = new Event($request->all());
+            $edition = Edition::where('active', 1)->first();
+            $event['edition'] = $edition['id'];
             $res = $event->save();
             $message = $res ? 'The Event ' . $event->title . ' has been saved' : 'The Event ' . $event->title . ' was not saved';
             session()->flash('message', $message);
             session()->flash('alert-class', 'alert-success');
+        } else {
+            return response()->json(['isValid' => false, 'errors' => 'The Date is busy']);
         }
-
-        else {
-            return response()->json(['isValid'=>false,'errors'=>'The Date is busy']);
-        }
-
 
 
     }
 
-    public function checkDate($request, $source) {
+    public function checkDate($request, $source)
+    {
 
-        if ($source==='new') {
-            $events = Event::where('active', 1)->where('room', $request['room'])->where('type','paper')->get();
-        }
-        else if ($source==='edit'){
-            $events = Event::where('active', 1)->where('room', $request['room'])->where('type','paper')->where('id','!=', $request['id'])->get();
+        if ($source === 'new') {
+            $events = Event::where('active', 1)->where('room', $request['room'])->where('type', 'poster')->get();
+        } else if ($source === 'edit') {
+            $events = Event::where('active', 1)->where('room', $request['room'])->where('type', 'poster')->where('id', '!=', $request['id'])->get();
         }
 
         foreach ($events as $event) {
@@ -126,6 +122,21 @@ class EventController extends Controller
 
     }
 
+    public function checkPaperForEvents()
+    {
+        $edition = Edition::where('active', 1)->first();
+        $posts = Post::where('edition', $edition['id'])->where('state', '4')->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users', 'user_fk')->get();
+        $events = Event::where('type', 'poster')->pluck('title')->toArray();
+
+        $select = [];
+        foreach ($posts as $post) {
+            if (!in_array($post['title'], $events)) {
+                array_push($select, $post);
+            }
+        }
+        return $select;
+    }
+
 
     /**
      * Display the specified resource.
@@ -136,7 +147,7 @@ class EventController extends Controller
     public function show(Event $event)
     {
 
-        $item = Event::where('id',$event->id)->with('room_fk')->first();
+        $item = Event::where('id', $event->id)->with('room_fk')->first();
         return view('admin.events.show', ['item' => $item, 'title' => $this->title]);
     }
 
@@ -149,11 +160,14 @@ class EventController extends Controller
     public function edit(Event $event)
     {
         $item = $event;
-        $edition = Edition::where('active',1)->first();
-        $posts = Post::where('edition',$edition['id'])->where('state','4')->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users', 'user_fk')->get();
+        $edition = Edition::where('active', 1)->first();
+        $posts = $this->checkPaperForEvents();
+        if ($item->type==='poster') {
+            array_push($posts, $item);
+        }
         $rooms = Room::where('visible', 1)->orderBy('name', 'ASC')->get();
-        $events=Event::where('active',1)->where('type','paper')->get();
-        return view('admin.events.edit', ['item' => $item, 'rooms' => $rooms, 'posts'=>$posts, 'events'=>$events, 'title' => $this->title]);
+        $events = Event::where('active', 1)->where('type', 'poster')->get();
+        return view('admin.events.edit', ['item' => $item, 'rooms' => $rooms, 'posts' => $posts, 'events' => $events, 'title' => $this->title, 'edition' => $edition]);
     }
 
     /**
@@ -172,17 +186,15 @@ class EventController extends Controller
         $data = $request->all();
 
 
-        $is_valid = $this->checkDate($request,'edit');
+        $is_valid = $this->checkDate($request, 'edit');
 
         if ($is_valid) {
             $res = Event::find($event->id)->update($data);
             $message = $res ? 'The Event ' . $event->title . ' has been saved' : 'The Event ' . $event->title . ' was not saved';
             session()->flash('message', $message);
             session()->flash('alert-class', 'alert-success');
-        }
-
-        else {
-            return response()->json(['isValid'=>false,'errors'=>'The Date is busy']);
+        } else {
+            return response()->json(['isValid' => false, 'errors' => 'The Date is busy']);
         }
 
     }

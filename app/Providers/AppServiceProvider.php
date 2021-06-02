@@ -104,21 +104,31 @@ class AppServiceProvider extends ServiceProvider
 
         $events->listen(BuildingMenu::class, function (BuildingMenu $event) {
 
+            $edition= Edition::where('active',1)->first();
+
             $array = [
                 [
                     'text' => 'rooms',
                     'url' => 'admin/rooms',
                     'icon' => 'far fa-fw fa-building',
-                    'label' => Room::count(),
+                    'label' => Room::where('edition',$edition['id'])->count(),
                     'label_color' => 'success',
                 ],
                 [
                     'text' => 'events',
                     'url' => 'admin/events',
-                    'icon' => 'far fa-fw fa-calendar',
-                    'label' => Event::where('active',1)->count(),
+                    'icon' => 'far fa-fw fa-calendar-plus',
+                    'label' => Event::where('edition',$edition['id'])->where('active',1)->count(),
                     'label_color' => 'success',
-                ]
+                ],
+
+                [
+                'text' => 'calendar',
+                'url' => 'admin/calendar',
+                'icon' => 'far fa-fw fa-calendar',
+                'label' => Event::where('edition',$edition['id'])->where('active',1)->count(),
+                'label_color' => 'success',
+            ]
 
                 ];
 

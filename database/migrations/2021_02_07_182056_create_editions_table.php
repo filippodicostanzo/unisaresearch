@@ -16,6 +16,9 @@ class CreateEditionsTable extends Migration
         Schema::create('editions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('start');
+            $table->string('end');
+            $table->boolean('calendar');
             $table->longText('description')->nullable();
             $table->boolean('active');
             $table->timestamps();

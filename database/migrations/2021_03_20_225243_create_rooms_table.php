@@ -23,9 +23,13 @@ class CreateRoomsTable extends Migration
             $table->longText('description')->nullable();
             $table->longText('url')->nullable();
             $table->boolean('visible');
+            $table->bigInteger('edition')->unsigned();
             $table->timestamps();
         });
 
+        Schema::table('rooms', function(Blueprint $table) {
+            $table->foreign('edition')->references('id')->on('editions')->onDelete('cascade')->onUpdate('cascade');
+        });
 
     }
 

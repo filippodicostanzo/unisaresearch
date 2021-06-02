@@ -63,6 +63,7 @@ import RoomShow from "./components/RoomShow";
 import EventCreate from "./components/EventCreate";
 import EventTable from "./components/EventTable";
 import EventShow from "./components/EventShow";
+import CalendarTable from "./components/CalendarTable";
 
 window.route = route;
 window.Ziggy = Ziggy;
@@ -120,6 +121,7 @@ const app = new Vue({
         'user-table': UserTable,
         'user-create': UserCreate,
         'user-show': UserShow,
+        'calendar-table':CalendarTable,
         'modal': Modal
     }
 });

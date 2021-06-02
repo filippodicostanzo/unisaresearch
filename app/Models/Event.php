@@ -23,11 +23,17 @@ class Event extends Model
         'end',
         'description',
         'room',
+        'edition',
         'active'
         ];
 
     public function room_fk()
     {
         return $this->belongsTo('App\Models\Room', 'room', 'id');
+    }
+
+    public function edition_fk()
+    {
+        return $this->belongsTo('App\Models\Edition', 'edition', 'id');
     }
 }

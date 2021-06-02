@@ -4,10 +4,11 @@
             <div class="card card-mini">
                 <div class="card-header">
                     <h1 class="m0 text-dark card-title text-xl">
-                        Create New Edition
+                        <span v-if="this.source === 'new'">Create New Edition</span>
+                        <span v-if="this.source === 'edit'">Edit {{this.edition.name}} </span>
                     </h1>
                     <div class="card-action">
-                        <a :href="route('categories.index')">
+                        <a :href="route('editions.index')">
                             <i class="fas fa-arrow-circle-left fa-3x fa-fw" aria-hidden="true"></i>
                         </a>
 
@@ -31,7 +32,32 @@
                                 <label class="form__label">Active</label>
                                 <input type="checkbox" name="active"  v-model="edition.active">
                             </div>
+                        </div>
 
+                        <div class="row pt-3">
+
+                            <div class="col-md-4 cols-sm-12">
+                                <div class="form-group"  :class="{ 'form-group--error': $v.edition.start.$error }">
+                                    <label class="form__label">Start</label>
+                                    <input class="form__input" type="date" name="start" v-model="$v.edition.start.$model">
+                                </div>
+                                <div class="error" v-if="!$v.edition.start.required">Start Date is required</div>
+                                <div class="error" v-if="!$v.edition.start.minValue">Start Date is incorrect</div>
+                            </div>
+
+                            <div class="col-md-4 cols-sm-12">
+                                <div class="form-group"  :class="{ 'form-group--error': $v.edition.end.$error }">
+                                    <label class="form__label">End</label>
+                                    <input class="form__input" type="date" name="end" v-model="$v.edition.end.$model">
+                                </div>
+                                <div class="error" v-if="!$v.edition.end.required">End Date is required</div>
+                                <div class="error" v-if="!$v.edition.end.isAfterDate">End Date is incorrect</div>
+                            </div>
+
+                            <div class="col-md-4 col-xs-12">
+                                <label class="form__label">Public Calendar</label>
+                                <input type="checkbox" name="calendar"  v-model="edition.calendar">
+                            </div>
                         </div>
 
                         <div class="row padding">
@@ -42,6 +68,7 @@
                                 </div>
                             </div>
                         </div>
+
 
 
                         <div class="row padding">
@@ -69,6 +96,10 @@
 
     import {minLength, required} from 'vuelidate/lib/validators'
 
+    const isAfterDate = (value, vm) => {
+        return new Date(value).getTime() > new Date(vm.start).getTime();
+    };
+
     export default {
         name: "EditionCreate",
         props: ['item','title'],
@@ -87,7 +118,11 @@
                 edition: {
                     name: '',
                     active: true,
+                    start: '',
+                    end: '',
+                    calendar:false,
                     description: '',
+
                 },
                 source: '',
                 submitStatus: null,
@@ -105,8 +140,16 @@
                 name: {
                     required,
                     minLength: minLength(4)
-                }
-            },
+                },
+                start: {
+                    required,
+                    minValue: value => value > new Date().toISOString()
+                },
+                end: {
+                    required,
+                    isAfterDate
+                },
+            }
         },
         methods: {
             submit() {

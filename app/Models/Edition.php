@@ -16,6 +16,9 @@ class Edition extends Model
     protected $fillable=[
         'id',
         'name',
+        'start',
+        'end',
+        'calendar',
         'description',
         'active',
     ];
