@@ -4,12 +4,12 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <p>Are you sure you want to move this task?</p>
+                        <p>This paper has already been inserted.</p><p> Are you sure you want to enter it again?</p>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary"
                                 @click="onCancel">
-                            Cancel
+                            No
                         </button>
                         <button class="btn btn-primary"
                                 @click="onConfirm">
