@@ -177,12 +177,12 @@
                                 </div>
                                 <div class="input-group">
                                     <span class="input-group-btn">
-                                        <a id="document" data-input="thumbnail" data-preview="cover_preview"
+                                        <a id="pdf" data-input="document" data-preview="cover_preview"
                                            class="btn btn-secondary">
                                             <i class="fa fa-picture-o"></i> Choose
                                         </a>
                                         </span>
-                                    {!! Form::text('pdf', null, array('placeholder' => 'PDF','class' => 'form-control file-src','id' => 'pdf')) !!}
+                                    {!! Form::text('pdf', null, array('placeholder' => 'PDF','class' => 'form-control file-src','id' => 'document')) !!}
 
                                 </div>
 
@@ -344,7 +344,7 @@
                 CKEDITOR.replace(id, options);
             }
 
-            $('#document').filemanager('file', '', false);
+            $('#pdf').filemanager('file', '', false);
         });
 
         var currentTab = 0; // Current tab is set to be the first tab (0)
