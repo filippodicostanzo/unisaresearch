@@ -100,7 +100,7 @@ class EventController extends Controller
     {
 
         if ($source === 'new') {
-            $events = Event::where('active', 1)->where('room', $request['room'])->where('type', 'poster')->get();
+            $events = Event::where('active', 1)->where('room', $request['room'])->get();
         } else if ($source === 'edit') {
             $events = Event::where('active', 1)->where('room', $request['room'])->where('type', 'poster')->where('id', '!=', $request['id'])->get();
         }
