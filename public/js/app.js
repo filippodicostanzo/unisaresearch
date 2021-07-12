@@ -2351,6 +2351,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -2369,7 +2372,12 @@ __webpack_require__.r(__webpack_exports__);
       rendered_events: [],
       colors: ['blue', 'green', 'orange', 'yellow', 'red'],
       isModalVisible: false,
+      eventModalVisible: false,
       startDate: '',
+      modalData: {
+        title: '',
+        body: ''
+      },
       events: [],
       modalHTML: {
         title: "Event Guide",
@@ -2390,6 +2398,7 @@ __webpack_require__.r(__webpack_exports__);
     this.rendered_rooms.forEach(function (room, index) {
       var obj = {
         label: room.name,
+        address: room.address,
         "class": 'split-' + parseInt(index + 1),
         color: _this.colors[index],
         id: room.id
@@ -2430,14 +2439,19 @@ __webpack_require__.r(__webpack_exports__);
     console.log(this.events);
   },
   methods: {
-    showModal: function showModal() {
+    showModal: function showModal(data) {
+      this.modalData.title = data.label;
+      this.modalData.body = data.address;
       this.isModalVisible = true;
     },
     closeModal: function closeModal() {
       this.isModalVisible = false;
     },
     openDetails: function openDetails() {
-      console.log('A');
+      this.eventModalVisible = true;
+    },
+    closeEventModal: function closeEventModal() {
+      this.eventModalVisible = false;
     },
     firstDate: function firstDate(events) {
       events.filter(function (evt) {
@@ -12142,7 +12156,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".vuecal .day-split-header {\n  font-size: 18px;\n}\n.vuecal__body .split-1 {\n  background-color: rgba(226, 242, 253, 0.7);\n}\n.vuecal__body .split-2 {\n  background-color: rgba(232, 245, 233, 0.7);\n}\n.vuecal__body .split-3 {\n  background-color: rgba(255, 243, 224, 0.7);\n}\n.vuecal__body .split-4 {\n  background-color: rgba(255, 235, 238, 0.7);\n}\n.vuecal__no-event {\n  display: none;\n}\n::-webkit-scrollbar {\n  width: 0px;\n}\n::-webkit-scrollbar-track {\n  display: none;\n}\n.custom-calendar.vc-container {\n  --day-border: 1px solid #b8c2cc;\n  --day-border-highlight: 1px solid #b8c2cc;\n  --day-width: 90px;\n  --day-height: 90px;\n  --weekday-bg: #f8fafc;\n  --weekday-border: 1px solid #eaeaea;\n  border-radius: 0;\n  width: 100%;\n}\n.poster-event {\n  background-color: rgba(255, 185, 185, 0.8);\n  border: none;\n  border-left: 3px solid rgba(230, 55, 55, 0.3);\n  color: #c55656;\n  border-radius: 20px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  width: 98% !important;\n  margin: 0 1%;\n}\n.break-event {\n  background-color: rgba(200, 248, 233, 0.8);\n  border: none;\n  border-left: 3px solid rgba(99, 186, 139, 0.4);\n  color: #219671;\n  border-radius: 20px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  width: 98% !important;\n  margin: 0 1%;\n}\n.other-event {\n  background-color: rgba(255, 202, 154, 0.8);\n  border: none;\n  border-left: 3px solid rgba(250, 118, 36, 0.3);\n  color: #b57335;\n  border-radius: 20px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  width: 98% !important;\n  margin: 0 1%;\n}\n.vuecal__event-time {\n  font-weight: bolder;\n}\n.day-split-header {\n  cursor: pointer;\n}", ""]);
+exports.push([module.i, ".vuecal .day-split-header {\n  font-size: 18px;\n}\n.vuecal__body .split-1 {\n  background-color: rgba(226, 242, 253, 0.7);\n}\n.vuecal__body .split-2 {\n  background-color: rgba(232, 245, 233, 0.7);\n}\n.vuecal__body .split-3 {\n  background-color: rgba(255, 243, 224, 0.7);\n}\n.vuecal__body .split-4 {\n  background-color: rgba(255, 235, 238, 0.7);\n}\n.vuecal__no-event {\n  display: none;\n}\n::-webkit-scrollbar {\n  width: 0px;\n}\n::-webkit-scrollbar-track {\n  display: none;\n}\n.custom-calendar.vc-container {\n  --day-border: 1px solid #b8c2cc;\n  --day-border-highlight: 1px solid #b8c2cc;\n  --day-width: 90px;\n  --day-height: 90px;\n  --weekday-bg: #f8fafc;\n  --weekday-border: 1px solid #eaeaea;\n  border-radius: 0;\n  width: 100%;\n}\n.poster-event {\n  background-color: rgba(255, 185, 185, 0.8);\n  border: none;\n  border-left: 3px solid rgba(230, 55, 55, 0.3);\n  color: #c55656;\n  border-radius: 20px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  width: 98% !important;\n  margin: 0 1%;\n}\n.break-event {\n  background-color: rgba(200, 248, 233, 0.8);\n  border: none;\n  border-left: 3px solid rgba(99, 186, 139, 0.4);\n  color: #219671;\n  border-radius: 20px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  width: 98% !important;\n  margin: 0 1%;\n}\n.other-event {\n  background-color: rgba(255, 202, 154, 0.8);\n  border: none;\n  border-left: 3px solid rgba(250, 118, 36, 0.3);\n  color: #b57335;\n  border-radius: 20px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  width: 98% !important;\n  margin: 0 1%;\n}\n.plenary-event {\n  background-color: rgba(239, 180, 241, 0.8);\n  border: none;\n  border-left: 3px solid rgba(250, 118, 36, 0.3);\n  color: #b57335;\n  border-radius: 20px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  width: 98% !important;\n  margin: 0 1%;\n}\n.parallel-event {\n  background-color: rgba(176, 255, 154, 0.8);\n  border: none;\n  border-left: 3px solid rgba(250, 118, 36, 0.3);\n  color: #b57335;\n  border-radius: 20px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  width: 98% !important;\n  margin: 0 1%;\n}\n.special-event {\n  background-color: rgba(154, 255, 243, 0.8);\n  border: none;\n  border-left: 3px solid rgba(250, 118, 36, 0.3);\n  color: #b57335;\n  border-radius: 20px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  width: 98% !important;\n  margin: 0 1%;\n}\n.vuecal__event-time {\n  font-weight: bolder;\n}\n.day-split-header {\n  cursor: pointer;\n}", ""]);
 
 // exports
 
@@ -74437,7 +74451,7 @@ var render = function() {
               var event = ref.event
               var view = ref.view
               return [
-                _c("div", { on: { click: _vm.openDetails } }, [
+                _c("div", [
                   _c("div", { staticClass: "vuecal__event-time" }, [
                     _c("span", [
                       _vm._v(_vm._s(event.start.formatTime("HH:mm")))
@@ -74453,8 +74467,34 @@ var render = function() {
                   _vm._v(" "),
                   _c("div", { staticClass: "vuecal__event-content" }, [
                     _c("i", { class: event.icon })
-                  ])
-                ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "vuecal__body mt-3",
+                      on: { click: _vm.openDetails }
+                    },
+                    [
+                      _c("button", { staticClass: "btn btn-outline-light" }, [
+                        _vm._v("More Info")
+                      ])
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("modal", {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.eventModalVisible,
+                      expression: "eventModalVisible"
+                    }
+                  ],
+                  attrs: { data: event },
+                  on: { close: _vm.closeEventModal }
+                })
               ]
             }
           }
@@ -74470,7 +74510,7 @@ var render = function() {
             expression: "isModalVisible"
           }
         ],
-        attrs: { data: _vm.modalHTML },
+        attrs: { data: _vm.modalData },
         on: { close: _vm.closeModal }
       })
     ],

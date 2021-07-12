@@ -17,7 +17,7 @@
                 </div>
             </template>
             <template v-slot:event="{ event, view }">
-                <div @click="openDetails">
+                <div >
                     <div class="vuecal__event-time">
                         <!-- Using Vue Cal injected Date prototypes -->
                         <span>{{ event.start.formatTime("HH:mm") }}</span> -
@@ -28,11 +28,14 @@
                     <div class="vuecal__event-title" v-html="event.title"/>
 
                     <div class="vuecal__event-content"><i :class="event.icon"></i></div>
+                    <div class="vuecal__body mt-3" @click="openDetails"><button class="btn btn-outline-light">More Info</button></div>
 
                 </div>
+                <modal v-show="eventModalVisible" :data="event" @close="closeEventModal"/>
             </template>
         </vue-cal>
-        <modal v-show="isModalVisible" :data="modalHTML" @close="closeModal"/>
+        <modal v-show="isModalVisible" :data="modalData" @close="closeModal"/>
+
     </div>
 </template>
 
@@ -54,8 +57,12 @@
                 rendered_events: [],
                 colors: ['blue', 'green', 'orange', 'yellow', 'red'],
                 isModalVisible: false,
-                startDate : '',
-
+                eventModalVisible: false,
+                startDate: '',
+                modalData: {
+                    title:'',
+                    body:''
+                },
                 events: [],
 
                 modalHTML: {
@@ -85,12 +92,12 @@
             console.log(this.startDate);
 
 
-
             console.log(this.rendered_items);
 
             this.rendered_rooms.forEach((room, index) => {
                 let obj = {
                     label: room.name,
+                    address: room.address,
                     class: 'split-' + parseInt(index + 1),
                     color: this.colors[index],
                     id: room.id
@@ -132,15 +139,22 @@
         },
 
         methods: {
-            showModal() {
+            showModal(data) {
+                this.modalData.title = data.label;
+                this.modalData.body = data.address;
                 this.isModalVisible = true;
             },
             closeModal() {
                 this.isModalVisible = false;
             },
 
+
             openDetails() {
-                console.log('A');
+                this.eventModalVisible = true;
+            },
+
+            closeEventModal() {
+                this.eventModalVisible = false
             },
 
             firstDate(events) {
@@ -154,7 +168,7 @@
                 });
 
 
-                return format(new Date(events[0].start),'yyyy-MM-dd');
+                return format(new Date(events[0].start), 'yyyy-MM-dd');
             }
         }
     }
@@ -244,6 +258,44 @@
         margin: 0 1%;
     }
 
+    .plenary-event {
+        background-color: rgba(239, 180, 241, 0.8);
+        border: none;
+        border-left: 3px solid rgba(250, 118, 36, .3);
+        color: #b57335;
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 98% !important;
+        margin: 0 1%;
+    }
+
+    .parallel-event {
+        background-color: rgba(176, 255, 154, 0.8);
+        border: none;
+        border-left: 3px solid rgba(250, 118, 36, .3);
+        color: #b57335;
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 98% !important;
+        margin: 0 1%;
+    }
+
+    .special-event {
+        background-color: rgba(154, 255, 243, 0.8);
+        border: none;
+        border-left: 3px solid rgba(250, 118, 36, .3);
+        color: #b57335;
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 98% !important;
+        margin: 0 1%;
+    }
     .vuecal__event-time {
         font-weight: bolder;
     }
