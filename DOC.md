@@ -188,4 +188,5 @@ Create route group to wrap package routes.
         'url' => env('APP_URL').'storage/app/public/',
         'visibility' => 'public',
     ],
-    ```
+    ```  
+- Edit Ziggy JS route change .env file with Remote Domain

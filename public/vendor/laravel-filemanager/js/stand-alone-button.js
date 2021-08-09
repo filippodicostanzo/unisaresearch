@@ -9,10 +9,15 @@
       var target_preview = $('#' + $(this).data('preview'));
       window.open(route_prefix + '?type=' + type, 'FileManager', 'width=900,height=600');
       window.SetUrl = function (items) {
+
         var file_path = items.map(function (item) {
+            console.log(item.url);
           return item.url;
         }).join(',');
 
+        
+        console.log(target_input);
+        
         // set the value of the desired input to image url
         target_input.val('').val(file_path).trigger('change');
 

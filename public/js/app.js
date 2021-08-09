@@ -2354,6 +2354,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -2364,7 +2368,7 @@ __webpack_require__.r(__webpack_exports__);
     VueCal: vue_cal__WEBPACK_IMPORTED_MODULE_0___default.a,
     'modal': _Modal__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
-  props: ['items', 'rooms'],
+  props: ['items', 'rooms', 'posts'],
   data: function data() {
     return {
       rendered_rooms: [],
@@ -2375,6 +2379,10 @@ __webpack_require__.r(__webpack_exports__);
       eventModalVisible: false,
       startDate: '',
       modalData: {
+        title: '',
+        body: ''
+      },
+      modalEvent: {
         title: '',
         body: ''
       },
@@ -2391,6 +2399,7 @@ __webpack_require__.r(__webpack_exports__);
     console.log(this.rooms);
     this.rendered_rooms = JSON.parse(this.rooms);
     this.rendered_items = JSON.parse(this.items);
+    this.rendered_posts = JSON.parse(this.posts);
     console.log(this.rendered_rooms);
     this.startDate = this.firstDate(this.rendered_items);
     console.log(this.startDate);
@@ -2399,6 +2408,9 @@ __webpack_require__.r(__webpack_exports__);
       var obj = {
         label: room.name,
         address: room.address,
+        city: room.city,
+        url: room.url,
+        description: room.description,
         "class": 'split-' + parseInt(index + 1),
         color: _this.colors[index],
         id: room.id
@@ -2407,6 +2419,8 @@ __webpack_require__.r(__webpack_exports__);
       _this.label_rooms.push(obj);
     });
     this.rendered_items.forEach(function (evt, index) {
+      console.log(evt);
+
       var room_index = _this.label_rooms.findIndex(function (x) {
         return x.id === evt.room;
       });
@@ -2417,6 +2431,12 @@ __webpack_require__.r(__webpack_exports__);
         icon = 'fa-file';
       } else if (evt.type === 'break') {
         icon = 'fa-stopwatch';
+      } else if (evt.type === 'special') {
+        icon = 'fa-bahai';
+      } else if (evt.type === 'plenary') {
+        icon = 'fa-clipboard-list';
+      } else if (evt.type === 'parallel') {
+        icon = 'fa-volume-up';
       } else {
         icon = 'fa-microphone';
       }
@@ -2425,6 +2445,9 @@ __webpack_require__.r(__webpack_exports__);
         start: Object(date_fns__WEBPACK_IMPORTED_MODULE_3__["format"])(new Date(evt.start), 'yyyy-MM-dd HH:mm'),
         end: Object(date_fns__WEBPACK_IMPORTED_MODULE_3__["format"])(new Date(evt.end), 'yyyy-MM-dd HH:mm'),
         title: evt.title,
+        type: evt.type,
+        room: evt.room_fk,
+        description: evt.description,
         icon: 'fas fa-1x fa-lg ' + icon,
         content: '<i class="fas fa-pencil-alt fa-1x fa-lg"></i>',
         "class": evt.type + '-event',
@@ -2439,15 +2462,43 @@ __webpack_require__.r(__webpack_exports__);
     console.log(this.events);
   },
   methods: {
+    sessionText: function sessionText(text) {
+      return text === 'plenary' || text === 'poster' || text === 'parallel';
+    },
     showModal: function showModal(data) {
       this.modalData.title = data.label;
-      this.modalData.body = data.address;
+      this.modalData.body = "<div class=\"text-center\">\n            <h2>".concat(data.label, "</h2><hr>\n            ").concat(data.address ? '<p><i class="fa fa-map-pin"></i> ' + data.address + '</p>' : '', "\n            ").concat(data.city ? '<p><i class="fa fa-city"></i> ' + data.city + '</p>' : '', "\n            ").concat(data.url ? '<p><i class="fa fa-play"></i> ' + '<a href="' + data.url + '" target="_blank"> Link Meet</a></p>' : '', "\n            ").concat(data.description ? '<hr>' + data.description : '', "\n\n            </div>");
       this.isModalVisible = true;
     },
     closeModal: function closeModal() {
       this.isModalVisible = false;
     },
-    openDetails: function openDetails() {
+    openDetails: function openDetails(event) {
+      console.log(this.rendered_posts);
+      var post = this.rendered_posts.find(function (item) {
+        return item.title === event.title;
+      });
+      console.log(post);
+      this.modalEvent.title = event.title;
+      this.modalEvent.body = "<h2>".concat(event.title, "</h2><hr>\n            <p><i class=\"fa fa-clock\"></i> ").concat(event.start.format("DD/MM/YYYY HH:mm"), " - ").concat(event.end.format("DD/MM/YYYY HH:mm"), "</p>\n            <p><i class=\"fa fa-door-closed\"></i> ").concat(event.room.name, "</p>\n            <p class=\"text-capitalize\"><i class=\"fa fa-list\"></i> ").concat(event.type, " ").concat(this.sessionText(event.type) ? 'session' : '', "</p>");
+
+      if (post) {
+        var authors = '';
+        post.authors.forEach(function (author, idx) {
+          authors += "<span>".concat(author.firstname, " ").concat(author.lastname, "</span>");
+
+          if (idx != post.authors.length - 1) {
+            authors += ' - ';
+          }
+        });
+        this.modalEvent.body += "<p><i class=\"fa fa-users\"></i> ".concat(authors, "</p>");
+
+        if (post.pdf) {
+          this.modalEvent.body += "<p><i class=\"fa fa-file-pdf\"></i> <a href=\"".concat(post.pdf, "\" target=\"_blank\">Download Pdf</a> </p>");
+        }
+      }
+
+      this.modalEvent.body += "".concat(event.description ? '<hr>' + event.description : '');
       this.eventModalVisible = true;
     },
     closeEventModal: function closeEventModal() {
@@ -2464,7 +2515,8 @@ __webpack_require__.r(__webpack_exports__);
       });
       return Object(date_fns__WEBPACK_IMPORTED_MODULE_3__["format"])(new Date(events[0].start), 'yyyy-MM-dd');
     }
-  }
+  },
+  computed: {}
 });
 
 /***/ }),
@@ -4043,6 +4095,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_pagination_2__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_pagination_2__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/esm/index.js");
 /* harmony import */ var _Modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Modal */ "./resources/js/components/Modal.vue");
+//
+//
 //
 //
 //
@@ -12156,7 +12210,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".vuecal .day-split-header {\n  font-size: 18px;\n}\n.vuecal__body .split-1 {\n  background-color: rgba(226, 242, 253, 0.7);\n}\n.vuecal__body .split-2 {\n  background-color: rgba(232, 245, 233, 0.7);\n}\n.vuecal__body .split-3 {\n  background-color: rgba(255, 243, 224, 0.7);\n}\n.vuecal__body .split-4 {\n  background-color: rgba(255, 235, 238, 0.7);\n}\n.vuecal__no-event {\n  display: none;\n}\n::-webkit-scrollbar {\n  width: 0px;\n}\n::-webkit-scrollbar-track {\n  display: none;\n}\n.custom-calendar.vc-container {\n  --day-border: 1px solid #b8c2cc;\n  --day-border-highlight: 1px solid #b8c2cc;\n  --day-width: 90px;\n  --day-height: 90px;\n  --weekday-bg: #f8fafc;\n  --weekday-border: 1px solid #eaeaea;\n  border-radius: 0;\n  width: 100%;\n}\n.poster-event {\n  background-color: rgba(255, 185, 185, 0.8);\n  border: none;\n  border-left: 3px solid rgba(230, 55, 55, 0.3);\n  color: #c55656;\n  border-radius: 20px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  width: 98% !important;\n  margin: 0 1%;\n}\n.break-event {\n  background-color: rgba(200, 248, 233, 0.8);\n  border: none;\n  border-left: 3px solid rgba(99, 186, 139, 0.4);\n  color: #219671;\n  border-radius: 20px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  width: 98% !important;\n  margin: 0 1%;\n}\n.other-event {\n  background-color: rgba(255, 202, 154, 0.8);\n  border: none;\n  border-left: 3px solid rgba(250, 118, 36, 0.3);\n  color: #b57335;\n  border-radius: 20px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  width: 98% !important;\n  margin: 0 1%;\n}\n.plenary-event {\n  background-color: rgba(239, 180, 241, 0.8);\n  border: none;\n  border-left: 3px solid rgba(250, 118, 36, 0.3);\n  color: #b57335;\n  border-radius: 20px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  width: 98% !important;\n  margin: 0 1%;\n}\n.parallel-event {\n  background-color: rgba(176, 255, 154, 0.8);\n  border: none;\n  border-left: 3px solid rgba(250, 118, 36, 0.3);\n  color: #b57335;\n  border-radius: 20px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  width: 98% !important;\n  margin: 0 1%;\n}\n.special-event {\n  background-color: rgba(154, 255, 243, 0.8);\n  border: none;\n  border-left: 3px solid rgba(250, 118, 36, 0.3);\n  color: #b57335;\n  border-radius: 20px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  width: 98% !important;\n  margin: 0 1%;\n}\n.vuecal__event-time {\n  font-weight: bolder;\n}\n.day-split-header {\n  cursor: pointer;\n}", ""]);
+exports.push([module.i, ".vuecal .day-split-header {\n  font-size: 18px;\n}\n.vuecal__body .split-1 {\n  background-color: rgba(226, 242, 253, 0.7);\n}\n.vuecal__body .split-2 {\n  background-color: rgba(232, 245, 233, 0.7);\n}\n.vuecal__body .split-3 {\n  background-color: rgba(255, 243, 224, 0.7);\n}\n.vuecal__body .split-4 {\n  background-color: rgba(255, 235, 238, 0.7);\n}\n.vuecal__no-event {\n  display: none;\n}\n::-webkit-scrollbar {\n  width: 0px;\n}\n::-webkit-scrollbar-track {\n  display: none;\n}\n.custom-calendar.vc-container {\n  --day-border: 1px solid #b8c2cc;\n  --day-border-highlight: 1px solid #b8c2cc;\n  --day-width: 90px;\n  --day-height: 90px;\n  --weekday-bg: #f8fafc;\n  --weekday-border: 1px solid #eaeaea;\n  border-radius: 0;\n  width: 100%;\n}\n.poster-event {\n  background-color: rgba(255, 185, 185, 0.8);\n  border: none;\n  border-left: 3px solid rgba(230, 55, 55, 0.3);\n  color: #c55656;\n  border-radius: 20px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  width: 98% !important;\n  margin: 0 1%;\n  padding: 10px;\n}\n.break-event {\n  background-color: rgba(200, 248, 233, 0.8);\n  border: none;\n  border-left: 3px solid rgba(99, 186, 139, 0.4);\n  color: #219671;\n  border-radius: 20px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  width: 98% !important;\n  margin: 0 1%;\n}\n.other-event {\n  background-color: rgba(255, 202, 154, 0.8);\n  border: none;\n  border-left: 3px solid rgba(250, 118, 36, 0.3);\n  color: #b57335;\n  border-radius: 20px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  width: 98% !important;\n  margin: 0 1%;\n}\n.plenary-event {\n  background-color: rgba(239, 180, 241, 0.8);\n  border: none;\n  border-left: 3px solid rgba(250, 118, 36, 0.3);\n  color: #b57335;\n  border-radius: 20px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  width: 98% !important;\n  margin: 0 1%;\n}\n.parallel-event {\n  background-color: rgba(167, 232, 167, 0.8);\n  border: none;\n  border-left: 3px solid rgba(250, 118, 36, 0.3);\n  color: #b57335;\n  border-radius: 20px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  width: 98% !important;\n  margin: 0 1%;\n}\n.special-event {\n  background-color: rgba(154, 255, 243, 0.8);\n  border: none;\n  border-left: 3px solid rgba(250, 118, 36, 0.3);\n  color: #b57335;\n  border-radius: 20px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  width: 98% !important;\n  margin: 0 1%;\n}\n.vuecal__event-time {\n  font-weight: bolder;\n}\n.day-split-header {\n  cursor: pointer;\n}", ""]);
 
 // exports
 
@@ -74471,9 +74525,24 @@ var render = function() {
                   _vm._v(" "),
                   _c(
                     "div",
+                    { staticClass: "vuecal__event-content text-capitalize" },
+                    [
+                      _vm._v(_vm._s(event.type) + " "),
+                      _vm.sessionText(event.type)
+                        ? _c("span", [_vm._v(" Session")])
+                        : _vm._e()
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
                     {
                       staticClass: "vuecal__body mt-3",
-                      on: { click: _vm.openDetails }
+                      on: {
+                        click: function($event) {
+                          return _vm.openDetails(event)
+                        }
+                      }
                     },
                     [
                       _c("button", { staticClass: "btn btn-outline-light" }, [
@@ -74492,7 +74561,7 @@ var render = function() {
                       expression: "eventModalVisible"
                     }
                   ],
-                  attrs: { data: event },
+                  attrs: { data: _vm.modalEvent },
                   on: { close: _vm.closeEventModal }
                 })
               ]
@@ -76424,35 +76493,33 @@ var render = function() {
                       : _vm._e()
                   ]),
                   _vm._v(" "),
-                  _vm.evt.type == "poster"
-                    ? _c("div", { staticClass: "col-md-6 cols-sm-12" }, [
-                        _c("label", { staticClass: "form__label" }, [
-                          _vm._v("Authors")
-                        ]),
-                        _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.evt.authors,
-                              expression: "evt.authors"
-                            }
-                          ],
-                          staticClass: "form__input",
-                          attrs: { name: "authors" },
-                          domProps: { value: _vm.evt.authors },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.$set(_vm.evt, "authors", $event.target.value)
-                            }
+                  _c("div", { staticClass: "col-md-6 cols-sm-12" }, [
+                    _c("label", { staticClass: "form__label" }, [
+                      _vm._v("Authors")
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.evt.authors,
+                          expression: "evt.authors"
+                        }
+                      ],
+                      staticClass: "form__input",
+                      attrs: { name: "authors" },
+                      domProps: { value: _vm.evt.authors },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
                           }
-                        })
-                      ])
-                    : _vm._e()
+                          _vm.$set(_vm.evt, "authors", $event.target.value)
+                        }
+                      }
+                    })
+                  ])
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "row pt-3" }, [
@@ -76482,8 +76549,7 @@ var render = function() {
                             type: "datetime-local",
                             name: "start",
                             min: this.datetime_start,
-                            max: this.datetime_end,
-                            onkeydown: "return false"
+                            max: this.datetime_end
                           },
                           domProps: { value: _vm.$v.evt.start.$model },
                           on: {
@@ -76541,8 +76607,7 @@ var render = function() {
                             type: "datetime-local",
                             name: "end",
                             min: this.datetime_start,
-                            max: this.datetime_end,
-                            onkeydown: "return false"
+                            max: this.datetime_end
                           },
                           domProps: { value: _vm.$v.evt.end.$model },
                           on: {
@@ -77034,6 +77099,10 @@ var render = function() {
                         _vm._v(" "),
                         _c("td", [_vm._v(_vm._s(item.title))]),
                         _vm._v(" "),
+                        _c("td", { staticClass: "text-capitalize" }, [
+                          _vm._v(_vm._s(item.type))
+                        ]),
+                        _vm._v(" "),
                         _c("td", [_vm._v(_vm._s(item.room_fk.name))]),
                         _vm._v(" "),
                         _c("td", [
@@ -77170,6 +77239,8 @@ var staticRenderFns = [
         _c("th", [_vm._v("Id")]),
         _vm._v(" "),
         _c("th", [_vm._v("Title")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Type")]),
         _vm._v(" "),
         _c("th", [_vm._v("Room")]),
         _vm._v(" "),

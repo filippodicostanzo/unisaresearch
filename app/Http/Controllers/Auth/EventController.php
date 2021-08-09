@@ -99,15 +99,42 @@ class EventController extends Controller
     public function checkDate($request, $source)
     {
 
+
+
+
+
+        /**
+         *
+         * CHECK PLENARY
+         *
+         */
+
         if ($source === 'new') {
-            $events = Event::where('active', 1)->where('room', $request['room'])->get();
+            if ($request['type'] === 'plenary') {
+                $events=Event::where('active', 1)->get();
+            }
+            else {
+
+                $room_events = Event::where('active', 1)->where('room', $request['room'])->get();
+                $plenary_events=Event::where('active', 1)->where('type', 'plenary')->get();
+                $events = array_merge($room_events->toArray(), $plenary_events->toArray());
+            }
         } else if ($source === 'edit') {
-            $events = Event::where('active', 1)->where('room', $request['room'])->where('type', 'poster')->where('id', '!=', $request['id'])->get();
+
+            if ($request['type'] === 'plenary') {
+                $events=Event::where('active', 1)->where('id', '!=', $request['id'])->get();
+            }
+            else {
+                $room_events = Event::where('active', 1)->where('room', $request['room'])->where('id', '!=', $request['id'])->get();
+                $plenary_events=Event::where('active', 1)->where('type', 'plenary')->where('id', '!=', $request['id'])->get();
+                $events = array_merge($room_events->toArray(), $plenary_events->toArray());
+                //$events = Event::where('active', 1)->where('room', $request['room'])->where('id', '!=', $request['id'])->get();
+            }
         }
 
         foreach ($events as $event) {
-            $start = Carbon::create($event->start);
-            $end = Carbon::create($event->end)->subMinutes(1);
+            $start = Carbon::create($event['start']);
+            $end = Carbon::create($event['end'])->subMinutes(1);
             $valid_start = Carbon::create($request['start'])->between($start, $end);
             $valid_end = Carbon::create($request['end'])->subMinutes(1)->between($start, $end);
 

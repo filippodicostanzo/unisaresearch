@@ -34,6 +34,7 @@
                             <tr>
                                 <th>Id</th>
                                 <th>Title</th>
+                                <th>Type</th>
                                 <th>Room</th>
                                 <th>Active</th>
                                 <th>Start</th>
@@ -47,6 +48,7 @@
 
                                 <td>{{item.id}}</td>
                                 <td>{{item.title}}</td>
+                                <td class="text-capitalize">{{item.type}}</td>
                                 <td>{{item.room_fk.name}}</td>
                                 <td> <span v-if="item.active==1"><i class="fa fas fa-check"></i> </span> <span v-else><i class="fa fas fa-close"></i></span></td>
                                 <td>{{ format(new Date(item.start), 'dd/MM/yyyy HH:mm') }}</td>

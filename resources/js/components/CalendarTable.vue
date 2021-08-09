@@ -17,7 +17,7 @@
                 </div>
             </template>
             <template v-slot:event="{ event, view }">
-                <div >
+                <div>
                     <div class="vuecal__event-time">
                         <!-- Using Vue Cal injected Date prototypes -->
                         <span>{{ event.start.formatTime("HH:mm") }}</span> -
@@ -28,10 +28,14 @@
                     <div class="vuecal__event-title" v-html="event.title"/>
 
                     <div class="vuecal__event-content"><i :class="event.icon"></i></div>
-                    <div class="vuecal__body mt-3" @click="openDetails"><button class="btn btn-outline-light">More Info</button></div>
+                    <div class="vuecal__event-content text-capitalize">{{event.type}} <span
+                        v-if="sessionText(event.type)"> Session</span></div>
+                    <div class="vuecal__body mt-3" @click="openDetails(event)">
+                        <button class="btn btn-outline-light">More Info</button>
+                    </div>
 
                 </div>
-                <modal v-show="eventModalVisible" :data="event" @close="closeEventModal"/>
+                <modal v-show="eventModalVisible" :data="modalEvent" @close="closeEventModal"/>
             </template>
         </vue-cal>
         <modal v-show="isModalVisible" :data="modalData" @close="closeModal"/>
@@ -48,7 +52,7 @@
     export default {
         name: "CalendarTable.vue",
         components: {VueCal, 'modal': Modal},
-        props: ['items', 'rooms'],
+        props: ['items', 'rooms', 'posts'],
 
         data: () => {
             return {
@@ -60,8 +64,12 @@
                 eventModalVisible: false,
                 startDate: '',
                 modalData: {
-                    title:'',
-                    body:''
+                    title: '',
+                    body: ''
+                },
+                modalEvent: {
+                    title: '',
+                    body: ''
                 },
                 events: [],
 
@@ -86,6 +94,7 @@
             console.log(this.rooms);
             this.rendered_rooms = JSON.parse(this.rooms);
             this.rendered_items = JSON.parse(this.items);
+            this.rendered_posts = JSON.parse(this.posts);
             console.log(this.rendered_rooms);
 
             this.startDate = this.firstDate(this.rendered_items);
@@ -98,6 +107,9 @@
                 let obj = {
                     label: room.name,
                     address: room.address,
+                    city: room.city,
+                    url: room.url,
+                    description: room.description,
                     class: 'split-' + parseInt(index + 1),
                     color: this.colors[index],
                     id: room.id
@@ -106,6 +118,7 @@
             });
 
             this.rendered_items.forEach((evt, index) => {
+                console.log(evt);
 
                 let room_index = this.label_rooms.findIndex(x => x.id === evt.room);
                 let icon = ''
@@ -114,6 +127,12 @@
                     icon = 'fa-file'
                 } else if (evt.type === 'break') {
                     icon = 'fa-stopwatch'
+                } else if (evt.type === 'special') {
+                    icon = 'fa-bahai'
+                } else if (evt.type === 'plenary') {
+                    icon = 'fa-clipboard-list'
+                } else if (evt.type === 'parallel') {
+                    icon = 'fa-volume-up'
                 } else {
                     icon = 'fa-microphone'
                 }
@@ -122,6 +141,9 @@
                     start: format(new Date(evt.start), 'yyyy-MM-dd HH:mm'),
                     end: format(new Date(evt.end), 'yyyy-MM-dd HH:mm'),
                     title: evt.title,
+                    type: evt.type,
+                    room: evt.room_fk,
+                    description: evt.description,
                     icon: 'fas fa-1x fa-lg ' + icon,
                     content: '<i class="fas fa-pencil-alt fa-1x fa-lg"></i>',
                     class: evt.type + '-event',
@@ -139,9 +161,20 @@
         },
 
         methods: {
+            sessionText(text) {
+                return text === 'plenary' || text === 'poster' || text === 'parallel';
+            },
+
             showModal(data) {
                 this.modalData.title = data.label;
-                this.modalData.body = data.address;
+                this.modalData.body = `<div class="text-center">
+                <h2>${data.label}</h2><hr>
+                ${data.address ? '<p><i class="fa fa-map-pin"></i> ' + data.address + '</p>' : ''}
+                ${data.city ? '<p><i class="fa fa-city"></i> ' + data.city + '</p>' : ''}
+                ${data.url ? '<p><i class="fa fa-play"></i> ' + '<a href="'+data.url+'" target="_blank"> Link Meet</a></p>' : ''}
+                ${data.description ? '<hr>'+ data.description : ''}
+
+                </div>`;
                 this.isModalVisible = true;
             },
             closeModal() {
@@ -149,7 +182,33 @@
             },
 
 
-            openDetails() {
+            openDetails(event) {
+                console.log(this.rendered_posts);
+                let post = this.rendered_posts.find(item => item.title === event.title);
+                console.log(post);
+                this.modalEvent.title = event.title;
+                this.modalEvent.body = `<h2>${event.title}</h2><hr>
+                <p><i class="fa fa-clock"></i> ${event.start.format("DD/MM/YYYY HH:mm")} - ${event.end.format("DD/MM/YYYY HH:mm")}</p>
+                <p><i class="fa fa-door-closed"></i> ${event.room.name}</p>
+                <p class="text-capitalize"><i class="fa fa-list"></i> ${event.type} ${this.sessionText(event.type) ? 'session' : ''}</p>`;
+
+
+                if (post) {
+                    let authors = ''
+                    post.authors.forEach((author, idx) => {
+                        authors += `<span>${author.firstname} ${author.lastname}</span>`;
+                        if (idx != post.authors.length - 1) {
+                            authors += ' - '
+                        }
+                    })
+                    this.modalEvent.body += `<p><i class="fa fa-users"></i> ${authors}</p>`;
+                    if (post.pdf) {
+                        this.modalEvent.body += `<p><i class="fa fa-file-pdf"></i> <a href="${post.pdf}" target="_blank">Download Pdf</a> </p>`
+                    }
+                }
+
+                this.modalEvent.body += `${event.description ? '<hr>' + event.description : ''}`;
+
                 this.eventModalVisible = true;
             },
 
@@ -170,7 +229,8 @@
 
                 return format(new Date(events[0].start), 'yyyy-MM-dd');
             }
-        }
+        },
+        computed: {}
     }
 </script>
 
@@ -230,6 +290,7 @@
         justify-content: center;
         width: 98% !important;
         margin: 0 1%;
+        padding: 10px;
     }
 
     .break-event {
@@ -272,7 +333,7 @@
     }
 
     .parallel-event {
-        background-color: rgba(176, 255, 154, 0.8);
+        background-color: rgba(167, 232, 167, 0.8);
         border: none;
         border-left: 3px solid rgba(250, 118, 36, .3);
         color: #b57335;
@@ -296,6 +357,7 @@
         width: 98% !important;
         margin: 0 1%;
     }
+
     .vuecal__event-time {
         font-weight: bolder;
     }

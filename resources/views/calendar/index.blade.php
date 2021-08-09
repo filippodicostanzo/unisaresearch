@@ -10,5 +10,5 @@
             </div>
         @endif
     </div>
-    <calendar-table title="{{$title}}" items="{{json_encode($items)}}" rooms="{{json_encode($rooms)}}"></calendar-table>
+    <calendar-table title="{{$title}}" items="{{json_encode($items)}}" rooms="{{json_encode($rooms)}}" posts="{{json_encode($posts)}}"></calendar-table>
 @stop

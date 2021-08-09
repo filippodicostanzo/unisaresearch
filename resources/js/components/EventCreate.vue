@@ -95,7 +95,7 @@
                                 </div>
 
                             </div>
-                            <div class="col-md-6 cols-sm-12" v-if="evt.type=='poster'">
+                            <div class="col-md-6 cols-sm-12">
                                 <label class="form__label">Authors</label>
                                 <input class="form__input" name="authors" v-model="evt.authors">
                             </div>
@@ -107,7 +107,7 @@
                                     <label class="form__label">Start</label>
                                     <input class="form__input" type="datetime-local" name="start"
                                            v-model="$v.evt.start.$model" :min="this.datetime_start"
-                                           :max="this.datetime_end" onkeydown="return false">
+                                           :max="this.datetime_end">
                                 </div>
                                 <div class="error" v-if="!$v.evt.start.required">Start Date is required</div>
                                 <div class="error" v-if="!$v.evt.start.minValue">Start Date is incorrect</div>
@@ -118,7 +118,7 @@
                                     <label class="form__label">End</label>
                                     <input class="form__input" type="datetime-local" name="end"
                                            v-model="$v.evt.end.$model" :min="this.datetime_start"
-                                           :max="this.datetime_end" onkeydown="return false">
+                                           :max="this.datetime_end">
                                 </div>
                                 <div class="error" v-if="!$v.evt.end.required">End Date is required</div>
                                 <div class="error" v-if="!$v.evt.end.isAfterDate">End Date is incorrect</div>
@@ -338,7 +338,7 @@
                                 } else {
                                     this.submitStatus = 'OK'
 
-                                    window.location.href = route('events.index')
+                                   window.location.href = route('events.index')
                                 }
 
                             }
