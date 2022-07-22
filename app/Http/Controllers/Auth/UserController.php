@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Monarobase\CountryList\CountryListFacade;
-use function PHPUnit\Framework\isEmpty;
 
 class UserController extends Controller
 {
@@ -117,7 +116,7 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Author  $author
+     * @param \App\Models\Author $author
      * @return \Illuminate\Http\Response
      */
     public function show(User $user)
@@ -127,7 +126,7 @@ class UserController extends Controller
         $role = $user->getRoles();
         $role_id = Role::where('name', $role)->first();
 
-        return view('admin.users.show', ['item' => $item, 'role'=>$role[0], 'title' => $this->title]);
+        return view('admin.users.show', ['item' => $item, 'role' => $role[0], 'title' => $this->title]);
     }
 
 
@@ -154,8 +153,8 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Category  $category
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Category $category
      * @return \Illuminate\Http\Response
      */
 
@@ -169,21 +168,16 @@ class UserController extends Controller
         ]);
 
 
-
-
-
         $data = $request->all();
 
         if ($data['new_password']) {
 
             $data['password'] = Hash::make($data['password']);
-        }
-        else {
+        } else {
             unset($data['password']);
         }
 
         unset($data['new_password']);
-
 
 
         /**
@@ -194,38 +188,63 @@ class UserController extends Controller
 
         if (isset($user->id)) {
 
-        $roles = Role::all()->sortBy('name');
-        $role = $user->getRoles();
-        $role_id = Role::where('name', $role)->first();
+            $roles = Role::all()->sortBy('name');
+            $role = $user->getRoles();
+            $role_id = Role::where('name', $role)->first();
 
-        $new_role = Role::where('id', $data['role'])->first();
+            if (!isset($data['role'])) {
+                $res = User::find($user->id)->update($data);
+            } else {
 
-        if ($role_id['id'] !== $data['role']) {
 
-            if ($role_id['id']=='5' && $data['role']=='4') {
-                Mail::to($user->email)->send(new \App\Mail\ApprovedAccount($user));
+                $new_role = Role::where('id', $data['role'])->first();
+
+
+                if ($role_id['id'] !== $data['role']) {
+
+                    if ($role_id['id'] == '5' && $data['role'] == '4') {
+                        Mail::to($user->email)->send(new \App\Mail\ApprovedAccount($user));
+                    } else {
+                        Mail::to($user->email)->send(new \App\Mail\ChangeUserRole($user, $new_role['name']));
+                    }
+                }
+
+
+                DB::table('role_user')
+                    ->where('user_id', $user->id)
+                    ->update([
+                        'role_id' => $data['role'],
+                    ]);
+
+                $res = User::find($user->id)->update($data);
             }
-            else {
-                Mail::to($user->email)->send(new \App\Mail\ChangeUserRole($user, $new_role['name']));
-            }
-        }
-
-
-            DB::table('role_user')
-                ->where('user_id',$user->id)
-                ->update([
-                    'role_id' => $data['role'],
-                ]);
-
-            $res = User::find($user->id)->update($data);
-        }
-        else {
+        } else {
             $res = User::find($request->id)->update($data);
         }
 
 
-        $message = $res ? 'User ' . $user->name .' '. $user->surname . ' has been saved' : 'User ' . $user->name .' '. $user->surname .' was not saved';
+        $message = $res ? 'User ' . $user->name . ' ' . $user->surname . ' has been saved' : 'User ' . $user->name . ' ' . $user->surname . ' was not saved';
         session()->flash('message', $message);
+    }
+
+
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param \App\Models\Post $post
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(User $user)
+    {
+
+        if (($this->user->hasRole('superadministrator|administrator'))) {
+            $res = $user->delete();
+            $message = $res ? 'User ' . $user->name . ' ' . $user->surname . ' has been deleted' : 'User ' . $user->name . ' ' . $user->surname . ' was not deleted';
+            session()->flash('message', $message);
+        } else {
+            return abort(403);
+        }
     }
 
 }
