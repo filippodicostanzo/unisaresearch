@@ -87,7 +87,7 @@ class AppServiceProvider extends ServiceProvider
                     'text' => 'papers',
                     'url' => 'admin/posts/all',
                     'icon' => 'fas fa-fw fa-file',
-                    'label' => Post::where('edition', $edition->id)->count(),
+                    'label' => Post::where('edition', $edition->id)->where('state', '!=', 1)->count(),
                     'label_color' => 'success',
                 ],
                 [
@@ -104,33 +104,33 @@ class AppServiceProvider extends ServiceProvider
 
         $events->listen(BuildingMenu::class, function (BuildingMenu $event) {
 
-            $edition= Edition::where('active',1)->first();
+            $edition = Edition::where('active', 1)->first();
 
             $array = [
                 [
                     'text' => 'rooms',
                     'url' => 'admin/rooms',
                     'icon' => 'far fa-fw fa-building',
-                    'label' => Room::where('edition',$edition['id'])->count(),
+                    'label' => Room::where('edition', $edition['id'])->count(),
                     'label_color' => 'success',
                 ],
                 [
                     'text' => 'events',
                     'url' => 'admin/events',
                     'icon' => 'far fa-fw fa-calendar-plus',
-                    'label' => Event::where('edition',$edition['id'])->where('active',1)->count(),
+                    'label' => Event::where('edition', $edition['id'])->where('active', 1)->count(),
                     'label_color' => 'success',
                 ],
 
                 [
-                'text' => 'calendar',
-                'url' => 'admin/calendar',
-                'icon' => 'far fa-fw fa-calendar',
-                'label' => Event::where('edition',$edition['id'])->where('active',1)->count(),
-                'label_color' => 'success',
-            ]
+                    'text' => 'calendar',
+                    'url' => 'admin/calendar',
+                    'icon' => 'far fa-fw fa-calendar',
+                    'label' => Event::where('edition', $edition['id'])->where('active', 1)->count(),
+                    'label_color' => 'success',
+                ]
 
-                ];
+            ];
 
             $event->menu->addAfter('calendar_settings', ...$array);
         });
@@ -180,10 +180,9 @@ class AppServiceProvider extends ServiceProvider
         $events->listen(BuildingMenu::class, function (BuildingMenu $event) {
 
 
-                $postcount = Post::whereHas('users', function ($q) {
-                    $q->where('users.id', Auth::id());
-                })->count();
-
+            $postcount = Post::whereHas('users', function ($q) {
+                $q->where('users.id', Auth::id());
+            })->count();
 
 
             $array = [
@@ -201,8 +200,8 @@ class AppServiceProvider extends ServiceProvider
 
         $events->listen(BuildingMenu::class, function (BuildingMenu $event) {
 
-
-                $postcount = Post::where('created', Auth::id())->count();
+            $edition = Edition::where('active', 1)->first();
+            $postcount = Post::where('created', Auth::id())->where('edition', $edition['id'])->count();
 
 
             $array = [
