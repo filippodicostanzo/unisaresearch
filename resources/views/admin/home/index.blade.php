@@ -10,7 +10,9 @@
 
     use App\Models\Post;
     use App\Models\User;
-    $items=Post::where('state','!=', '1')->orderBy('id', 'DESC')->limit(20)->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->get();
+    use App\Models\Edition;
+    $edition = Edition::where('active', 1)->first();
+    $items=Post::where('state','!=', '1')->where('edition', $edition->id)->orderBy('id', 'DESC')->limit(20)->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->get();
     $user=Auth::user();
     $roles = $user->roles()->first();
 
