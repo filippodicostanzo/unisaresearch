@@ -28,7 +28,7 @@
         </div>
         <div class="col-4">
             <card-widget title="Total Paper Submitted" type="posts" data="{{App\Models\Post::where('state', '!=', '1')->get()}}"
-                         count="{{Post::where('state', '!=', '1')->count()}}" icon="file-alt"></card-widget>
+                         count="{{Post::where('state', '!=', '1')->where('edition', $edition->id)->count()}}" icon="file-alt"></card-widget>
         </div>
         <div class="col-4">
             <card-widget title="Total Topics" type="categories" data="{{App\Models\Category::all()}}"
