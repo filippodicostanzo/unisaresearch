@@ -48,9 +48,9 @@
                     </div>
                     <div class="card-body">
                         <input type="hidden" id="count_fields" value="{{count($fields)}}">
-                    {!! Form::model($item, ['method' => 'PATCH','route' => ['posts.update', $item->id], 'enctype' => 'multipart/form-data', 'id'=>'regForm'] ) !!}
-                    @csrf
-                    <!-- One "tab" for each step in the form: -->
+                        {!! Form::model($item, ['method' => 'PATCH','route' => ['posts.update', $item->id], 'enctype' => 'multipart/form-data', 'id'=>'regForm'] ) !!}
+                        @csrf
+                        <!-- One "tab" for each step in the form: -->
                         <div class="tab">
 
                             <div class="form-group">
@@ -81,7 +81,6 @@
                                     </div>
                                 </div>
                                 @foreach ($authors as $author)
-
 
                                     <div class="item col-md-6 col-xs-6 mb-3">
                                         <div class="form-check">
@@ -114,7 +113,6 @@
                             </div>
 
 
-
                         </div>
 
 
@@ -145,6 +143,8 @@
                                         Consequently, we inform you don’t have to include in your text any direct
                                         references to authors. Otherwise, the abstract will not be accepted for
                                         evaluation.</p>
+                                    <p class="small text-bold">When you upload the document, please be sure the names of
+                                        the authors ARE NOT indicated.</p>
                                 </div>
                                 <div class="input-group">
                                     <span class="input-group-btn">
@@ -185,7 +185,30 @@
                             <span class="step"></span>
                         </div>
 
-                        <div class="modal fade" id="modalSubmit" tabindex="-1" role="dialog" aria-labelledby="modalSubmitLabel" aria-hidden="true">
+
+                        <div class="modal fade" id="modalSave" tabindex="-1" role="dialog"
+                             aria-labelledby="modalSaveLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalSaveLabel">Notice</h5>
+                                        <!--                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>-->
+                                    </div>
+                                    <div class="modal-body">
+                                        The file has been saved as a draft. To submit, please click on the left red button.
+                                    </div>
+                                    <div class="modal-footer">
+
+                                        <!--                                        <button type="button" class="btn btn-primary" id="confirmSave">Save</button>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="modalSubmit" tabindex="-1" role="dialog"
+                             aria-labelledby="modalSubmitLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -195,10 +218,12 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        Are you sure to <b>submit the paper for review?</b><br> By doing so, you will no longer be able to modify it.
+                                        Are you sure to <b>submit the paper for review?</b><br> By doing so, you will no
+                                        longer be able to modify it.
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                                        </button>
                                         <button type="button" class="btn btn-primary" id="confirmSubmit">Submit</button>
                                     </div>
                                 </div>
@@ -225,7 +250,9 @@
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
             crossorigin="anonymous"></script>
 
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
 
     <script src="../../../ckeditor/ckeditor.js"></script>
 
@@ -313,6 +340,8 @@
             var x = document.getElementsByClassName("tab");
             // Exit the function if any field in the current tab is invalid:
             if (n == 1 && !validateForm()) return false;
+
+            console.log(currentTab);
             // Hide the current tab:
             x[currentTab].style.display = "none";
             // Increase or decrease the current tab by 1:
@@ -320,12 +349,19 @@
             // if you have reached the end of the form... :
             if (currentTab >= x.length) {
 
+                $('#modalSave').modal('show');
+                document.getElementById("prevBtn").style.display = "none";
                 document.getElementById('loader').style.display = "block";
                 document.getElementById("prevBtn").style.display = "none";
                 document.getElementById("nextBtn").style.display = "none";
+                document.getElementById("submBtn").style.display = "none";
 
+                setTimeout(() => {
+                    document.getElementById("regForm").submit();
+                }, 3000)
                 //...the form gets submitted:
-                document.getElementById("regForm").submit();
+
+
                 return false;
             }
             // Otherwise, display the correct tab:
@@ -410,7 +446,7 @@
             let i;
 
             var inputsWeActuallyWant = [];
-            for (var j = (input_field.length - 1) ; j >= 0; j--) {
+            for (var j = (input_field.length - 1); j >= 0; j--) {
 
                 if (input_field[j].id !== "pdf") {
                     inputsWeActuallyWant.push(input_field[j]);
@@ -429,8 +465,7 @@
                     input_textarea[i].className += " invalid";
                     // and set the current valid status to false:
                     valid = false;
-                }
-                else {
+                } else {
                     input_textarea[i].classList.remove("invalid");
                 }
 
@@ -444,9 +479,7 @@
                     // and set the current valid status to false:
                     valid = false;
 
-                }
-
-                else {
+                } else {
                     input_field[i].classList.remove("invalid");
                 }
             }

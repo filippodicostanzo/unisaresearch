@@ -40,10 +40,10 @@
                     </div>
                     <div class="card-body">
                         <input type="hidden" id="count_fields" value="{{count($fields)}}">
-                    {!! Form::open(array('route' => 'posts.store','method'=>'POST', 'enctype' => 'multipart/form-data', 'id'=>'regForm')) !!}
-                    @csrf
+                        {!! Form::open(array('route' => 'posts.store','method'=>'POST', 'enctype' => 'multipart/form-data', 'id'=>'regForm')) !!}
+                        @csrf
 
-                    <!-- One "tab" for each step in the form: -->
+                        <!-- One "tab" for each step in the form: -->
                         <div class="tab">
 
                             <div class="form-group">
@@ -146,13 +146,14 @@
                                                 </div>
                         -->
                         <div class="tab" id="textarea-section">
-                        <!--  @foreach($fields as $key => $value)
-                            <div class="form-group">
-                                <label>{{$value->name}}</label>
+                            <!--  @foreach($fields as $key => $value)
+                                <div class="form-group">
+                                    <label>{{$value->name}}</label>
 
                                     <textarea name="field_{{$key+1}}" id="field_{{$key+1}}" rows="10" cols="80"
                                               class="form-control"></textarea>
                                 </div>
+
                             @endforeach -->
 
                         </div>
@@ -174,6 +175,8 @@
                                         Consequently, we inform you don’t have to include in your text any direct
                                         references to authors. Otherwise, the abstract will not be accepted for
                                         evaluation.</p>
+                                    <p class="small text-bold">When you upload the document, please be sure the names of the
+                                        authors ARE NOT indicated.</p>
                                 </div>
                                 <div class="input-group">
                                     <span class="input-group-btn">
@@ -216,6 +219,29 @@
                             <span class="step"></span>
                             <span class="step"></span>
                         </div>
+
+
+                        <div class="modal fade" id="modalSave" tabindex="-1" role="dialog"
+                             aria-labelledby="modalSaveLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalSaveLabel">Notice</h5>
+                                        <!--                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>-->
+                                    </div>
+                                    <div class="modal-body">
+                                        The file has been saved as a draft. To submit, please click on the left red button.
+                                    </div>
+                                    <div class="modal-footer">
+
+                                        <!--                                        <button type="button" class="btn btn-primary" id="confirmSave">Save</button>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
 
                         <div class="modal fade" id="modalSubmit" tabindex="-1" role="dialog"
                              aria-labelledby="modalSubmitLabel" aria-hidden="true">
@@ -385,14 +411,21 @@
             // if you have reached the end of the form... :
             if (currentTab >= x.length) {
 
+                $('#modalSave').modal('show');
+                document.getElementById("prevBtn").style.display = "none";
                 document.getElementById('loader').style.display = "block";
                 document.getElementById("prevBtn").style.display = "none";
                 document.getElementById("nextBtn").style.display = "none";
                 document.getElementById("submBtn").style.display = "none";
 
+
                 //...the form gets submitted:
                 document.getElementById('source').value = 'save';
-                document.getElementById("regForm").submit();
+
+
+                setTimeout(() => {
+                    document.getElementById("regForm").submit();
+                }, 3000)
                 return false;
             }
             // Otherwise, display the correct tab:
