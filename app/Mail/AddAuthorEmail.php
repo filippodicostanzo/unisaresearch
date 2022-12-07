@@ -29,7 +29,7 @@ class AddAuthorEmail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Add Author')
+        return $this->subject('New Paper Submitted')
             ->view('mail.addauthor')->with('author', $this->author)->with('post', $this->post);
     }
 }

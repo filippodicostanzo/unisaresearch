@@ -76,7 +76,6 @@ class PostController extends Controller
     {
 
 
-
         $administrators = User::whereRoleIs('superadministrator')->get();
 
         $post = new Post($request->all());
@@ -113,6 +112,7 @@ class PostController extends Controller
         $authors_post = Post::where('id', $post->id)->with('authors')->first();
         $auts = $authors_post->authors()->get();
         $authors_post->authors_fk = $auts;
+        $coauthors = [];
 
         // SEND MAIL FOR PAPER SUBMITTED
         if ($request->state === '2') {
@@ -121,8 +121,15 @@ class PostController extends Controller
             }
 
             foreach ($auts as $aut) {
-                Mail::to($aut->email)->send(new \App\Mail\AddAuthorEmail($aut, $authors_post));
+                $coauthors[] = $aut->email;
             }
+
+
+            Mail::to($post->user_fk->email)->cc($coauthors)->send(new \App\Mail\AddAuthorEmail($auts, $authors_post));
+            /*
+                        foreach ($auts as $aut) {
+                            Mail::to($aut->email)->send(new \App\Mail\AddAuthorEmail($auts, $authors_post));
+                        }*/
         }
 
         $message = $res ? 'The Paper ' . $post->title . ' has been saved' : 'The Paper ' . $post->title . ' was not saved';
@@ -186,7 +193,6 @@ class PostController extends Controller
         $administrators = User::whereRoleIs('superadministrator')->get();
 
 
-
         $authors = $request->input('authors');
         $authors_array = $request->input('authors');
 
@@ -218,15 +224,23 @@ class PostController extends Controller
         $authors_post = Post::where('id', $post->id)->with('authors')->first();
         $auts = $authors_post->authors()->get();
         $authors_post->authors_fk = $auts;
+        $coauthors = [];
 
         // SEND MAIL FOR PAPER SUBMITTED
         if ($data['state'] === '2') {
             foreach ($administrators as $admin) {
                 Mail::to($admin->email)->send(new \App\Mail\NewPaperEmail($post));
             }
+
             foreach ($auts as $aut) {
-                Mail::to($aut->email)->send(new \App\Mail\AddAuthorEmail($aut, $authors_post));
+                $coauthors[] = $aut->email;
             }
+
+            Mail::to($post->user_fk->email)->cc($coauthors)->send(new \App\Mail\AddAuthorEmail($auts, $authors_post));
+
+            /* foreach ($auts as $aut) {
+                 Mail::to($aut->email)->send(new \App\Mail\AddAuthorEmail($aut, $authors_post));
+             }*/
         }
 
 
@@ -391,7 +405,6 @@ class PostController extends Controller
                 $comment->save();
             }
         }
-
 
         //ACCEPTED PAPER
         if ($request['state'] == '4') {
