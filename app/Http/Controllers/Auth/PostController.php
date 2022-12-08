@@ -197,7 +197,11 @@ class PostController extends Controller
 
 
         $authors = $request->input('coauthors');
-        $authors_array = explode(',',$request->input('coauthors'));
+        $authors_array = [];
+
+        if ($request->input('coauthors') !== null) {
+            $authors_array = explode(',', $request->input('coauthors'));
+        }
 
       /*  if ($authors != null) {
             $authors = implode(',', $authors);
@@ -219,8 +223,15 @@ class PostController extends Controller
 
         $res = Post::find($post->id)->update($data);
 
-        if ($res) {
-            $post->authors()->sync($authors_array);
+
+        if(empty($authors_array)) {
+            $post->authors()->detach();
+        }
+
+        else {
+            if ($res) {
+                $post->authors()->sync($authors_array);
+            }
         }
 
 
