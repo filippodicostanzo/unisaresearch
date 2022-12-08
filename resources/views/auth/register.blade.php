@@ -51,7 +51,7 @@
                 @endif
             </div>
 
-            <div class="input-group mb-3 col-md-6 col-sm-12">
+            <div class="input-group mb-3 col-md-12 col-sm-12">
                 <select id="title" name="title"  class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}">
                     <option value="">Title</option>
                     <option value="Prof">Prof.</option>
@@ -72,7 +72,7 @@
                 @endif
             </div>
 
-            <div class="input-group mb-3 col-md-6 col-sm-12">
+<!--            <div class="input-group mb-3 col-md-6 col-sm-12">
                 <select id="gender" name="gender"  class="form-control {{ $errors->has('gender') ? 'is-invalid' : '' }}">
                     <option value="">Gender</option>
                     <option value="M">Male</option>
@@ -90,7 +90,7 @@
                     </div>
                 @endif
 
-            </div>
+            </div>-->
 
             <div class="input-group mb-3 col-md-6 col-sm-12">
                 <select id="country" name="country"  class="form-control {{ $errors->has('country') ? 'is-invalid' : '' }}">

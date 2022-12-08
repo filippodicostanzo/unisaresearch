@@ -96,7 +96,7 @@
 
                         <div class="row"
                              v-if="active_role === 'researcher' || active_role==='user' || active_role==='supervisor'">
-                            <div class="col-md-6 col-xs-12">
+                            <div class="col-md-12 col-xs-12">
                                 <div class="form-group" :class="{ 'form-group--error': $v.user.title.$error }">
                                     <label class="form__label">Title</label>
                                     <select name="role" v-model="user.title"
@@ -107,8 +107,8 @@
                                 <div class="error" v-if="!$v.user.title.required">Title is required</div>
                             </div>
 
-                            <div class="col-md-6 col-xs-12">
-                                <div class="form-group" :class="{ 'form-group--error': $v.user.gender.$error }">
+<!--                            <div class="col-md-6 col-xs-12">
+                                <div class="form-group" :class="{ 'form-group&#45;&#45;error': $v.user.gender.$error }">
                                     <label class="form__label">Gender</label>
                                     <select name="role" v-model="user.gender"
                                             class="form-control">
@@ -117,7 +117,7 @@
                                     </select>
                                 </div>
                                 <div class="error" v-if="!$v.user.gender.required">Gender is required</div>
-                            </div>
+                            </div>-->
                         </div>
 
                         <div class="row"
@@ -256,7 +256,7 @@
                     email: '',
                     password: '',
                     title: '',
-                    gender: '',
+                    gender: '/',
                     country: '',
                     city: '',
                     affiliation: '',
@@ -298,11 +298,11 @@
                 user: {
                     name: {
                         required,
-                        minLength: minLength(4)
+                        minLength: minLength(2)
                     },
                     surname: {
                         required,
-                        minLength: minLength(4)
+                        minLength: minLength(2)
                     },
                     email: {
                         required,
@@ -323,11 +323,11 @@
                 user: {
                     name: {
                         required,
-                        minLength: minLength(3)
+                        minLength: minLength(2)
                     },
                     surname: {
                         required,
-                        minLength: minLength(3)
+                        minLength: minLength(2)
                     },
                     email: {
                         required,
@@ -366,11 +366,11 @@
                 user: {
                     name: {
                         required,
-                        minLength: minLength(3)
+                        minLength: minLength(2)
                     },
                     surname: {
                         required,
-                        minLength: minLength(4)
+                        minLength: minLength(2)
                     },
                     email: {
                         required,
@@ -384,9 +384,11 @@
                     title: {
                         required
                     },
+
                     gender: {
                         required
                     },
+
                     country: {
                         required
                     },
