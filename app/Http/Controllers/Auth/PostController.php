@@ -87,12 +87,16 @@ class PostController extends Controller
 
         $edition = Edition::where('active', 1)->first();
 
-        $authors_array = $request->input('authors');
-        $authors = $request->input('authors');
+        //$authors_array = $request->input('authors');
 
-        if ($authors != null) {
+        $authors = $request->input('coauthors');
+
+        $authors_array = explode(',',$request->input('coauthors'));
+
+
+        /*if ($authors != null) {
             $authors = implode(',', $authors);
-        }
+        }*/
 
         $post['authors'] = $authors;
         $post['latest_modify'] = Carbon::now();
@@ -167,7 +171,6 @@ class PostController extends Controller
 
         if ($item->created === Auth::id() && $item->state === '1') {
 
-
             return view('posts.edit', ['title' => $this->title, 'item' => $item]);
         }
 
@@ -193,12 +196,12 @@ class PostController extends Controller
         $administrators = User::whereRoleIs('superadministrator')->get();
 
 
-        $authors = $request->input('authors');
-        $authors_array = $request->input('authors');
+        $authors = $request->input('coauthors');
+        $authors_array = explode(',',$request->input('coauthors'));
 
-        if ($authors != null) {
+      /*  if ($authors != null) {
             $authors = implode(',', $authors);
-        }
+        }*/
 
 
         $data = $request->all();

@@ -72,10 +72,11 @@
                             </div>
 
                             <div class="form-group row">
-                                <div class="col-12"><label>Authors</label></div>
+                                <div class="col-12"><label>List of Authors</label></div>
                                 <div class="item col-md-6 col-xs-6 mb-3">
                                     <div class="form-check">
-                                        <input type="checkbox" checked disabled>
+                                        <input type="checkbox" checked disabled id="created-checkbox"
+                                               tag="{{$mainaut->name}} {{$mainaut->surname}}">
                                         <label class="form-check-label"
                                                for="exampleCheck1">{{$mainaut->name}} {{$mainaut->surname}}</label>
                                     </div>
@@ -83,9 +84,9 @@
                                 @foreach ($authors as $author)
 
                                     <div class="item col-md-6 col-xs-6 mb-3">
-                                        <div class="form-check">
+                                        <div class="form-check authors-checkbox">
                                             <input type="checkbox" id="{{$author->id}}"
-                                                   name="authors[]"
+                                                   name="authors[]" tag="{{$author->firstname}} {{$author->lastname}}"
                                                    value="{{$author->id}}" {{ in_array($author->id, $aut) ? 'checked' : ''}}>
                                             <label class="form-check-label"
                                                    for="exampleCheck1">{{$author->firstname}} {{$author->lastname}}</label>
@@ -93,8 +94,16 @@
                                     </div>
 
                                 @endforeach
+
                                 <div class="col-12">
                                     <div id="author_error"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-12"><label>Authors Selected</label></div>
+                                <div class="col-12">
+                                    <div class="co-authors">  </div>
                                 </div>
                             </div>
 
@@ -197,7 +206,8 @@
                                                                                 </button>-->
                                     </div>
                                     <div class="modal-body">
-                                        The file has been saved as a draft. To submit, please click on the left red button.
+                                        The file has been saved as a draft. To submit, please click on the left red
+                                        button.
                                     </div>
                                     <div class="modal-footer">
 
@@ -233,6 +243,7 @@
                         {{ Form::hidden('created', $user) }}
                         {{ Form::hidden('edit', $user) }}
                         {{ Form::hidden('state', 1, array('id'=>'post_state')) }}
+                        {{ Form::hidden('coauthors', $item->authors) }}
 
 
 
@@ -269,8 +280,99 @@
 
         $(document).ready(function () {
 
+            let authors = [{id: '0', name: $('#created-checkbox').attr('tag')}];
+
+            let inputAuthors = $('input[name=coauthors]').val();
+
+            let arrayAuthors = inputAuthors.split(",");
+
+            arrayAuthors.unshift('0');
+
+            console.warn(arrayAuthors);
+
+
+            $("input[name='authors[]']").each(function () {
+
+                if ($(this).is(':checked')) {
+
+                    let id = $(this).attr("id");
+                    let name = $(this).attr("tag")
+
+                    let obj = {
+                        id: id,
+                        name: name
+                    }
+
+                    authors.push(obj);
+
+                }
+            });
+
+            let ids = [];
+
+
+             authors = arrayAuthors.map((i) => authors.find((j) => j.id === i));
+
+            authors.forEach((el,i)=>{
+                let apix = i === 0 ? '' : ' - ';
+                $('.co-authors').append(apix + '<span>'+ el.name + '</span>');
+            })
+
+
+
+            $('.authors-checkbox input').on('click', function () {
+
+
+                let id = $(this).attr("id");
+                let name = $(this).attr("tag")
+
+
+
+                var obj = {
+                    id: id,
+                    name: name
+                }
+
+
+                if ($(this).is(":checked")) {
+                    authors.push(obj);
+                } else {
+
+                    let index = authors.map(x => {
+                        return x.id;
+                    }).indexOf(id)
+
+                    authors.splice(index, 1);
+                }
+
+                let names = '';
+                ids = [];
+
+                authors.forEach((obj, i) => {
+                        let apix = i === 0 ? '' : ' - ';
+                        names += apix + '<span>' + obj.name + '</span>';
+
+                        if (obj.id != 0) {
+                            ids.push(obj.id);
+                        }
+                    }
+                );
+
+
+
+                $('.co-authors').html('<p>' + names + '</p>');
+
+
+                $("input[name=coauthors]").val(ids.join(','));
+
+                // $('.co-authors').html('<p>CIAO A TUTTI</p>');
+
+
+
+            });
+
             var fields = $('#count_fields').val();
-            console.log(fields);
+
 
             var txt = document.getElementsByTagName("textarea");
 
@@ -282,7 +384,7 @@
             $('#pdf').filemanager('file', '', false);
 
             $('#template-selected').change(function () {
-                console.log($(this).val());
+
 
                 $('#template').val($(this).val());
 
@@ -341,7 +443,7 @@
             // Exit the function if any field in the current tab is invalid:
             if (n == 1 && !validateForm()) return false;
 
-            console.log(currentTab);
+
             // Hide the current tab:
             x[currentTab].style.display = "none";
             // Increase or decrease the current tab by 1:
@@ -376,7 +478,7 @@
             //z = x[currentTab].getElementsByTagName("textarea");
 
             var template = document.getElementById("template-selected");
-            console.log(template.value);
+
 
             if (!template.value) {
                 template.className += ' invalid'
@@ -454,7 +556,6 @@
             }
             input_field = inputsWeActuallyWant;
 
-            console.log(input_field);
 
             for (i = 0; i < input_textarea.length; i++) {
                 var id = input_textarea[i].getAttribute('id');

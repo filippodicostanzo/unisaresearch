@@ -62,7 +62,7 @@
                             </div>
 
                             <div class="form-group row">
-                                <div class="col-12"><label>Authors</label></div>
+                                <div class="col-12"><label>List of Authors</label></div>
 
                                 @if(count($authors)==0)
                                     <div>You can add an author from the appropriate section</div>
@@ -71,21 +71,25 @@
 
                                 <div class="item col-md-6 col-xs-6 mb-3">
                                     <div class="form-check">
-                                        <input type="checkbox" checked disabled>
+                                        <input type="checkbox" id="created-checkbox" checked disabled
+                                               tag="{{$usr->name}} {{$usr->surname}}">
                                         <label class="form-check-label"
                                                for="exampleCheck1">{{$usr->name}} {{$usr->surname}}</label>
                                     </div>
                                 </div>
                                 @foreach ($authors as $item)
                                     <div class="item col-md-6 col-xs-6 mb-3">
-                                        <div class="form-check">
+                                        <div class="form-check authors-checkbox">
                                             <input type="checkbox" id="{{$item->id}}"
-                                                   name="authors[]" value="{{$item->id}}">
+                                                   name="authors[]" value="{{$item->id}}"
+                                                   tag="{{$item->firstname}} {{$item->lastname}}">
                                             <label class="form-check-label"
                                                    for="exampleCheck1">{{$item->firstname}} {{$item->lastname}}</label>
                                         </div>
                                     </div>
                                 @endforeach
+
+
                                 <div class="col-12">
                                     <div id="author_error"></div>
                                 </div>
@@ -116,6 +120,13 @@
 
                                 -->
 
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-12"><label>Authors Selected</label></div>
+                                <div class="col-12">
+                                    <div class="co-authors"> {{$usr->name}} {{$usr->surname}}  </div>
+                                </div>
                             </div>
 
                             <div class="form-group">
@@ -154,6 +165,8 @@
                                               class="form-control"></textarea>
                                 </div>
 
+
+
                             @endforeach -->
 
                         </div>
@@ -175,7 +188,8 @@
                                         Consequently, we inform you don’t have to include in your text any direct
                                         references to authors. Otherwise, the abstract will not be accepted for
                                         evaluation.</p>
-                                    <p class="small text-bold">When you upload the document, please be sure the names of the
+                                    <p class="small text-bold">When you upload the document, please be sure the names of
+                                        the
                                         authors ARE NOT indicated.</p>
                                 </div>
                                 <div class="input-group">
@@ -232,7 +246,8 @@
                                                                                 </button>-->
                                     </div>
                                     <div class="modal-body">
-                                        The file has been saved as a draft. To submit, please click on the left red button.
+                                        The file has been saved as a draft. To submit, please click on the left red
+                                        button.
                                     </div>
                                     <div class="modal-footer">
 
@@ -268,10 +283,9 @@
 
                         {{ Form::hidden('template', null, array('id'=>'template')) }}
                         {{ Form::hidden('created', $user) }}
+                        {{ Form::hidden('coauthors'), null }}
                         {{ Form::hidden('edit', $user) }}
                         {{ Form::hidden('source', null, array('id'=>'source')) }}
-
-
                         {{ Form::hidden('state', 1, array('id'=>'post_state')) }}
 
 
@@ -334,7 +348,7 @@
 
 
             $('#template-selected').change(function () {
-                console.log($(this).val());
+
 
                 $('#template').val($(this).val());
 
@@ -360,8 +374,59 @@
 
             });
 
+            let authors = [{id: '0', name: $('#created-checkbox').attr('tag')}];
+            let ids = [];
+
+            $('.authors-checkbox input').on('click', function () {
+
+
+                let id = $(this).attr("id");
+                let name = $(this).attr("tag")
+
+
+                var obj = {
+                    id: id,
+                    name: name
+                }
+
+
+                if ($(this).is(":checked")) {
+                    authors.push(obj);
+                } else {
+
+                    let index = authors.map(x => {
+                        return x.id;
+                    }).indexOf(id)
+
+                    authors.splice(index, 1);
+                }
+
+                let names = '';
+                ids = [];
+
+                authors.forEach((obj, i) => {
+                        let apix = i === 0 ? '' : ' - ';
+                        names += apix + obj.name;
+
+                        if (obj.id != 0) {
+                            ids.push(obj.id);
+                        }
+                    }
+                );
+
+                $('.co-authors').html('<p>' + names + '</p>');
+
+
+                $("input[name=coauthors]").val(ids.join(','));
+
+                // $('.co-authors').html('<p>CIAO A TUTTI</p>');
+
+
+
+            });
+
             var fields = $('#count_fields').val();
-            console.log(fields);
+
 
             var txt = document.getElementsByTagName("textarea");
 
@@ -441,8 +506,7 @@
 
             var template = document.getElementById("template-selected");
             var title = document.getElementById("title");
-            console.log(template.value);
-            console.log(title.value);
+
 
             if (!template.value || !title.value) {
                 valid = false;
