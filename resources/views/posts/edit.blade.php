@@ -103,7 +103,7 @@
                             <div class="form-group row">
                                 <div class="col-12"><label>Authors Selected</label></div>
                                 <div class="col-12">
-                                    <div class="co-authors">  </div>
+                                    <div class="co-authors"></div>
                                 </div>
                             </div>
 
@@ -146,7 +146,7 @@
                             <div class="form-group imageUpload">
                                 <label for="image">Upload Anonymus PDF</label>
                                 <div class="note">
-                                    <p class="small">As you know the Forum adopts a double-blind peer review evaluation.
+                                    <p class="small">
                                         Amongst other rules, it is expected that abstracts must be anonymous when sent
                                         to reviewer.
                                         Consequently, we inform you don’t have to include in your text any direct
@@ -206,8 +206,8 @@
                                                                                 </button>-->
                                     </div>
                                     <div class="modal-body">
-                                        The file has been saved as a draft. To submit, please click on the left red
-                                        button.
+                                        Your submission has been saved as a draft. To submit, go to edit (pencil) -->
+                                        next --> next --> left red button "Submit for review".
                                     </div>
                                     <div class="modal-footer">
 

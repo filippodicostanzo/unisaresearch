@@ -167,6 +167,7 @@
 
 
 
+
                             @endforeach -->
 
                         </div>
@@ -182,8 +183,7 @@
                             <div class="form-group imageUpload">
                                 <label for="image">Upload Anonymus PDF</label>
                                 <div class="note">
-                                    <p class="small">As you know the Forum adopts a double-blind peer review evaluation.
-                                        Amongst other rules, it is expected that abstracts must be anonymous when sent
+                                    <p class="small">                                        Amongst other rules, it is expected that abstracts must be anonymous when sent
                                         to reviewer.
                                         Consequently, we inform you don’t have to include in your text any direct
                                         references to authors. Otherwise, the abstract will not be accepted for
@@ -246,8 +246,8 @@
                                                                                 </button>-->
                                     </div>
                                     <div class="modal-body">
-                                        The file has been saved as a draft. To submit, please click on the left red
-                                        button.
+                                        Your submission has been saved as a draft. To submit, go to edit (pencil) -->
+                                        next --> next --> left red button "Submit for review".
                                     </div>
                                     <div class="modal-footer">
 
@@ -420,7 +420,6 @@
                 $("input[name=coauthors]").val(ids.join(','));
 
                 // $('.co-authors').html('<p>CIAO A TUTTI</p>');
-
 
 
             });
