@@ -284,11 +284,13 @@
 
             let inputAuthors = $('input[name=coauthors]').val();
 
-            let arrayAuthors = inputAuthors.split(",");
+            let arrayAuthors = [];
+
+            if (inputAuthors !== "") {
+                arrayAuthors = inputAuthors.split(",");
+            }
 
             arrayAuthors.unshift('0');
-
-            console.warn(arrayAuthors);
 
 
             $("input[name='authors[]']").each(function () {
@@ -311,13 +313,14 @@
             let ids = [];
 
 
-             authors = arrayAuthors.map((i) => authors.find((j) => j.id === i));
+            authors = arrayAuthors.map((i) => authors.find((j) => j.id === i));
 
-            authors.forEach((el,i)=>{
+            console.log(authors);
+
+            authors.forEach((el, i) => {
                 let apix = i === 0 ? '' : ' - ';
-                $('.co-authors').append(apix + '<span>'+ el.name + '</span>');
+                $('.co-authors').append(apix + '<span>' + el.name + '</span>');
             })
-
 
 
             $('.authors-checkbox input').on('click', function () {
@@ -325,7 +328,6 @@
 
                 let id = $(this).attr("id");
                 let name = $(this).attr("tag")
-
 
 
                 var obj = {
@@ -359,14 +361,12 @@
                 );
 
 
-
                 $('.co-authors').html('<p>' + names + '</p>');
 
 
                 $("input[name=coauthors]").val(ids.join(','));
 
                 // $('.co-authors').html('<p>CIAO A TUTTI</p>');
-
 
 
             });
