@@ -91,7 +91,7 @@ class PostController extends Controller
 
         $authors = $request->input('coauthors');
 
-        $authors_array = explode(',',$request->input('coauthors'));
+
 
 
         /*if ($authors != null) {
@@ -107,7 +107,9 @@ class PostController extends Controller
 
         $res = $post->save();
 
-        if ($res) {
+
+        if ($res && $authors!=null) {
+            $authors_array = explode(',', $request->input('coauthors'));
             $post->authors()->sync($authors_array);
         }
 
