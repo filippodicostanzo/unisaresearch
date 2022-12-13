@@ -354,7 +354,6 @@ class PostController extends Controller
 
         $supervisors_post = Post::where('id', $post->id)->with('users')->first();
         if ($data['state'] === '3' && $post->state != '3') {
-            Mail::to($post->user_fk->email)->send(new \App\Mail\ReviewPaper($post));
             foreach ($supervisors_post->users as $supervisor) {
                 Mail::to($supervisor->email)->send(new \App\Mail\SupervisorPaper($supervisor, $supervisors_post));
             }
