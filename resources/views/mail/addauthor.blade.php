@@ -61,10 +61,14 @@
                                     <p style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">
                                         Dear <b>{{$post->user_fk->name}} {{$post->user_fk->surname}}</b><br>
                                         we received your submission for the <b>{{$post->template_fk->name}}</b>
-                                        titled <b>{{$post->title}}</b> co authored with @foreach($author as $aut)
-                                            {{ $loop->first ? '' : ', ' }}<b>{{$aut->firstname}} {{$aut->lastname}}</b>
-                                    @endforeach
-                                    .</p>
+                                        titled <b>{{$post->title}}</b>
+                                        @if (count($author) > 0)
+                                            co authored with @foreach($author as $aut)
+                                                {{ $loop->first ? '' : ', ' }}
+                                                <b>{{$aut->firstname}} {{$aut->lastname}}</b>
+                                            @endforeach
+                                        @endif
+                                        .</p>
 
                                     <p style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">
                                         If this attribution has been done by mistake, do not reply to this email.
