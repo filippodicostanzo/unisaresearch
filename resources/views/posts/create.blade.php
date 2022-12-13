@@ -65,7 +65,8 @@
                                 <div class="col-12"><label>List of Authors</label></div>
 
                                 @if(count($authors)==0)
-                                    <div>You can add an author from the appropriate section</div>
+                                    <div class="col-12 mb-3">You can add an author from the appropriate
+                                            <a  href="../authors">section</a></div>
                                 @endif
 
 
@@ -168,6 +169,7 @@
 
 
 
+
                             @endforeach -->
 
                         </div>
@@ -183,7 +185,8 @@
                             <div class="form-group imageUpload">
                                 <label for="image">Upload Anonymus PDF</label>
                                 <div class="note">
-                                    <p class="small">                                        Amongst other rules, it is expected that abstracts must be anonymous when sent
+                                    <p class="small"> Amongst other rules, it is expected that abstracts must be
+                                        anonymous when sent
                                         to reviewer.
                                         Consequently, we inform you don’t have to include in your text any direct
                                         references to authors. Otherwise, the abstract will not be accepted for
@@ -283,7 +286,7 @@
 
                         {{ Form::hidden('template', null, array('id'=>'template')) }}
                         {{ Form::hidden('created', $user) }}
-                        {{ Form::hidden('coauthors'), null }}
+                        {{ Form::hidden('coauthors', null, array('id'=>'coauthors')) }}
                         {{ Form::hidden('edit', $user) }}
                         {{ Form::hidden('source', null, array('id'=>'source')) }}
                         {{ Form::hidden('state', 1, array('id'=>'post_state')) }}
@@ -500,6 +503,7 @@
             // This function deals with validation of the form fields
             var x, y, i, z, k, valid = true;
             x = document.getElementsByClassName("tab");
+            let neededElements = [].filter.call(document.getElementsByTagName('input'), el => el.className.indexOf('exists') >= 0);
             y = x[currentTab].getElementsByTagName("input");
             //z = x[currentTab].getElementsByTagName("textarea");
 
@@ -591,7 +595,8 @@
             var inputsWeActuallyWant = [];
             for (var j = (input_field.length - 1); j >= 0; j--) {
 
-                if (input_field[j].id !== "pdf") {
+                if (input_field[j].id !== "pdf" && input_field[j].id!=="coauthors") {
+                    console.log(input_field[j].id);
                     inputsWeActuallyWant.push(input_field[j]);
                 }
             }
@@ -619,6 +624,8 @@
                 }
 
             }
+
+            console.log(input_field);
 
             for (i = 0; i < input_field.length; i++) {
                 // If a field is empty...

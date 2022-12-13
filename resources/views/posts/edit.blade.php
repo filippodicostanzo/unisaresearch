@@ -73,6 +73,12 @@
 
                             <div class="form-group row">
                                 <div class="col-12"><label>List of Authors</label></div>
+
+                                @if(count($authors)==0)
+                                    <div class="col-12 mb-3">You can add an author from the appropriate
+                                        <a  href="../../authors">section</a></div>
+                                @endif
+
                                 <div class="item col-md-6 col-xs-6 mb-3">
                                     <div class="form-check">
                                         <input type="checkbox" checked disabled id="created-checkbox"
@@ -243,7 +249,7 @@
                         {{ Form::hidden('created', $user) }}
                         {{ Form::hidden('edit', $user) }}
                         {{ Form::hidden('state', 1, array('id'=>'post_state')) }}
-                        {{ Form::hidden('coauthors', $item->authors) }}
+                        {{ Form::hidden('coauthors', $item->authors, array('id'=>'coauthors')) }}
 
 
 
@@ -550,7 +556,7 @@
             var inputsWeActuallyWant = [];
             for (var j = (input_field.length - 1); j >= 0; j--) {
 
-                if (input_field[j].id !== "pdf") {
+                if (input_field[j].id !== "pdf" && input_field[j].id!=="coauthors") {
                     inputsWeActuallyWant.push(input_field[j]);
                 }
             }
