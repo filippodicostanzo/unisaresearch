@@ -117,11 +117,11 @@
             author: {
                 firstname: {
                     required,
-                    minLength: minLength(4)
+                    minLength: minLength(2)
                 },
                 lastname: {
                     required,
-                    minLength: minLength(4)
+                    minLength: minLength(2)
                 },
                 email: {
                     required,
