@@ -65,8 +65,10 @@
                                 <div class="col-12"><label>List of Authors</label></div>
 
                                 @if(count($authors)==0)
-                                    <div class="col-12 mb-3">You can add an author from the appropriate
-                                            <a  href="../authors">section</a></div>
+                                    <div class="col-12 mb-3">Please, add your co-authors by clicking <a
+                                            href="../authors">here</a> or on " My co-authors" on the left before adding
+                                        a manuscript.
+                                    </div>
                                 @endif
 
 
@@ -170,6 +172,7 @@
 
 
 
+
                             @endforeach -->
 
                         </div>
@@ -185,12 +188,6 @@
                             <div class="form-group imageUpload">
                                 <label for="image">Upload Anonymus PDF</label>
                                 <div class="note">
-                                    <p class="small"> Amongst other rules, it is expected that abstracts must be
-                                        anonymous when sent
-                                        to reviewer.
-                                        Consequently, we inform you don’t have to include in your text any direct
-                                        references to authors. Otherwise, the abstract will not be accepted for
-                                        evaluation.</p>
                                     <p class="small text-bold">When you upload the document, please be sure the names of
                                         the
                                         authors ARE NOT indicated.</p>
