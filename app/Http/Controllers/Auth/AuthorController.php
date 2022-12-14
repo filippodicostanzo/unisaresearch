@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Author;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -210,38 +211,38 @@ class AuthorController extends Controller
      *
      * @param \App\Models\Author $author
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy(Author $author)
     {
         if ($this->user->hasRole('superadministrator|administrator')) {
 
+
             try {
+                $author->users()->detach($author->user_id);
                 $res = $author->delete();
-                $message = $res ? 'The Author ' . $author->firstname . ' ' .$author->lastname. ' has been deleted' : 'The Author ' . $author->firstname . ' ' .$author->lastname. ' was not deleted';
+                $message = $res ? 'The Author ' . $author->firstname . ' ' . $author->lastname . ' has been deleted' : 'The Author ' . $author->firstname . ' ' . $author->lastname . ' was not deleted';
                 session()->flash('message', $message);
                 session()->flash('alert-class', 'alert-success');
             } catch (\Exception $e) {
-                if ($e->getCode() =='23000') {
+                if ($e->getCode() == '23000') {
                     $message = 'The author cannot be deleted because he is present in the list of authors inserted by the researchers';
                     session()->flash('message', $message);
                     session()->flash('alert-class', 'alert-danger');
                 }
             }
-        }
-        else {
-            $items= Author::whereHas('users', function($q) {
+        } else {
+            $items = Author::whereHas('users', function ($q) {
                 $q->where('users.id', Auth::id());
             })->orderBy('id', 'ASC')->get()->toArray();
 
 
-
             if (in_array($author->toArray(), $items)) {
                 $author->users()->detach(Auth::id());
-                $message = 'The Author ' . $author->firstname . ' ' .$author->lastname. ' has been deleted';
+                $message = 'The Author ' . $author->firstname . ' ' . $author->lastname . ' has been deleted';
                 session()->flash('message', $message);
-            }
-            else {
-                abort( 403) ;
+            } else {
+                abort(403);
             }
         }
 
@@ -287,7 +288,7 @@ class AuthorController extends Controller
     public function authorsadmin() {
         $source = 'admin';
         $items = Author::orderBy('id', 'ASC')->get();
-        return view('authors.index', ['items' => $items, 'title' => $this->title, 'source'=>$source]);
+        return view('authors.index', ['items' => $items, 'title' => $this->title, 'source' => $source]);
     }
 
 }
