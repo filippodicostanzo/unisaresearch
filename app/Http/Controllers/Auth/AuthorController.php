@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Author;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -215,15 +216,33 @@ class AuthorController extends Controller
      */
     public function destroy(Author $author)
     {
+
+
+        $find = DB::table('author_post')->where('author_id','=', $author->id)->count();
+
+
+
+
         if ($this->user->hasRole('superadministrator|administrator')) {
 
 
             try {
-                $author->users()->detach($author->user_id);
-                $res = $author->delete();
-                $message = $res ? 'The Author ' . $author->firstname . ' ' . $author->lastname . ' has been deleted' : 'The Author ' . $author->firstname . ' ' . $author->lastname . ' was not deleted';
-                session()->flash('message', $message);
-                session()->flash('alert-class', 'alert-success');
+
+                if (!$find) {
+                    $author->users()->detach($author->user_id);
+                    $res = $author->delete();
+                    $message = $res ? 'The Author ' . $author->firstname . ' ' . $author->lastname . ' has been deleted' : 'The Author ' . $author->firstname . ' ' . $author->lastname . ' was not deleted';
+                    session()->flash('message', $message);
+                    session()->flash('alert-class', 'alert-success');
+                }
+
+                else {
+                    $message = 'The Author ' . $author->firstname . ' ' . $author->lastname . ' cannot be deleted because he belongs to the list of co-authors of someone.';
+                    session()->flash('message', $message);
+                    session()->flash('alert-class', 'alert-danger');
+                }
+
+
             } catch (\Exception $e) {
                 if ($e->getCode() == '23000') {
                     $message = 'The author cannot be deleted because he is present in the list of authors inserted by the researchers';
@@ -237,10 +256,42 @@ class AuthorController extends Controller
             })->orderBy('id', 'ASC')->get()->toArray();
 
 
+
+
             if (in_array($author->toArray(), $items)) {
-                $author->users()->detach(Auth::id());
-                $message = 'The Author ' . $author->firstname . ' ' . $author->lastname . ' has been deleted';
-                session()->flash('message', $message);
+
+
+                $posts =  DB::table('author_post')->where('author_id','=', $author->id)->get();
+
+
+                $flag = false;
+
+                foreach ($posts as $post) {
+
+                    $alba = Post::where('id','=',$post->post_id)->get();
+
+
+
+                        foreach($alba as $alb) {
+                                $array = explode(',', $alb->authors);
+                                if (in_array($author->id, $array)) {
+                                    $flag=true;
+                                }
+                        }
+
+
+                }
+
+                if ($flag) {
+                    $message = 'ERROR! You cannot delete a co-author ' . $author->firstname . ' ' . $author->lastname . '  that you have added to your manuscript(s). If you still want to delete a co-author, please check if you can delete the related manuscript first. ';
+                    session()->flash('message', $message);
+                    session()->flash('alert-class', 'alert-danger');
+                }
+                else {
+                    $author->users()->detach(Auth::id());
+                    $message = 'The Author ' . $author->firstname . ' ' . $author->lastname . ' has been deleted';
+                    session()->flash('message', $message);
+                }
             } else {
                 abort(403);
             }
