@@ -62,8 +62,7 @@
                                     </button>
                                     <p class="typo__p" v-if="submitStatus === 'OK'">Thanks for your submission! Waiting
                                         for Redirect</p>
-                                    <p class="typo__p" v-if="submitStatus === 'ERROR'">ERROR! the author is already
-                                        present in the database</p>
+                                    <p class="typo__p" v-if="submitStatus === 'ERROR'">ERROR! Please, check the instruction to fill each field.</p>
                                     <p class="typo__p" v-if="submitStatus === 'PENDING'">Sending...</p>
 
                                 </div>

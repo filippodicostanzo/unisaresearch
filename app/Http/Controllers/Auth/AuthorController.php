@@ -105,7 +105,7 @@ class AuthorController extends Controller
 
         if ($author_find) {
             $author_find->users()->sync(Auth::id(), false);
-            $message = 'The author is already present. You can enter him as the author of your papers but you cannot change his name and surname';
+            $message = 'You have already added this email address, associating it to another name and surname. Please, check your list of co-authors carefully.';
             session()->flash('message', $message);
         } else {
 
