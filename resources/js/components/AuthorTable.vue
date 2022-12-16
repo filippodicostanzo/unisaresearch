@@ -5,7 +5,7 @@
             <div class="card">
                 <div class="card-header">
                     <h1 class="m0 text-dark card-title text-xl">
-                        {{this.title}}
+                        {{ this.title }}
                         <i
                             class="fa fa-info-circle fa-fw pointer"
                             aria-hidden="true"
@@ -25,8 +25,10 @@
                     <div class="row">
                         <div class="col-12">
                             <p>
-                                Please, add all your co-authors here. You may select them during the submission of a
-                                manuscript.
+                                Please, add all your co-authors here. You will be able to select them during the
+                                submission of a manuscript.</p>
+                            <p>If you have no co-author or have added all your co-authors, please add your manuscript by
+                                clicking <a href="./posts">HERE</a> or on "My Papers" on the left.
                             </p>
                         </div>
                     </div>

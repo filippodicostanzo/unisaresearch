@@ -76,7 +76,8 @@
 
                                 @if(count($authors)==0)
                                     <div class="col-12 mb-3">Please, add your co-authors by clicking <a
-                                            href="../../authors">here</a> or on " My co-authors" on the left before adding
+                                            href="../../authors">here</a> or on " My co-authors" on the left before
+                                        adding
                                         a manuscript.
                                     </div>
                                 @endif
@@ -147,9 +148,9 @@
                         <div class="tab">
                             <div class="form-group">
                                 <label>
-                                    Tags:
+                                    Keywords:
                                 </label>
-                                {!! Form::text('tags', null, array('placeholder' => 'Tag separated by comma','class' => 'form-control',  'oninput'=>"this.className = ''")) !!}
+                                {!! Form::text('tags', null, array('placeholder' => 'Keywords separated by comma','class' => 'form-control',  'oninput'=>"this.className = ''")) !!}
                             </div>
                             <div class="form-group imageUpload">
                                 <label for="image">Upload Anonymus PDF</label>
@@ -165,7 +166,7 @@
                                             <i class="fa fa-picture-o"></i> Choose
                                         </a>
                                         </span>
-                                    {!! Form::text('pdf', null, array('placeholder' => 'PDF','class' => 'form-control file-src','id' => 'document')) !!}
+                                    {!! Form::text('pdf', null, array('placeholder' => 'Upload and select the file from File Manager','class' => 'form-control file-src','id' => 'document')) !!}
 
                                 </div>
 
@@ -179,12 +180,18 @@
                         </div>
 
                         <div style="display: none" id="loader"><h3>Loading...</h3></div>
+
+
                         <div style="overflow:auto;">
-                            <div style="float: left" id="divSubmit"></div>
-                            <div style="float:right;">
+
+                            <div style="float:left;">
                                 <button type="button" id="prevBtn" onclick="nextPrev(-1)" class="btn btn-primary">
                                     Previous
                                 </button>
+                            </div>
+
+                            <div style="float: right" id="divSubmit"></div>
+                            <div style="float:right; margin-right: 10px">
                                 <button type="button" id="nextBtn" onclick="nextPrev(1)" class="btn btn-primary">Next
                                 </button>
                             </div>
@@ -209,8 +216,8 @@
                                                                                 </button>-->
                                     </div>
                                     <div class="modal-body">
-                                        Your submission has been saved as a draft. To submit, go to edit (pencil) -->
-                                        next --> next --> left red button "Submit for review".
+                                        Your submission has been saved as a draft. To submit, edit your manuscript and
+                                        then push on "Submit for Review".
                                     </div>
                                     <div class="modal-footer">
 
@@ -429,7 +436,7 @@
                 document.getElementById("prevBtn").style.display = "inline";
             }
             if (n == (x.length - 1)) {
-                document.getElementById("nextBtn").innerHTML = "Save";
+                document.getElementById("nextBtn").innerHTML = "Save Draft";
                 document.getElementById('error').innerHTML = '';
                 document.getElementById("divSubmit").innerHTML = '<button type="button" id="submBtn" onclick="validateFormReview()" class="btn btn-danger">Submit For Review</button>';
             } else {
@@ -553,7 +560,7 @@
             var inputsWeActuallyWant = [];
             for (var j = (input_field.length - 1); j >= 0; j--) {
 
-                if (input_field[j].id !== "pdf" && input_field[j].id!=="coauthors") {
+                if (input_field[j].id !== "pdf" && input_field[j].id !== "coauthors") {
                     inputsWeActuallyWant.push(input_field[j]);
                 }
             }

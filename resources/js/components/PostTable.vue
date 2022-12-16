@@ -39,7 +39,7 @@
                                 <th v-show="source=='admin'">Authors</th>
                                 <th>Topic</th>
                                 <th>Template</th>
-                                <th>Submitted</th>
+                                <th>Date</th>
                                 <th>Status</th>
                                 <th v-if="source==='admin' ||source==='reviewer'">
                                     Reviews
