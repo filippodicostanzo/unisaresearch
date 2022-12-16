@@ -50,10 +50,19 @@ $postresearcher =  Post::where('created','=',Auth::id())->with('state_fk', 'cate
     @endrole
 
     @role('researcher')
+
+    @if(count($postresearcher)==0)
+        <div class="row mt-5">
+
+            <welcome  user="{{$user}}"></welcome>
+
+        </div>
+    @else
     <div class="row mt-5">
         <div class="col-12">
             <card-table data="{{$postresearcher}}" user="{{$user}}" role="{{json_encode($roles)}}"></card-table>
         </div>
     </div>
+    @endif
     @endrole
 @stop

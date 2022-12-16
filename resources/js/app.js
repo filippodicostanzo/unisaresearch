@@ -64,6 +64,7 @@ import EventCreate from "./components/EventCreate";
 import EventTable from "./components/EventTable";
 import EventShow from "./components/EventShow";
 import CalendarTable from "./components/CalendarTable";
+import Welcome from "./components/Welcome";
 
 window.route = route;
 window.Ziggy = Ziggy;
@@ -122,7 +123,8 @@ const app = new Vue({
         'user-create': UserCreate,
         'user-show': UserShow,
         'calendar-table':CalendarTable,
-        'modal': Modal
+        'modal': Modal,
+        'welcome':Welcome,
     }
 });
 
