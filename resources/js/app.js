@@ -27,6 +27,8 @@ import axios from 'axios';
 import lodash from 'lodash'
 import Vuelidate from 'vuelidate'
 import CKEditor from 'ckeditor4-vue';
+import VueGoodTablePlugin from 'vue-good-table';
+import 'vue-good-table/dist/vue-good-table.css'
 
 import route from 'ziggy-js';
 import { Ziggy } from './ziggy';
@@ -64,6 +66,7 @@ import EventCreate from "./components/EventCreate";
 import EventTable from "./components/EventTable";
 import EventShow from "./components/EventShow";
 import CalendarTable from "./components/CalendarTable";
+import VueTable from "./components/VueTable";
 import Welcome from "./components/Welcome";
 
 window.route = route;
@@ -73,6 +76,9 @@ Vue.prototype.$http = axios;
 Vue.prototype.$_ = lodash;
 Vue.use(Vuelidate);
 Vue.use( CKEditor );
+Vue.use(VueGoodTablePlugin);
+
+
 
 Vue.mixin({
     methods: {
@@ -125,6 +131,7 @@ const app = new Vue({
         'calendar-table':CalendarTable,
         'modal': Modal,
         'welcome':Welcome,
+        'vue-table': VueTable,
     }
 });
 

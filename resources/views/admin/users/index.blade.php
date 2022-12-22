@@ -11,4 +11,5 @@
         @endif
     </div>
     <user-table title="{{$title}}" items="{{json_encode($items)}}"></user-table>
+    <!-- <user-table title="{{$title}}" items="{{json_encode($items)}}"></user-table> -->
 @stop

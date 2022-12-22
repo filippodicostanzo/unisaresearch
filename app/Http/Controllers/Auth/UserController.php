@@ -49,21 +49,17 @@ class UserController extends Controller
             $type = $request->query('type');
 
             if ($type === 'administrator') {
-                $items = User::whereRoleIs('superadministrator')->orwhereRoleIs('administrator')->orderBy('id', 'ASC')->get();
+                $items = User::whereRoleIs('superadministrator')->orwhereRoleIs('administrator')->with('roles')->orderBy('id', 'ASC')->get();
             } else if ($type === 'supervisor') {
-                $items = User::whereRoleIs('supervisor')->orderBy('id', 'ASC')->get();
+                $items = User::whereRoleIs('supervisor')->with('roles')->orderBy('id', 'ASC')->get();
             } else if ($type === 'researcher') {
-                $items = User::whereRoleIs('researcher')->orderBy('id', 'ASC')->get();
+                $items = User::whereRoleIs('researcher')->with('roles')->orderBy('id', 'ASC')->get();
             } else if ($type === 'user') {
-                $items = User::whereRoleIs('user')->orderBy('id', 'ASC')->get();
+                $items = User::whereRoleIs('user')->with('roles')->orderBy('id', 'ASC')->get();
             } else {
-                $items = User::orderBy('id', 'ASC')->get();
+                $items = User::with('roles')->orderBy('id', 'ASC')->get();
             }
 
-            foreach ($items as $item) {
-                foreach ($item->roles as $role)
-                    $item->role = $role->display_name;
-            }
         }
 
         return view('admin.users.index', ['items' => $items, 'title' => $this->title]);
@@ -245,6 +241,15 @@ class UserController extends Controller
         } else {
             return abort(403);
         }
+    }
+
+
+    public function vueTable() {
+
+        $items = User::with('roles')->orderBy('id', 'ASC')->get();
+
+        return view('admin.users.vuetable', ['items' => $items, 'title' => $this->title]);
+
     }
 
 }
