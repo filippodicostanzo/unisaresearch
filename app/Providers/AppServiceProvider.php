@@ -179,8 +179,9 @@ class AppServiceProvider extends ServiceProvider
 
         $events->listen(BuildingMenu::class, function (BuildingMenu $event) {
 
+            $edition = Edition::where('active', 1)->first();
 
-            $postcount = Post::whereHas('users', function ($q) {
+            $postcount = Post::where('edition', $edition['id'])->whereHas('users', function ($q) {
                 $q->where('users.id', Auth::id());
             })->count();
 
