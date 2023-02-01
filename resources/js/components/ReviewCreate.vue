@@ -151,7 +151,7 @@
                                         <label class="btn btn-outline-secondary">
                                             <input type="radio" id="review" autocomplete="off"
                                                    v-model="review.result" value="review">
-                                            In Reviews
+                                            Save to Submit Later
                                         </label>
                                         <label class="btn btn-outline-danger">
                                             <input type="radio" id="rejected" autocomplete="off"

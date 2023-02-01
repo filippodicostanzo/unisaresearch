@@ -330,7 +330,9 @@ export default {
                 el.users.map((us) => {
                     reviews.map((rew) => {
                         if (us.pivot.user_id == rew.supervisor && us.pivot.post_id == rew.post) {
-                            us.checked = true;
+                            if (rew.result !== 'review') {
+                                us.checked = true;
+                            }
                         }
                     })
                 })

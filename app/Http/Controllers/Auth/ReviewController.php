@@ -140,8 +140,10 @@ class ReviewController extends Controller
             $res = $review->save();
         }
 
-        foreach ($administrators as $admin) {
-            Mail::to($admin->email)->send(new \App\Mail\SupervisorReview($review->user_fk, $review->post_fk));
+        if ($review->result !== 'review') {
+            foreach ($administrators as $admin) {
+                Mail::to($admin->email)->send(new \App\Mail\SupervisorReview($review->user_fk, $review->post_fk));
+            }
         }
 
         $message = $res ? 'The Review has been saved' : 'The Review was not saved';
@@ -195,23 +197,24 @@ class ReviewController extends Controller
     }
 
 
-    public function count() {
+    public function count()
+    {
 
         $supervisors = User::whereRoleIs(['supervisor', 'superadministrator'])->orderBy('id', 'ASC')->get();
-        $edition = Edition::where('active',1)->first();
+        $edition = Edition::where('active', 1)->first();
 
 
         foreach ($supervisors as $supervisor) {
 
             $count = DB::table("posts")
-                ->select("posts.*")->where('edition',$edition->id)
-                ->whereRaw("find_in_set('".$supervisor->id."',posts.supervisors)")
+                ->select("posts.*")->where('edition', $edition->id)
+                ->whereRaw("find_in_set('" . $supervisor->id . "',posts.supervisors)")
                 ->count();
 
             $supervisor->count = $count;
         }
 
-        $items=$supervisors;
+        $items = $supervisors;
 
         return view('admin.rewiewers.count', ['items' => $items, 'title' => $this->title]);
     }
