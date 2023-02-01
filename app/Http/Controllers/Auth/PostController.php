@@ -444,7 +444,18 @@ class PostController extends Controller
         $source = 'admin';
 
         $items = Post::where('edition', $edition->id)->where('state', '!=', 1)->orderBy('id', 'ASC')->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users', 'user_fk')->get();
-        return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews, 'statuses' => $statuses, 'source' => $source]);
+
+        $presents = [];
+
+        foreach ($items as $item) {
+            $presents[] = $item->category_fk->name;
+        }
+
+        $presents = array_unique($presents);
+        $presents = array_values($presents);
+
+        return view('posts.vuetable', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews, 'statuses' => $statuses, 'source' => $source, 'categories'=>$presents]);
+       // return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews, 'statuses' => $statuses, 'source' => $source]);
 
     }
 
