@@ -351,6 +351,7 @@
             submit() {
                 //this.review.post = this.rendered.id;
                 console.log(this.rendered.state);
+                this.submitStatus='PENDING';
 
 
                 this.$http
@@ -361,6 +362,7 @@
                         }
                     })
                     .catch(error => {
+                        this.submitStatus='ERROR';
                         this.errors = error.response.data.errors;
                     });
 
@@ -473,6 +475,15 @@
         padding: 10px;
         border-radius: 10px;
         text-transform: capitalize;
+    }
+
+    .typo__p{
+        text-align: center;
+        width: 200px;
+        margin: 30px auto;
+        background: lightgray;
+        padding: 20px;
+        border-radius: 50px;
     }
 
 </style>
