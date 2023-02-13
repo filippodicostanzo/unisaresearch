@@ -153,11 +153,22 @@ class PostController extends Controller
     {
 
         $source = $request['source'];
-        $item = Post::with('state_fk', 'category_fk', 'template_fk', 'authors', 'user_fk', 'users')->where('id', $post->id)->first();
+        $item = Post::with('state_fk', 'category_fk', 'template_fk', 'authors', 'user_fk', 'users', 'comment_fk')->where('id', $post->id)->first();
         $user = Auth::user();
+
         $roles = $user->roles()->first();
 
-        return view('posts.show', ['item' => $item, 'role' => $roles, 'title' => $this->title, 'source' => $source]);
+        if($roles->name ==='researcher') {
+            if ($item->created ===$user->id){
+                return view('posts.show', ['item' => $item, 'role' => $roles, 'title' => $this->title, 'source' => $source]);
+            }
+            else {
+                return abort(403);
+            }
+        }
+        else {
+            return view('posts.show', ['item' => $item, 'role' => $roles, 'title' => $this->title, 'source' => $source]);
+        }
     }
 
     /**
@@ -454,8 +465,8 @@ class PostController extends Controller
         $presents = array_unique($presents);
         $presents = array_values($presents);
 
-        return view('posts.vuetable', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews, 'statuses' => $statuses, 'source' => $source, 'categories'=>$presents]);
-       // return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews, 'statuses' => $statuses, 'source' => $source]);
+        return view('posts.vuetable', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews, 'statuses' => $statuses, 'source' => $source, 'categories' => $presents]);
+        // return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews, 'statuses' => $statuses, 'source' => $source]);
 
     }
 
