@@ -165,13 +165,6 @@ class AppServiceProvider extends ServiceProvider
                     'label' => count($researchers),
                     'label_color' => 'success',
                 ],
-                [
-                    'text' => 'users',
-                    'url' => 'admin/users?type=user',
-                    'icon' => 'fas fa-fw fa-user-clock',
-                    'label' => count($users),
-                    'label_color' => 'success',
-                ],
             ];
             $event->menu->addAfter('users_settings', ...$array);
         });
