@@ -108,7 +108,7 @@ class PostController extends Controller
         $res = $post->save();
 
 
-        if ($res && $authors!=null) {
+        if ($res && $authors != null) {
             $authors_array = explode(',', $request->input('coauthors'));
             $post->authors()->sync($authors_array);
         }
@@ -153,21 +153,25 @@ class PostController extends Controller
     {
 
         $source = $request['source'];
-        $item = Post::with('state_fk', 'category_fk', 'template_fk', 'authors', 'user_fk', 'users', 'comment_fk')->where('id', $post->id)->first();
+
+        $item = Post::with('state_fk', 'category_fk', 'template_fk', 'authors', 'user_fk', 'users')->where('id', $post->id)->first();
+
+        $comment = Comment::where('post_id', $item->id)->first();
+
         $user = Auth::user();
 
         $roles = $user->roles()->first();
 
         if($roles->name ==='researcher') {
             if ($item->created ===$user->id){
-                return view('posts.show', ['item' => $item, 'role' => $roles, 'title' => $this->title, 'source' => $source]);
+                return view('posts.show', ['item' => $item, 'role' => $roles, 'title' => $this->title, 'source' => $source,'comment'=>$comment]);
             }
             else {
                 return abort(403);
             }
         }
         else {
-            return view('posts.show', ['item' => $item, 'role' => $roles, 'title' => $this->title, 'source' => $source]);
+            return view('posts.show', ['item' => $item, 'role' => $roles, 'title' => $this->title, 'source' => $source, 'comment'=>$comment]);
         }
     }
 
@@ -216,9 +220,9 @@ class PostController extends Controller
             $authors_array = explode(',', $request->input('coauthors'));
         }
 
-      /*  if ($authors != null) {
-            $authors = implode(',', $authors);
-        }*/
+        /*  if ($authors != null) {
+              $authors = implode(',', $authors);
+          }*/
 
 
         $data = $request->all();
@@ -237,11 +241,9 @@ class PostController extends Controller
         $res = Post::find($post->id)->update($data);
 
 
-        if(empty($authors_array)) {
+        if (empty($authors_array)) {
             $post->authors()->detach();
-        }
-
-        else {
+        } else {
             if ($res) {
                 $post->authors()->sync($authors_array);
             }

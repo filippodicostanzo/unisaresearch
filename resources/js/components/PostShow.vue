@@ -76,6 +76,24 @@
                     </div>
                 </div>
             </div>
+
+            <div class="card" v-if="json_comment.comment!==null">
+                <div class="card-header">
+                    <h1 class="m0 text-dark card-title text-xl">
+                        Evaluation
+                    </h1>
+                </div>
+
+                <div class="card-body no-padding">
+                    <div class="row pt-3">
+                        <div class="col-md-12 col-sm-12">
+                            <div v-html="`${json_comment.comment}`"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
         </div>
     </div>
 </template>
@@ -85,7 +103,7 @@
 
     export default {
         name: "PostShow",
-        props: ['item', 'role', 'source'],
+        props: ['item', 'role', 'source','comment'],
         data: () => {
             return {
                 rendered: {
@@ -96,15 +114,18 @@
                 fields: [],
                 nameFields: [],
                 json_role: {},
+                json_comment:{}
 
             }
         },
         mounted() {
             this.json_role = JSON.parse(this.role);
             this.rendered = JSON.parse(this.item);
+            this.json_comment=JSON.parse(this.comment);
             this.nameFields = JSON.parse(this.rendered.template_fk.fields);
             this.createFields();
             console.log(this.rendered);
+            console.log(this.comment);
 
         },
         methods: {
