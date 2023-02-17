@@ -64,25 +64,31 @@
                                     </p>
 
                                     <p style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">
-                                        YThe Naples Forum on Service chairs ask you to review the abstract titled <b>{{$post->title}}</b>
+                                        The Naples Forum on Service chairs ask you to review the abstract titled
+                                        <b>{{$post->title}}</b>
                                     </p>
 
                                     <p style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">
-                                        You can find the document in your Reviewer Section of the manuscript management platform available at https://www.nfos.it.
+                                        You can find the document in your Reviewer Section of the manuscript management
+                                        platform available at <a href="https://www.nfos.it" target="_blank">https://www.nfos.it.</a>
 
                                     </p>
                                     <p style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">
-                                        If it is your first time there, please, register yourself using as login your email address EMAIL ADDRESS OF THE REVIEWER.
+                                        If it is your first time there, please, register yourself using as login your
+                                        email address <b>{{$supervisor->email}}</b>
                                     </p>
 
                                     <p style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">
-                                        Please, perform the review with 20 days.
-                                        In case you want to decline this invitation, send an email to naplesforumonservice@gmail.com.
+                                        Please, perform the review with 20 days.<br>
+                                        In case you want to decline this invitation, send an email to
+                                        <a href="mailto:naplesforumonservice@gmail.com">naplesforumonservice@gmail.com</a>.
                                     </p>
 
-                                    <p style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">With our Best regards,
-                                        TThank you for your support.
-                                        With our Best regards, The Naples Forum Secretariat</p>
+                                    <p style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">
+                                        Thank you for your support.<br>
+                                        With our Best regards,<br>
+                                        The Naples Forum Secretariat
+                                    </p>
 
                                 </td>
                             </tr>

@@ -59,8 +59,8 @@
                                         We Are Sorry!</h1>
 
                                     <p style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">
-                                        Dear {{$post->user_fk->name}} {{$post->user_fk->surname}}<br>
-                                        We are sorry to inform you that your abstract titled {{$post->title}} has not
+                                        Dear <b>{{$post->user_fk->name}} {{$post->user_fk->surname}}</b><br>
+                                        We are sorry to inform you that your abstract titled <b>{{$post->title}}</b> has not
                                         been accepted by the Naples Forum on Service.
 
                                     <p style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">
@@ -70,11 +70,11 @@
 
                                     <p style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">
                                         Feel free to contact us for any further request at
-                                        naplesforumonservice@gmail.com
+                                        naplesforumonservice@gmail.com.
                                     </p>
-                                    
+
                                     <p style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">
-                                        With our Best regards,
+                                        With our Best regards,<br>
                                         The Naples Forum Secretariat</p>
 
                                 </td>
