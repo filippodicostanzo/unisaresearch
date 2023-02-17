@@ -77,7 +77,7 @@
                 </div>
             </div>
 
-            <div class="card" v-if="json_comment.comment!==null">
+            <div class="card" v-if="json_comment!==null">
                 <div class="card-header">
                     <h1 class="m0 text-dark card-title text-xl">
                         Evaluation
@@ -119,13 +119,13 @@
             }
         },
         mounted() {
+            console.log(this.comment);
             this.json_role = JSON.parse(this.role);
             this.rendered = JSON.parse(this.item);
             this.json_comment=JSON.parse(this.comment);
             this.nameFields = JSON.parse(this.rendered.template_fk.fields);
             this.createFields();
             console.log(this.rendered);
-            console.log(this.comment);
 
         },
         methods: {
