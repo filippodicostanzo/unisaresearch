@@ -19,6 +19,7 @@
         "laravel/ui": "^3.0",
         "laravelcollective/html": "^6.2",
         "monarobase/country-list": "^3.2",
+        "phpoffice/phpspreadsheet": "^1.27",
         "santigarcor/laratrust": "^6.3",
         "tightenco/ziggy": "^0.9.4",
         "unisharp/laravel-filemanager": "master"

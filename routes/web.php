@@ -98,6 +98,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
 
     Route::get('/calendar', [CalendarController::class, 'index']);
 
+    Route::post('/posts/all/generate', [\App\Http\Controllers\Auth\PostController::class, 'generate']);
+
 
 });
 

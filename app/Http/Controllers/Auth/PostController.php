@@ -10,10 +10,14 @@ use App\Models\Post;
 use App\Models\Review;
 use App\Models\Status;
 use App\Models\User;
+use App\Models\PaperExport;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class PostController extends Controller
 {
@@ -92,8 +96,6 @@ class PostController extends Controller
         $authors = $request->input('coauthors');
 
 
-
-
         /*if ($authors != null) {
             $authors = implode(',', $authors);
         }*/
@@ -151,6 +153,7 @@ class PostController extends Controller
      */
     public function show(Post $post, Request $request)
     {
+
 
         $source = $request['source'];
 
@@ -491,6 +494,74 @@ class PostController extends Controller
         return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews, 'statuses' => $statuses, 'source' => $source]);
 
 
+    }
+
+    function generate(Request $request)
+    {
+        $papers = $request->get('papers');
+        $file = new Spreadsheet;
+        $active_sheet = $file->getActiveSheet();
+
+        $array = (array)$papers[0];
+        $keys = array_keys($array);
+        $allpapers = [];
+
+
+        $col = 1;
+        foreach ($keys as $key) {
+            $active_sheet->setCellValueByColumnAndRow($col, 1, $key);
+            $col++;
+        }
+
+
+        foreach ($papers as $p) {
+
+
+            $paper = new PaperExport();
+            $paper->id = $p['id'];
+            $paper->title = $p['title'];
+            $ar = get_object_vars($paper);
+            array_push($allpapers, $ar);
+        }
+
+
+        $col = 1;
+        $row = 2;
+
+
+        foreach ($allpapers as $papers) {
+
+            foreach ($papers as $p) {
+                $active_sheet->setCellValueExplicitByColumnAndRow($col, $row, $p, DataType::TYPE_STRING);
+                $col++;
+            }
+            $row++;
+            $col = 1;
+        }
+
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Csv($file);
+
+        $writer->setDelimiter(';');
+        $writer->setEnclosure('"');
+        $writer->setLineEnding("\r\n");
+        $writer->setSheetIndex(0);
+        $writer->setUseBOM(true);
+
+        $file_name = 'papers.csv';
+
+
+        $writer->save($file_name);
+
+
+        header('Content-Type: application/x-www-form-urlencoded');
+
+        header('Content-Transfer-Encoding: Binary');
+
+        header("Content-disposition: attachment; filename=\"" . $file_name . "\"");
+
+        readfile($file_name);
+
+        unlink($file_name);
     }
 
 }

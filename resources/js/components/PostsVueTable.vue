@@ -28,7 +28,7 @@
                                     :pagination-options="{
                                         enabled: true,
                                         mode: 'records',
-                                        perPage: 100,
+                                        perPage: 20,
                                         position: 'bottom',
                                         perPageDropdown: [50,100, 200],
                                         dropdownAllowAll: true,
@@ -135,6 +135,7 @@
 
 import {VueGoodTable} from 'vue-good-table';
 import Modal from "./Modal";
+import {format} from 'date-fns'
 
 export default {
     name: "PostsVueTable.vue",
@@ -353,7 +354,24 @@ export default {
         },
 
         downloadSelected() {
-            console.log(this.$refs['my-table'].selectedRows);
+            axios.post( this.url = window.location.href + '/generate',
+                {papers: this.$refs['my-table'].selectedRows}, {responseType: 'blob'}
+            ).then(
+                (response) => {
+                    const data = format(new Date(), 'yyyyMMddHHmmss');
+                    const url = window.URL.createObjectURL(new Blob([response.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', 'orders-'+data+'.csv'); //or any other extension
+                    document.body.appendChild(link);
+                    link.click();
+
+
+                });
+        },
+
+        onCancel() {
+            console.log('User cancelled the loader.')
         },
 
         colAuthors(rowObj) {
