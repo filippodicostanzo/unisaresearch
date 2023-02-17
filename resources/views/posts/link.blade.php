@@ -81,7 +81,9 @@
 
                                     @foreach ($autx as $author)
                                         {{$author->firstname}} {{$author->lastname}}
-                                        @if(!$loop->last) - @endif
+                                        @if(!$loop->last)
+                                            -
+                                        @endif
                                     @endforeach
                                 </div>
                             @endif
@@ -251,7 +253,6 @@
                             <div class="col-12"><label>Reviewer</label></div>
 
 
-
                             @foreach ($supervisors as $supervisor)
                                 @php
                                     $edition = Edition::where('active',1)->first();
@@ -313,7 +314,6 @@
         </div>
     </div>
     </div>
-    </div>
 @stop
 
 @push('js')
@@ -349,29 +349,46 @@
 
             $('#document').filemanager('file', '', false);
 
+            let statusSelected = $('#statuses-selected');
+
+            let error = $('.error');
+            let formSubmit = $('#regForm');
+            let saveButton = $('#savelink');
+
             $('#savelink').on('click', function (e) {
                 //
                 e.preventDefault();
 
-                if ($('#statuses-selected').val()=='3') {
-                    var ck_box = $('input[type="checkbox"]:checked').length;
+                if (statusSelected.val() === '2') {
+                    if ($('input[type="checkbox"]:checked').length > 0) {
+                        error.fadeIn();
+                        error.html('<p class="text-danger text-center"> If you select one or more reviewers, to confirm you must also change the status to "Review"</p>');
+                    } else {
+                        error.fadeOut();
+                        saveButton.attr("disabled", true);
+                        formSubmit.submit();
+
+                    }
+                } else if (statusSelected.val() === '3') {
+
 
                     // return in firefox or chrome console
                     // the number of checkbox checked
 
 
-                    if(ck_box > 0){
-                        $('.error').fadeOut();
-                        document.getElementById("regForm").submit();
-                    }
-                    else {
-                        $('.error').fadeIn();
-                        $('.error').html('<p class="text-danger text-center"> You must select at least one Reviewer</p>');
-                    }
-                }
+                    if ($('input[type="checkbox"]:checked').length > 0) {
+                        error.fadeOut();
+                        saveButton.attr("disabled", true);
+                        formSubmit.submit();
 
-                else {
-                    document.getElementById("regForm").submit();
+                    } else {
+                        error.fadeIn();
+                        error.html('<p class="text-danger text-center"> You must select at least one Reviewer</p>');
+                    }
+                } else {
+                    error.fadeOut();
+                    saveButton.attr("disabled", true);
+                    formSubmit.submit();
                 }
 
             })
