@@ -79,15 +79,15 @@
                                 <div class="col-md-6 col-sm-12">
                                     <fieldset class="rating">
                                         <input type="radio" id="f1_star5" v-model="review.field_1" value="5"/><label
-                                        class="full" for="f1_star5" title="Awesome - 5 stars"></label>
+                                        class="full" for="f1_star5" title="5 stars"></label>
                                         <input type="radio" id="f1_star4" v-model="review.field_1" value="4"/><label
-                                        class="full" for="f1_star4" title="Pretty good - 4 stars"></label>
+                                        class="full" for="f1_star4" title="4 stars"></label>
                                         <input type="radio" id="f1_star3" v-model="review.field_1" value="3"/><label
-                                        class="full" for="f1_star3" title="Meh - 3 stars"></label>
+                                        class="full" for="f1_star3" title="3 stars"></label>
                                         <input type="radio" id="f1_star2" v-model="review.field_1" value="2"/><label
-                                        class="full" for="f1_star2" title="Kinda bad - 2 stars"></label>
+                                        class="full" for="f1_star2" title="2 stars"></label>
                                         <input type="radio" id="f1_star1" v-model="review.field_1" value="1"/><label
-                                        class="full" for="f1_star1" title="Sucks big time - 1 star"></label>
+                                        class="full" for="f1_star1" title="1 star"></label>
                                     </fieldset>
                                 </div>
                             </div>
@@ -101,15 +101,15 @@
                                 <div class="col-md-6 col-sm-12">
                                     <fieldset class="rating">
                                         <input type="radio" id="f2_star5" v-model="review.field_2" value="5"/><label
-                                        class="full" for="f2_star5" title="Awesome - 5 stars"></label>
+                                        class="full" for="f2_star5" title="5 stars"></label>
                                         <input type="radio" id="f2_star4" v-model="review.field_2" value="4"/><label
-                                        class="full" for="f2_star4" title="Pretty good - 4 stars"></label>
+                                        class="full" for="f2_star4" title="4 stars"></label>
                                         <input type="radio" id="f2_star3" v-model="review.field_2" value="3"/><label
-                                        class="full" for="f2_star3" title="Meh - 3 stars"></label>
+                                        class="full" for="f2_star3" title="3 stars"></label>
                                         <input type="radio" id="f2_star2" v-model="review.field_2" value="2"/><label
-                                        class="full" for="f2_star2" title="Kinda bad - 2 stars"></label>
+                                        class="full" for="f2_star2" title="2 stars"></label>
                                         <input type="radio" id="f2_star1" v-model="review.field_2" value="1"/><label
-                                        class="full" for="f2_star1" title="Sucks big time - 1 star"></label>
+                                        class="full" for="f2_star1" title="1 star"></label>
 
                                     </fieldset>
                                 </div>
@@ -122,15 +122,15 @@
                                 <div class="col-md-6 col-sm-12">
                                     <fieldset class="rating">
                                         <input type="radio" id="f3_star5" v-model="review.field_3" value="5"/><label
-                                        class="full" for="f3_star5" title="Awesome - 5 stars"></label>
+                                        class="full" for="f3_star5" title="5 stars"></label>
                                         <input type="radio" id="f3_star4" v-model="review.field_3" value="4"/><label
-                                        class="full" for="f3_star4" title="Pretty good - 4 stars"></label>
+                                        class="full" for="f3_star4" title="4 stars"></label>
                                         <input type="radio" id="f3_star3" v-model="review.field_3" value="3"/><label
-                                        class="full" for="f3_star3" title="Meh - 3 stars"></label>
+                                        class="full" for="f3_star3" title="3 stars"></label>
                                         <input type="radio" id="f3_star2" v-model="review.field_3" value="2"/><label
-                                        class="full" for="f3_star2" title="Kinda bad - 2 stars"></label>
+                                        class="full" for="f3_star2" title="2 stars"></label>
                                         <input type="radio" id="f3_star1" v-model="review.field_3" value="1"/><label
-                                        class="full" for="f3_star1" title="Sucks big time - 1 star"></label>
+                                        class="full" for="f3_star1" title="1 star"></label>
 
                                     </fieldset>
                                 </div>
