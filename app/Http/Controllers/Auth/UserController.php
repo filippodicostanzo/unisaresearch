@@ -49,10 +49,13 @@ class UserController extends Controller
             $type = $request->query('type');
 
             if ($type === 'administrator') {
+                $this->title = 'Administrators';
                 $items = User::whereRoleIs('superadministrator')->orwhereRoleIs('administrator')->with('roles')->orderBy('id', 'ASC')->get();
             } else if ($type === 'supervisor') {
+                $this->title = 'Reviewers';
                 $items = User::whereRoleIs('supervisor')->with('roles')->orderBy('id', 'ASC')->get();
             } else if ($type === 'researcher') {
+                $this->title = 'Authors';
                 $items = User::whereRoleIs('researcher')->with('roles')->orderBy('id', 'ASC')->get();
             } else if ($type === 'user') {
                 $items = User::whereRoleIs('user')->with('roles')->orderBy('id', 'ASC')->get();
