@@ -79,7 +79,7 @@
                                     </p>
 
                                     <p style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">
-                                        Please, perform the review with 20 days.<br>
+                                        Please, perform the review within 20 days.<br>
                                         In case you want to decline this invitation, send an email to
                                         <a href="mailto:naplesforumonservice@gmail.com">naplesforumonservice@gmail.com</a>.
                                     </p>
