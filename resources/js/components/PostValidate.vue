@@ -231,6 +231,11 @@
                     </div>
 
                     <div class="card-body no-padding">
+                        <div class="row">
+                            <p>
+                                This field contains the evaluation shown to the authors (starts given by the reviwers are not shown). Thus, write a summary of the evaluations, and copy and paste the comments of the reviewers in the following.
+                            </p>
+                        </div>
                         <div class="row pt-3">
                             <div class="col-md-12 col-xs-12 center">
                                 <div class="form-group">
