@@ -103,6 +103,7 @@
                         <p>The button <i aria-hidden="true" class="fas fa-minus-circle fa-1x fa-lg"></i> allows you to delete this item.</p>
                         <p>the states are very important and it is possible to activate and deactivate them, as well as define a color for
 each individual state.</p>
+<p>You can add a new status for papers, but only the status with the Ids from 1 to 5 are included in the filters in the papers list.</p>
                         </div>
                     `
                 }

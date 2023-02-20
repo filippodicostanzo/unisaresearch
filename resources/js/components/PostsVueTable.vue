@@ -140,7 +140,7 @@ import {format} from 'date-fns'
 export default {
     name: "PostsVueTable.vue",
     components: {VueGoodTable, 'modal': Modal},
-    props: ['title', 'items', 'role', 'reviews', 'user', 'statuses', 'source', 'categories'],
+    props: ['id', 'title', 'items', 'role', 'reviews', 'user', 'statuses', 'source', 'categories'],
 
     data() {
         return {
@@ -154,6 +154,11 @@ export default {
                 {value: 'Rejected', text: 'Rejected'}
             ],
             columns: [
+                {
+                    label: 'ID',
+                    field: 'id',
+
+                },
                 {
                     label: 'Title',
                     field: 'title',

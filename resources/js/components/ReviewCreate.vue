@@ -73,7 +73,7 @@
 
                             <div class="row pt-3">
                                 <div class="col-md-6 col-sm-12"><span
-                                    class="text-bold"> Pertinence for Forum Topic:</span>
+                                    class="text-bold"> Alignment to Naples forum on Service Pillars:</span>
 
                                 </div>
                                 <div class="col-md-6 col-sm-12">
@@ -95,7 +95,7 @@
 
                             <div class="row pt-3">
                                 <div class="col-md-6 col-sm-12"><span
-                                    class="text-bold"> General quality of the paper:</span>
+                                    class="text-bold"> General quality:</span>
 
                                 </div>
                                 <div class="col-md-6 col-sm-12">
@@ -116,7 +116,7 @@
                             </div>
 
                             <div class="row pt-3">
-                                <div class="col-md-6 col-sm-12"><span class="text-bold"> Relevance of the paper:</span>
+                                <div class="col-md-6 col-sm-12"><span class="text-bold"> Relevance:</span>
 
                                 </div>
                                 <div class="col-md-6 col-sm-12">
@@ -138,7 +138,7 @@
 
                             <div class="row pt-3">
                                 <div class="col-md-6 col-sm-12">
-                                    <span class="text-bold"> Result:</span>
+                                    <span class="text-bold"> Final Decision:</span>
                                 </div>
 
                                 <div class="col-md-6 col-sm-12">

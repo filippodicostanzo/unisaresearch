@@ -33,7 +33,7 @@
                                             class="form-control">
                                         <option value="">Choose Type Of User</option>
                                         <option v-for="role in this.json_roles" :value="role.id" :data-name="role.name"
-                                                :id="'role_'+role.id">{{role.display_name}}
+                                                :id="'role_'+role.id" v-if="role.id!==2 && role.id!==5">{{role.display_name}}
                                         </option>
                                     </select>
                                 </div>
@@ -232,6 +232,8 @@
         mounted() {
             this.json_countries = JSON.parse(this.countries)
             this.json_roles = JSON.parse(this.roles);
+
+
 
 
             if (this.item) {
