@@ -257,12 +257,12 @@ export default {
         this.json_categories = JSON.parse(this.categories);
 
 
-        this.$set(this.columns[2], 'filterOptions', {
+        this.$set(this.columns[3], 'filterOptions', {
             enabled: true,
             filterDropdownItems: this.json_categories,
         })
 
-        this.$set(this.columns[5], 'filterOptions', {
+        this.$set(this.columns[6], 'filterOptions', {
             enabled: true,
             filterDropdownItems: this.paper_state,
         });
