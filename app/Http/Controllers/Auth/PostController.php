@@ -194,7 +194,12 @@ class PostController extends Controller
             return view('posts.edit', ['title' => $this->title, 'item' => $item]);
         }
 
-        if ($item->supervisor === Auth::id()) {
+        else if ($item->created === Auth::id() && $item->state === '4') {
+
+            return view('posts.edit', ['title' => $this->title, 'item' => $item]);
+        }
+
+        else if ($item->supervisor === Auth::id()) {
             return view('posts.edit', ['title' => $this->title, 'item' => $item]);
         } else {
 
@@ -230,16 +235,22 @@ class PostController extends Controller
 
         $data = $request->all();
 
+
         //Check consistency of input hidden STATE
-        if ($data['state'] != '1' && $data['state'] != '2') {
+        if ($data['state'] != '1' && $data['state'] != '2' && $data['state']!='6') {
             abort(403);
         }
+
         $data['created'] = Auth::id();
         $data['edit'] = Auth::id();
 
 
         $data['authors'] = $authors;
         $data['latest_modify'] = Carbon::now();
+
+        if ($data['state'] ==4 && $data['definitve_pdf'] != null) {
+            $data['state']=6;
+        }
 
         $res = Post::find($post->id)->update($data);
 
@@ -274,7 +285,6 @@ class PostController extends Controller
                  Mail::to($aut->email)->send(new \App\Mail\AddAuthorEmail($aut, $authors_post));
              }*/
         }
-
 
         $message = $res ? 'The Paper ' . $data['title'] . ' has been saved' : 'The Paper ' . $data['title'] . ' was not saved';
         session()->flash('message', $message);
@@ -493,6 +503,10 @@ class PostController extends Controller
 
         return view('posts.index', ['items' => $items, 'title' => $this->title, 'reviews' => $reviews, 'statuses' => $statuses, 'source' => $source]);
 
+
+    }
+
+    function definitivepost(Request  $request) {
 
     }
 

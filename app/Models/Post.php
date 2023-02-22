@@ -25,6 +25,7 @@ class Post extends Model
         'supervisors',
         'tags',
         'pdf',
+        'definitive_pdf',
         'edition',
         'field_1',
         'field_2',

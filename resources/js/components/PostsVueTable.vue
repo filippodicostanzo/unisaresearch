@@ -98,13 +98,13 @@
 
                                     <a class="btn btn-default btn-xs"
                                        :href="route('posts.link', {id: props.row.id})"
-                                       v-if="source==='admin'">
+                                       v-if="source==='admin' && props.row.state!=6">
                                         <i class="fas fa-link fa-1x fa-lg" aria-hidden="true"></i>
                                     </a>
 
                                     <a class="btn btn-default btn-xs"
                                        :href="route('posts.valid', {id: props.row.id})"
-                                       v-if="source==='admin'">
+                                       v-if="source==='admin' && props.row.state!=6">
                                         <i class="fas fa-clipboard-check fa-1x fa-lg" aria-hidden="true"></i>
                                     </a>
 
@@ -151,7 +151,8 @@ export default {
                 {value: 'Review', text: 'Review'},
                 {value: 'Submitted', text: 'Submitted'},
                 {value: 'Accepted', text: 'Accepted'},
-                {value: 'Rejected', text: 'Rejected'}
+                {value: 'Rejected', text: 'Rejected'},
+                {value: 'Final', text: 'Final'}
             ],
             columns: [
                 {
@@ -412,8 +413,11 @@ export default {
                 case '4' : {
                     return 'green-class post-status'
                 }
-                default : {
+                case '5' : {
                     return 'red-class post-status';
+                }
+                default : {
+                    return 'violet-class post-status';
                 }
             }
 
@@ -470,6 +474,13 @@ export default {
 .red-class {
     span {
         background-color: rgb(228, 1, 1);
+        color: white;
+    }
+}
+
+.violet-class {
+    span {
+        background-color: rgb(185, 11, 249);
         color: white;
     }
 }

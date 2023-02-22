@@ -31211,6 +31211,10 @@ a.text-muted:hover {
   background-color: #dc3545;
 }
 
+.card-table .btn.btn-success {
+  background-color: #28a745;
+}
+
 .card-title {
   text-transform: capitalize;
 }

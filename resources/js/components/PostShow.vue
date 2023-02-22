@@ -68,10 +68,26 @@
 
                 <div class="card-body no-padding">
                     <div class="row pt-3">
-                        <div class="col-md-6 col-sm-12"><span class="text-bold">Tags: </span>{{rendered.tags}}
+                        <div class="col-md-12 col-sm-12"><span class="text-bold">Tags: </span>{{rendered.tags}}
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="m0 text-dark card-title text-xl">
+                        Documents
+                    </h1>
+                </div>
+
+                <div class="card-body no-padding">
+                    <div class="row pt-3">
                         <div class="col-md-6 col-sm-12"  v-show="rendered.pdf!='' && rendered.pdf!=null"><span class="text-bold">PDF: </span><a
                             :href="rendered.pdf" class="btn button btn-primary" target="_blank">Download</a>
+                        </div>
+                        <div class="col-md-6 col-sm-12"  v-show="rendered.definitive_pdf!='' && rendered.pdf!=null"><span class="text-bold">Definitive PDF: </span><a
+                            :href="rendered.definitive_pdf" class="btn button btn-primary" target="_blank">Download</a>
                         </div>
                     </div>
                 </div>

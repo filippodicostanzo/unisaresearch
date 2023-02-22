@@ -26,6 +26,11 @@
     $fields=json_decode($template->fields);
 
 
+    if($item->state==4) {
+        $title = 'Final Manuscript';
+    }
+
+
 
 
 
@@ -71,7 +76,7 @@
                                 {!! Form::text('title', null, array('placeholder' => 'Title','class' => 'form-control',  'oninput'=>"this.className = ''")) !!}
                             </div>
 
-                            <div class="form-group row">
+                            <div class="form-group row" id="authors-section">
                                 <div class="col-12"><label>List of Authors</label></div>
 
                                 @if(count($authors)==0)
@@ -152,7 +157,7 @@
                                 </label>
                                 {!! Form::text('tags', null, array('placeholder' => 'Keywords separated by comma','class' => 'form-control',  'oninput'=>"this.className = ''")) !!}
                             </div>
-                            <div class="form-group imageUpload">
+                            <div class="form-group imageUpload" id="anonymus_pdf_section">
                                 <label for="image">Upload Anonymus PDF</label>
                                 <div class="note">
 
@@ -171,6 +176,28 @@
                                 </div>
 
                             </div>
+
+
+                            <div class="form-group imageUpload" id="definitive_pdf_section">
+                                <label for="image">Upload Final PDF</label>
+                                <div class="note">
+
+                                    <p class="small text-bold">When you upload the document, please be sure the names of
+                                        the authors ARE indicated.</p>
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <a id="definitive_pdf" data-input="doc_pdf" data-preview="cover_preview"
+                                           class="btn btn-secondary">
+                                            <i class="fa fa-picture-o"></i> Choose
+                                        </a>
+                                        </span>
+                                    {!! Form::text('definitive_pdf', null, array('placeholder' => 'Upload and select the file from File Manager','class' => 'form-control file-src','id' => 'doc_pdf')) !!}
+
+                                </div>
+
+                            </div>
+
                             <!--<button type="submit" class="btn btn-primary btn-lg btn-block">
                                 <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
                             </button> -->
@@ -250,9 +277,32 @@
                             </div>
                         </div>
 
+                        <div class="modal fade" id="modalDefinitive" tabindex="-1" role="dialog"
+                             aria-labelledby="modalSubmitLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalSubmitLabel">Submit Final Manuscript</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure to <b>submit the final manuscript?</b> By doing so, you will no longer be able to modify it.
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                                        </button>
+                                        <button type="button" class="btn btn-primary" id="definitiveSubmit">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
                         {{ Form::hidden('created', $user) }}
                         {{ Form::hidden('edit', $user) }}
-                        {{ Form::hidden('state', 1, array('id'=>'post_state')) }}
+                        {{ Form::hidden('state', $item->state, array('id'=>'post_state')) }}
                         {{ Form::hidden('coauthors', $item->authors, array('id'=>'coauthors')) }}
 
 
@@ -302,6 +352,19 @@
 
             arrayAuthors.unshift('0');
 
+            let state = $('input[name=state]').val();
+
+
+            if (state == 4) {
+                $('#template-selected').prop('disabled', 'disabled');
+                $('input[name=title]').attr('readonly', true);
+                $('#authors-section').hide();
+                $('#anonymus_pdf_section').hide();
+
+            } else {
+                $('#definitive_pdf_section').hide();
+            }
+
 
             $("input[name='authors[]']").each(function () {
 
@@ -327,9 +390,12 @@
 
             console.log(authors);
 
+
             authors.forEach((el, i) => {
                 let apix = i === 0 ? '' : ' - ';
-                $('.co-authors').append(apix + '<span>' + el.name + '</span>');
+                if (el!=undefined) {
+                    $('.co-authors').append(apix + '<span>' + el.name + '</span>');
+                }
             })
 
 
@@ -393,6 +459,8 @@
 
             $('#pdf').filemanager('file', '', false);
 
+            $('#definitive_pdf').filemanager('file', '', false);
+
             $('#template-selected').change(function () {
 
 
@@ -426,6 +494,8 @@
         showTab(currentTab); // Display the current tab
 
         function showTab(n) {
+            let state = $('input[name=state]').val();
+
             // This function will display the specified tab of the form ...
             var x = document.getElementsByClassName("tab");
             x[n].style.display = "block";
@@ -436,9 +506,17 @@
                 document.getElementById("prevBtn").style.display = "inline";
             }
             if (n == (x.length - 1)) {
+
                 document.getElementById("nextBtn").innerHTML = "Save Draft";
                 document.getElementById('error').innerHTML = '';
-                document.getElementById("divSubmit").innerHTML = '<button type="button" id="submBtn" onclick="validateFormReview()" class="btn btn-danger">Submit For Review</button>';
+
+                if (state == 1) {
+                    document.getElementById("divSubmit").innerHTML = '<button type="button" id="submBtn" onclick="validateFormReview()" class="btn btn-danger">Submit For Review</button>';
+                } else if (state == 4) {
+                    $('#nextBtn').hide();
+                    document.getElementById("divSubmit").innerHTML = '<button type="button" id="submBtn" onclick="validateFormReview()" class="btn btn-danger">Submit Final Manuscript</button>';
+                }
+
             } else {
                 document.getElementById("nextBtn").innerHTML = "Next";
                 document.getElementById("divSubmit").innerHTML = '';
@@ -558,13 +636,25 @@
             let i;
 
             var inputsWeActuallyWant = [];
+            let state = $('input[name=state]').val();
+            console.log(input_field);
             for (var j = (input_field.length - 1); j >= 0; j--) {
 
-                if (input_field[j].id !== "pdf" && input_field[j].id !== "coauthors") {
-                    inputsWeActuallyWant.push(input_field[j]);
+                if (state != 4) {
+
+                    if (input_field[j].id !== "pdf" && input_field[j].id !== "coauthors" && input_field[j].id !== 'doc_pdf') {
+                        inputsWeActuallyWant.push(input_field[j]);
+                    }
+                } else {
+                    if (input_field[j].id !== "pdf" && input_field[j].id !== "coauthors") {
+                        inputsWeActuallyWant.push(input_field[j]);
+                    }
                 }
             }
+
             input_field = inputsWeActuallyWant;
+
+            console.log(input_field);
 
 
             for (i = 0; i < input_textarea.length; i++) {
@@ -598,17 +688,31 @@
             if (!valid) {
                 document.getElementById('error').innerHTML = '<p class="text-danger">please fill in all required fields</p>'
             } else {
-
+                let state = $('input[name=state]').val();
                 document.getElementById('error').innerHTML = '';
-                document.getElementById('post_state').value = 2;
-                $('#modalSubmit').modal('show');
-                $('#confirmSubmit').on('click', function () {
-                    document.getElementById("regForm").submit();
-                })
+                if (state == 4) {
+                    document.getElementById('post_state').value = 6;
+                    $('#modalDefinitive').modal('show');
+
+                    $('#definitiveSubmit').on('click', function () {
+                        document.getElementById("regForm").submit();
+                    })
+
+                } else {
+                    document.getElementById('post_state').value = 2;
+                    $('#modalSubmit').modal('show');
+                    $('#confirmSubmit').on('click', function () {
+                        document.getElementById("regForm").submit();
+                    })
+                }
+
+
 
             }
 
         }
+
+
     </script>
 
 @endpush
