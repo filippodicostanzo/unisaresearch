@@ -4,12 +4,16 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Author;
+use App\Models\AuthorExport;
+use App\Models\PaperExport;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class AuthorController extends Controller
 {
@@ -340,6 +344,74 @@ class AuthorController extends Controller
         $source = 'admin';
         $items = Author::orderBy('id', 'ASC')->get();
         return view('authors.index', ['items' => $items, 'title' => $this->title, 'source' => $source]);
+    }
+
+    public function generate(Request $request)
+    {
+        $authors = $request->get('authors');
+        $file = new Spreadsheet;
+        $active_sheet = $file->getActiveSheet();
+
+        $array = (array)$authors[0];
+        $keys = array_keys($array);
+        $allauthors = [];
+
+        $col = 1;
+        foreach ($keys as $key) {
+            $active_sheet->setCellValueByColumnAndRow($col, 1, $key);
+            $col++;
+        }
+
+        foreach ($authors as $a) {
+
+            $author = new AuthorExport();
+            $author->id = $a['id'];
+            $author->firstname = $a['firstname'];
+            $author->lastname = $a['lastname'];
+            $author->email = $a['email'];
+            $ar = get_object_vars($author);
+            array_push($allauthors, $ar);
+        }
+
+
+        $col = 1;
+        $row = 2;
+
+
+        foreach ($allauthors as $authors) {
+
+            foreach ($authors as $a) {
+                $active_sheet->setCellValueExplicitByColumnAndRow($col, $row, $a, DataType::TYPE_STRING);
+                $col++;
+            }
+            $row++;
+            $col = 1;
+        }
+
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Csv($file);
+
+        $writer->setDelimiter(';');
+        $writer->setEnclosure('"');
+        $writer->setLineEnding("\r\n");
+        $writer->setSheetIndex(0);
+        $writer->setUseBOM(true);
+
+        $file_name = 'papers.csv';
+
+
+        $writer->save($file_name);
+
+
+        header('Content-Type: application/x-www-form-urlencoded');
+
+        header('Content-Transfer-Encoding: Binary');
+
+        header("Content-disposition: attachment; filename=\"" . $file_name . "\"");
+
+        readfile($file_name);
+
+        unlink($file_name);
+
     }
 
 }

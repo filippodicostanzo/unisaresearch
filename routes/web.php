@@ -71,6 +71,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
 
 
     Route::get('authors/all', [AuthorController::class, 'authorsadmin'])->name('authors.admin');
+    Route::post('authors/all/generate', [AuthorController::class, 'generate']);
+
     Route::resource('templates', 'TemplateController');
     Route::resource('categories', 'CategoryController');
     Route::resource('authors', 'AuthorController');

@@ -21,61 +21,57 @@
                         </a>
                     </div>
                 </div>
-                <div class="card-body no-padding">
-                    <div class="row">
-                        <div class="col-12">
-                            <p>
-                                Please, add all your co-authors here. You will be able to select them during the
-                                submission of a manuscript.</p>
-                            <p>If you have no co-author or have added all your co-authors, please add your manuscript by
-                                clicking <a href="./posts">HERE</a> or on "My Papers" on the left.
-                            </p>
+
+                <div class="card-body no-padding card-table">
+                    <vue-good-table ref="my-table"
+                                    @on-selected-rows-change="selectionChanged"
+                                    :columns="columns"
+                                    :rows="elements"
+                                    :select-options="{ enabled: true, selectOnCheckboxOnly: true }"
+                                    :search-options="{ enabled: true }"
+                                    :pagination-options="{
+                                        enabled: true,
+                                        mode: 'records',
+                                        perPage: 50,
+                                        position: 'bottom',
+                                        perPageDropdown: [50,100, 200],
+                                        dropdownAllowAll: true,
+                                        setCurrentPage: 1,
+                                        jumpFirstOrLast : true,
+                                        firstLabel : 'First Page',
+                                        lastLabel : 'Last Page',
+                                        nextLabel: 'next',
+                                        prevLabel: 'prev',
+                                        rowsPerPageLabel: 'Rows per page',
+                                        ofLabel: 'of',
+                                        pageLabel: 'page', // for 'pages' mode
+                                        allLabel: 'All',
+                                        infoFn: (params) => `my own page ${params.firstRecordOnPage}`,
+                                        }"
+                    >
+
+                        <div slot="selected-row-actions" v-if="source==='admin'">
+                            <button class="btn btn-success" @click="downloadSelected()">Download Selected</button>
                         </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table card-table table-striped">
-                            <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Email</th>
-                                <th class="text-right">Options</th>
-                            </tr>
-                            </thead>
-                            <tbody>
 
-                            <tr v-for="(item,k) in renderedPaginate" :key="k">
-
-                                <td>{{ item.id }}</td>
-                                <td>{{ item.firstname }}</td>
-                                <td>{{ item.lastname }}</td>
-                                <td>{{ item.email }}</td>
-                                <td class="text-right">
-                                    <a class="btn btn-default btn-xs"
-                                       :href="route('authors.show', (item.id)).withQuery({ source: source })">
+                        <template slot="table-row" slot-scope="props">
+                            <span v-if="props.column.field === 'options'">
+                                <a class="btn btn-default btn-xs"
+                                   :href="route('authors.show', {id: props.row.id}).withQuery({source: source})">
                                         <i class="fas fa-eye fa-1x fa-lg" aria-hidden="true"></i>
                                     </a>
                                     <a class="btn btn-default btn-xs"
-                                       :href="route('authors.edit', {id: item.id})">
+                                       :href="route('authors.edit', {id: props.row.id})">
                                         <i class="fas fa-pencil-alt fa-1x fa-lg" aria-hidden="true"></i>
                                     </a>
-                                    <a class="btn btn-danger btn-xs" v-on:click="deleteItem(item.id, $event)">
+                                    <a class="btn btn-danger btn-xs" v-on:click="deleteItem(props.row.id, $event)">
                                         <i class="fas fa-minus-circle fa-1x fa-lg" aria-hidden="true"></i>
                                     </a>
-                                </td>
-
-                            </tr>
-
-                            </tbody>
-
-                        </table>
-
-                        <vue-pagination v-model="page" :per-page="perpage" :records="pages"
-                                        @input="callbackPagination(page)"></vue-pagination>
-
-                    </div>
+                            </span>
+                        </template>
+                    </vue-good-table>
                 </div>
+
             </div>
         </div>
         <modal v-show="isModalVisible" :data="modalHTML" @close="closeModal"/>
@@ -84,23 +80,49 @@
 
 <script>
 
-import Pagination from 'vue-pagination-2';
+
 import Modal from './Modal';
+import {VueGoodTable} from 'vue-good-table';
+import {format} from "date-fns";
 
 export default {
     name: "AuthorTable",
     components: {
-        'vue-pagination': Pagination,
+        VueGoodTable,
         'modal': Modal,
     },
     props: ['title', 'items', 'source', 'role'],
     data: () => {
         return {
+            elements: [],
+            columns: [
+                {
+                    label: 'Id',
+                    field: 'id',
+                },
+                {
+                    label: 'First Name',
+                    field: 'firstname',
+                },
+                {
+                    label: 'Last Name',
+                    field: 'lastname',
+                },
+
+                {
+                    label: 'Email',
+                    field: 'email',
+                },
+
+
+                {
+                    label: 'Options',
+                    field: 'options'
+                },
+
+            ],
             rendered: {},
-            pages: 0,
-            perpage: 20,
-            page: 1,
-            renderedPaginate: [],
+
             isModalVisible: false,
             modalHTML: {
                 title: "Co Authors Guide",
@@ -118,11 +140,46 @@ export default {
     },
     mounted() {
         this.rendered = JSON.parse(this.items);
-        this.pages = this.rendered.length;
-        this.paginateData(this.page - 1, this.perpage)
+
+        this.rendered.forEach((item) => {
+
+
+            let elem = {
+                id: '',
+                firstname: '',
+                lastname: '',
+                email: '',
+                role: ''
+            };
+
+            elem.id = item.id;
+            elem.firstname = item.firstname;
+            elem.lastname = item.lastname;
+            elem.email = item.email;
+
+            this.elements.push(elem);
+        });
+
 
     },
     methods: {
+        selectionChanged() {
+        },
+
+        downloadSelected() {
+            axios.post( this.url = window.location.href + '/generate',
+                {authors: this.$refs['my-table'].selectedRows}, {responseType: 'blob'}
+            ).then(
+                (response) => {
+                    const data = format(new Date(), 'yyyyMMddHHmmss');
+                    const url = window.URL.createObjectURL(new Blob([response.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', 'coauthors-'+data+'.csv'); //or any other extension
+                    document.body.appendChild(link);
+                    link.click();
+                });
+        },
         deleteItem(id, e) {
             e.preventDefault();
 
@@ -147,25 +204,6 @@ export default {
                     });
 
             }
-        },
-
-        callbackPagination(page) {
-
-            let start = 0;
-            let end = 0;
-
-            if (page == 1) {
-                start = page - 1;
-                end = (page - 1) + this.perpage;
-            } else {
-                start = (page - 1) * this.perpage;
-                end = start + this.perpage;
-            }
-            this.paginateData(start, end);
-        },
-
-        paginateData(start, end) {
-            this.renderedPaginate = this.rendered.slice(start, end);
         },
         showModal() {
             this.isModalVisible = true;
