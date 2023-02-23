@@ -17,7 +17,7 @@
                                     @on-selected-rows-change="selectionChanged"
                                     :columns="columns"
                                     :rows="elements"
-                                    :select-options="{ enabled: false, selectOnCheckboxOnly: true }"
+                                    :select-options="{ enabled: true, selectOnCheckboxOnly: true }"
                                     :search-options="{ enabled: true }"
                                     :pagination-options="{
                                         enabled: true,
@@ -39,6 +39,10 @@
                                         infoFn: (params) => `my own page ${params.firstRecordOnPage}`,
                                         }"
                     >
+
+                        <div slot="selected-row-actions">
+                            <button class="btn btn-success" @click="downloadSelected()">Download Selected</button>
+                        </div>
 
                         <template slot="table-row" slot-scope="props">
                             <span v-if="props.column.field === 'options'">
@@ -65,6 +69,7 @@
 <script>
 
 import {VueGoodTable} from 'vue-good-table';
+import {format} from "date-fns";
 
 export default {
 
@@ -146,7 +151,12 @@ export default {
                 firstname: '',
                 lastname: '',
                 email: '',
-                role: ''
+                role: '',
+                country: '',
+                city:'',
+                affiliation:'',
+                disciplinary: '',
+                curriculumvitae:''
             };
 
 
@@ -154,6 +164,11 @@ export default {
             elem.firstname = item.name;
             elem.lastname = item.surname;
             elem.email = item.email;
+            elem.country = item.country;
+            elem.city = item.city;
+            elem.affiliation = item.affiliation;
+            elem.disciplinary = item.disciplinary;
+            elem.curriculumvitae = item.curriculumvitae;
 
             if (item.roles[0]==null) {
                 elem.role = ''
@@ -176,6 +191,21 @@ export default {
     methods: {
         selectionChanged() {
 
+        },
+
+        downloadSelected() {
+            axios.post( this.url = window.location.href.split('?')[0] + '/generate',
+                {users: this.$refs['my-table'].selectedRows}, {responseType: 'blob'}
+            ).then(
+                (response) => {
+                    const data = format(new Date(), 'yyyyMMddHHmmss');
+                    const url = window.URL.createObjectURL(new Blob([response.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', 'users-'+data+'.csv'); //or any other extension
+                    document.body.appendChild(link);
+                    link.click();
+                });
         },
 
 

@@ -78,6 +78,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
     Route::resource('authors', 'AuthorController');
 
     Route::resource('users', 'UserController');
+    Route::post('users/generate', [UserController::class, 'generate']);
 
     //Route::resource('posts', 'PostController');
     Route::resource('statuses', 'StatusController');

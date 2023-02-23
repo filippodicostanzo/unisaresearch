@@ -5,12 +5,15 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\UserExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Monarobase\CountryList\CountryListFacade;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class UserController extends Controller
 {
@@ -227,7 +230,6 @@ class UserController extends Controller
     }
 
 
-
     /**
      * Remove the specified resource from storage.
      *
@@ -247,7 +249,8 @@ class UserController extends Controller
     }
 
 
-    public function vueTable() {
+    public function vueTable()
+    {
 
         $items = User::with('roles')->orderBy('id', 'ASC')->get();
 
@@ -255,4 +258,81 @@ class UserController extends Controller
 
     }
 
+
+    public function generate(Request $request)
+    {
+        $users = $request->get('users');
+        $file = new Spreadsheet;
+        $active_sheet = $file->getActiveSheet();
+
+        $array = (array)$users[0];
+        $keys = array_keys($array);
+        $allusers = [];
+
+        $col = 1;
+        foreach ($keys as $key) {
+            $active_sheet->setCellValueByColumnAndRow($col, 1, $key);
+            $col++;
+        }
+
+
+
+        foreach ($users as $u) {
+
+            $user = new UserExport();
+            $user->id = $u['id'];
+            $user->name = $u['firstname'];
+            $user->surname = $u['lastname'];
+            $user->email = $u['email'];
+            $user->role = $u['role'];
+            $user->country = $u['country'];
+            $user->city = $u['city'];
+            $user->affiliation = $u['affiliation'];
+            $user->disciplinary = $u['disciplinary'];
+            $user->curriculumvitae = $u['curriculumvitae'];
+            $ar = get_object_vars($user);
+            array_push($allusers, $ar);
+        }
+
+        $col = 1;
+        $row = 2;
+
+
+        foreach ($allusers as $users) {
+
+            foreach ($users as $u) {
+                $active_sheet->setCellValueExplicitByColumnAndRow($col, $row, $u, DataType::TYPE_STRING);
+                $col++;
+            }
+            $row++;
+            $col = 1;
+        }
+
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Csv($file);
+
+        $writer->setDelimiter(';');
+        $writer->setEnclosure('"');
+        $writer->setLineEnding("\r\n");
+        $writer->setSheetIndex(0);
+        $writer->setUseBOM(true);
+
+        $file_name = 'users.csv';
+
+
+        $writer->save($file_name);
+
+
+        header('Content-Type: application/x-www-form-urlencoded');
+
+        header('Content-Transfer-Encoding: Binary');
+
+        header("Content-disposition: attachment; filename=\"" . $file_name . "\"");
+
+        readfile($file_name);
+
+        unlink($file_name);
+
+    }
+
 }
+
