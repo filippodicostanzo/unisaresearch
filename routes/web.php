@@ -103,6 +103,10 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
 
     Route::post('/posts/all/generate', [\App\Http\Controllers\Auth\PostController::class, 'generate']);
 
+    Route::get('/clear-cache', function() {
+        \Artisan::call('cache:clear');
+        return 'Application cache cleared';
+    });
 
 });
 
