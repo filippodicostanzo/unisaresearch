@@ -233,7 +233,7 @@
                     <div class="card-body no-padding">
                         <div class="row">
                             <p>
-                                This field contains the evaluation shown to the authors (starts given by the reviwers are not shown). Thus, write a summary of the evaluations, and copy and paste the comments of the reviewers in the following.
+                                This field contains the evaluation shown to the authors (stars given by the reviwers are not shown). Please, write a summary of the evaluations, and copy and paste the comments of the reviewers in the following.
                             </p>
                         </div>
                         <div class="row pt-3">
