@@ -304,6 +304,19 @@ export default {
             elem.state_fk = item.state_fk;
             elem.state_def = item.state_fk.name;
 
+            elem.authors_export = `${elem.user_fk.name} ${elem.user_fk.surname} [${elem.user_fk.email}] - `;
+            elem.authors.forEach((el)=>{
+                elem.authors_export += `${el.firstname} ${el.lastname} [${el.email}] - `
+            })
+            elem.state_export = elem.state_fk.name;
+
+            elem.tags = item.tags;
+            elem.pdf = item.pdf;
+            elem.definitive_pdf = item.definitive_pdf;
+
+
+
+
 
             this.elements.push(elem);
 
@@ -368,7 +381,7 @@ export default {
                     const url = window.URL.createObjectURL(new Blob([response.data]));
                     const link = document.createElement('a');
                     link.href = url;
-                    link.setAttribute('download', 'orders-'+data+'.csv'); //or any other extension
+                    link.setAttribute('download', 'papers-'+data+'.csv'); //or any other extension
                     document.body.appendChild(link);
                     link.click();
 

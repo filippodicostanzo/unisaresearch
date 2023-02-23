@@ -516,16 +516,12 @@ class PostController extends Controller
         $file = new Spreadsheet;
         $active_sheet = $file->getActiveSheet();
 
-        $array = (array)$papers[0];
-        $keys = array_keys($array);
+        /*$array = (array)$papers[0];
+        $keys = array_keys($array);*/
+
+
         $allpapers = [];
 
-
-        $col = 1;
-        foreach ($keys as $key) {
-            $active_sheet->setCellValueByColumnAndRow($col, 1, $key);
-            $col++;
-        }
 
 
         foreach ($papers as $p) {
@@ -534,10 +530,28 @@ class PostController extends Controller
             $paper = new PaperExport();
             $paper->id = $p['id'];
             $paper->title = $p['title'];
+            $paper->authors = $p['authors_export'];
+            $paper->template = $p['template'];
+            $paper->topic = $p['topic'];
+            $paper->state = $p['state_export'];
+            $paper->tags = $p['tags'];
+            $paper->pdf = $p['pdf'];
+            $paper->definitve_pdf = $p['definitive_pdf'];
+            $paper->date = $p['date'];
+
+
             $ar = get_object_vars($paper);
             array_push($allpapers, $ar);
         }
 
+        $array = (array)$allpapers[0];
+        $keys = array_keys($array);
+
+        $col = 1;
+        foreach ($keys as $key) {
+            $active_sheet->setCellValueByColumnAndRow($col, 1, $key);
+            $col++;
+        }
 
         $col = 1;
         $row = 2;
