@@ -41,4 +41,5 @@ return [
     'my_authors'                    => 'My Co-Authors',
     'my_posts'                      => 'My Posts',
     'my_papers'                     => 'My Papers',
+    'assigned_reviews'               => 'Assigned Reviews',
 ];

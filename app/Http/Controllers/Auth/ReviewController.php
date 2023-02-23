@@ -216,6 +216,6 @@ class ReviewController extends Controller
 
         $items = $supervisors;
 
-        return view('admin.rewiewers.count', ['items' => $items, 'title' => $this->title]);
+        return view('admin.rewiewers.count', ['items' => $items, 'title' => 'Assigned Reviews']);
     }
 }
