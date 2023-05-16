@@ -57,7 +57,7 @@ class EventController extends Controller
     {
         $edition = Edition::where('active', 1)->first();
         $posts = $this->checkPaperForEvents();
-        $rooms = Room::where('visible', 1)->orderBy('name', 'ASC')->get();
+        $rooms = Room::where('visible', 1)->where('edition',$edition['id'])->orderBy('name', 'ASC')->get();
         $events = Event::where('active', 1)->where('type', 'poster')->get();
         return view('admin.events.create', ['title' => $this->title, 'rooms' => $rooms, 'posts' => $posts, 'events' => $events, 'edition' => $edition]);
     }
@@ -152,7 +152,7 @@ class EventController extends Controller
     public function checkPaperForEvents()
     {
         $edition = Edition::where('active', 1)->first();
-        $posts = Post::where('edition', $edition['id'])->where('state', '4')->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users', 'user_fk')->get();
+        $posts = Post::where('edition', $edition['id'])->where('state', '4')->orWhere('state','6')->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users', 'user_fk')->get();
         $events = Event::where('type', 'poster')->pluck('title')->toArray();
 
         $select = [];
@@ -192,7 +192,7 @@ class EventController extends Controller
         if ($item->type==='poster') {
             array_push($posts, $item);
         }
-        $rooms = Room::where('visible', 1)->orderBy('name', 'ASC')->get();
+        $rooms = Room::where('visible', 1)->where('edition',$edition['id'])->orderBy('name', 'ASC')->get();
         $events = Event::where('active', 1)->where('type', 'poster')->get();
         return view('admin.events.edit', ['item' => $item, 'rooms' => $rooms, 'posts' => $posts, 'events' => $events, 'title' => $this->title, 'edition' => $edition]);
     }

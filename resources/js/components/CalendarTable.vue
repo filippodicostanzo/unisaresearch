@@ -28,8 +28,11 @@
                     <div class="vuecal__event-title" v-html="event.title"/>
 
                     <div class="vuecal__event-content"><i :class="event.icon"></i></div>
-                    <div class="vuecal__event-content text-capitalize">{{event.type}} <span
-                        v-if="sessionText(event.type)"> Session</span></div>
+
+                    <div class="vuecal__event-content text-capitalize">{{event.authors}}</div>
+
+<!--                    <div class="vuecal__event-content text-capitalize">{{event.type}} <span
+                        v-if="sessionText(event.type)"> Session</span></div>-->
                     <div class="vuecal__body mt-3" @click="openDetails(event)">
                         <button class="btn btn-outline-light">More Info</button>
                     </div>
@@ -117,10 +120,15 @@
                 this.label_rooms.push(obj);
             });
 
+            console.log(this.label_rooms);
+
             this.rendered_items.forEach((evt, index) => {
                 console.log(evt);
 
                 let room_index = this.label_rooms.findIndex(x => x.id === evt.room);
+
+                console.log(room_index);
+
                 let icon = ''
 
                 if (evt.type === 'poster') {
@@ -142,16 +150,20 @@
                     end: format(new Date(evt.end), 'yyyy-MM-dd HH:mm'),
                     title: evt.title,
                     type: evt.type,
+                    authors: evt.authors,
                     room: evt.room_fk,
                     description: evt.description,
                     icon: 'fas fa-1x fa-lg ' + icon,
                     content: '<i class="fas fa-pencil-alt fa-1x fa-lg"></i>',
                     class: evt.type + '-event',
-                    split: room_index + 1,
+                    //split: room_index + 1,
+                    split: evt.room,
                     deletable: false,
                     resizable: false,
                     draggable: false
                 }
+
+                console.log(obj);
                 this.events.push(obj);
             });
 
@@ -201,7 +213,7 @@
                             authors += ' - '
                         }
                     })
-                    this.modalEvent.body += `<p><i class="fa fa-users"></i> ${authors}</p>`;
+                    this.modalEvent.body += `<p><i class="fa fa-users"></i> ${post.user_fk.name} ${post.user_fk.surname} - ${authors}</p>`;
                     if (post.pdf) {
                         this.modalEvent.body += `<p><i class="fa fa-file-pdf"></i> <a href="${post.pdf}" target="_blank">Download Pdf</a> </p>`
                     }
