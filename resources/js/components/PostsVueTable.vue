@@ -12,7 +12,7 @@
                             v-if="source==='admin' ||source==='reviewer'"></i>
                     </h1>
                     <div class="card-action">
-                        <a :href="route('users.create')">
+                        <a :href="route('posts.create')">
                             <i class="fa fa-plus-circle fa-3x fa-fw" aria-hidden="true"></i>
                         </a>
                     </div>
@@ -304,9 +304,9 @@ export default {
             elem.state_fk = item.state_fk;
             elem.state_def = item.state_fk.name;
 
-            elem.authors_export = `${elem.user_fk.name} ${elem.user_fk.surname} [${elem.user_fk.email}] - `;
+            elem.authors_export = `${elem.user_fk.name} ${elem.user_fk.surname} [${elem.user_fk.email}]; `;
             elem.authors.forEach((el)=>{
-                elem.authors_export += `${el.firstname} ${el.lastname} [${el.email}] - `
+                elem.authors_export += `${el.firstname} ${el.lastname} [${el.email}]; `
             })
             elem.state_export = elem.state_fk.name;
 

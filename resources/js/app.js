@@ -68,6 +68,7 @@ import EventShow from "./components/EventShow";
 import CalendarTable from "./components/CalendarTable";
 import VueTable from "./components/VueTable";
 import Welcome from "./components/Welcome";
+import PostsVueTable from "./components/PostsVueTable";
 
 window.route = route;
 window.Ziggy = Ziggy;
@@ -132,6 +133,7 @@ const app = new Vue({
         'modal': Modal,
         'welcome':Welcome,
         'vue-table': VueTable,
+        'posts-vue-table': PostsVueTable,
     }
 });
 

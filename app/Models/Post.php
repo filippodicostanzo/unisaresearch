@@ -56,7 +56,7 @@ class Post extends Model
 
     public function authors()
     {
-        return $this->belongsToMany('App\Models\Author');
+        return $this->belongsToMany('App\Models\Author')->orderBy('author_post.id');
     }
 
     public function user_fk() {
