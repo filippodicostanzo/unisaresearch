@@ -62,7 +62,13 @@
                             </div>
 
                             <div class="form-group row">
-                                <div class="col-12"><label>List of Authors</label></div>
+                                <div class="col-8"><label>List of Authors</label></div>
+                                <div class="col-4 text-right">
+
+                                    <button type="button" class="btn btn-sm btn-primary" id="addNewAuthorBtn">
+                                        <i class="fas fa-plus"></i> Add New Co-Author
+                                    </button>
+                                </div>
 
                                 @if(count($authors)==0)
                                     <div class="col-12 mb-3">Please, add your co-authors by clicking <a
@@ -85,7 +91,10 @@
                                         <div class="form-check authors-checkbox">
                                             <input type="checkbox" id="{{$item->id}}"
                                                    name="authors[]" value="{{$item->id}}"
-                                                   tag="{{$item->firstname}} {{$item->lastname}}">
+                                                   tag="{{$item->firstname}} {{$item->lastname}}"
+                                                   data-author-id="{{$item->id}}"
+                                                   data-author-name="{{$item->firstname}} {{$item->lastname}}"
+                                            >
                                             <label class="form-check-label"
                                                    for="exampleCheck1">{{$item->firstname}} {{$item->lastname}}</label>
                                         </div>
@@ -125,10 +134,25 @@
 
                             </div>
 
-                            <div class="form-group row">
-                                <div class="col-12"><label>Authors Selected</label></div>
-                                <div class="col-12">
-                                    <div class="co-authors"> {{$usr->name}} {{$usr->surname}}  </div>
+                            {{--                           <div class="form-group row">
+                                                           <div class="col-12"><label>Authors Selected</label></div>
+                                                           <div class="col-12">
+                                                               <div class="co-authors"> {{$usr->name}} {{$usr->surname}}  </div>
+                                                           </div>
+                                                       </div>--}}
+
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">Selected Authors Order</div>
+                                    <div class="card-body">
+                                        <ul id="selectedAuthors" class="list-group">
+                                            <li class="list-group-item" data-author-id="0">
+                                                {{$usr->name}} {{$usr->surname}}
+                                                <span class="badge badge-primary ml-2">Submitter</span>
+                                                <i class="fas fa-grip-lines float-right"></i>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
 
@@ -141,6 +165,47 @@
                                 </select>
                             </div>
 
+                            <div class="modal fade" id="addAuthorModal" tabindex="-1" role="dialog">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="addAuthorModalLabel">Add New Co-Author</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Rimosso il tag form e sostituito con un div -->
+                                            <div id="authorFormFields">
+                                                @csrf
+                                                <div class="form-group">
+                                                    <label for="firstname">First Name</label>
+                                                    <input type="text" class="form-control" id="firstname"
+                                                           name="firstname">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="lastname">Last Name</label>
+                                                    <input type="text" class="form-control" id="lastname"
+                                                           name="lastname">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="email">Email</label>
+                                                    <input type="email" class="form-control" id="email" name="email">
+                                                </div>
+                                                <div class="alert alert-danger" id="authorFormError"
+                                                     style="display: none;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                                            </button>
+                                            <button type="button" class="btn btn-primary" id="saveAuthorBtn">Save
+                                                Co-Author
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
 
@@ -167,6 +232,11 @@
                                     <textarea name="field_{{$key+1}}" id="field_{{$key+1}}" rows="10" cols="80"
                                               class="form-control"></textarea>
                                 </div>
+
+
+
+
+
 
 
 
@@ -293,6 +363,7 @@
                         {{ Form::hidden('edit', $user) }}
                         {{ Form::hidden('source', null, array('id'=>'source')) }}
                         {{ Form::hidden('state', 1, array('id'=>'post_state')) }}
+                        {{ Form::hidden('submitter_position', 1, array('id'=>'submitter_position')) }}
 
 
                         {!! Form::close() !!}
@@ -317,344 +388,630 @@
 
     <script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+
     <script>
 
-        var options = {
+        // Configurazione globale per CKEditor
+        const options = {
             filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
             filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token={{csrf_token()}}',
             filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
             filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token={{csrf_token()}}'
         };
 
+        // Setup di base per AJAX
         $.ajaxSetup({headers: {'csrftoken': '{{ csrf_token() }}'}});
 
-        $(document).ready(function () {
+        const ManuscriptEditor = {
+            // Variabili di stato
+            currentTab: 0,
+            authors: [],
 
-            $('#search').on('keyup', function (e) {
+            // Inizializzazione principale
+            init() {
+                this.initializeUI();
+                this.initializeAuthors();
+                this.setupEventListeners();
+                this.showTab(this.currentTab);
+            },
 
+            // Inizializzazione dell'interfaccia utente
+            initializeUI() {
+                this.initializeCKEditor();
+                this.initializeFileManager();
+                this.initializeSortableList();
+            },
 
-                var code = e.key; // recommended to use e.key, it's normalized across devices and languages
+            // Inizializzazione di CKEditor
+            initializeCKEditor() {
+                const textareas = document.getElementsByTagName("textarea");
+                Array.from(textareas).forEach(textarea => {
+                    CKEDITOR.replace(textarea.getAttribute('id'), options);
+                });
+            },
 
-                if (code === "Enter") {
+            // Inizializzazione del file manager
+            initializeFileManager() {
+                $('#pdf').filemanager('file', '', false);
+            },
 
-                    e.preventDefault();
+            // Inizializzazione della lista ordinabile
+            initializeSortableList() {
+                const selectedAuthorsList = document.getElementById('selectedAuthors');
+                if (selectedAuthorsList) {
+                    new Sortable(selectedAuthorsList, {
+                        animation: 150,
+                        handle: '.fa-grip-lines',
+                        onEnd: (evt) => {
+                            console.log('Drag and drop completato:');
+                            console.log('Elemento spostato da posizione:', evt.oldIndex + 1);
+                            console.log('Elemento spostato a posizione:', evt.newIndex + 1);
 
-                    $value = $(this).val();
+                            this.updateAuthorsOrder();
 
-                    $.ajax({
-                        type: 'get',
-                        url: '{{\Illuminate\Support\Facades\URL::to('authors/search')}}',
-                        data: {'search': $value},
-                        success: function (data) {
-                            $('.authors-checkbox').html(data);
+                            const currentOrder = $('#selectedAuthors li').map(function (index) {
+                                return {
+                                    position: index + 1,
+                                    id: $(this).data('author-id'),
+                                    text: $(this).text().trim()
+                                };
+                            }).get();
+
+                            console.log('Ordine finale dopo spostamento:', currentOrder);
                         }
                     });
                 }
-            });
+            },
 
+            // Inizializzazione degli autori
+            initializeAuthors() {
+                this.authors = [{
+                    id: '0',
+                    name: $('#created-checkbox').attr('tag')
+                }];
+                this.initializeExistingCheckboxes();
+            },
 
-            $('#template-selected').change(function () {
+            // Setup dei listener per gli eventi
+            setupEventListeners() {
+                this.setupSearchHandler();
+                this.setupTemplateHandler();
+                this.setupAuthorModal();
+            },
 
+            // Setup del gestore di ricerca
+            setupSearchHandler() {
+                $('#search').on('keyup', (e) => {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                        const $value = $(e.target).val();
 
-                $('#template').val($(this).val());
-
-
-                $.getJSON("/templates/" + $(this).val(), function (jsonData) {
-
-                    $('#textarea-section').empty();
-
-
-                    let fields = JSON.parse(jsonData.fields);
-
-                    fields.forEach((value, key) => {
-
-                        $('#textarea-section').append('<div class="form-group"> <label>' + value.name + '</label> <textarea name="field_' + parseInt(key + 1) + '" id="field_' + parseInt(key + 1) + '" rows="10" cols="80" form="regForm"></textarea></div>');
-                        CKEDITOR.replace('field_' + parseInt(key + 1), options);
-                    })
-
-                })
-
-
-                //   $('#textarea-section').append('<textarea name="field_21" id="field_21" rows="10" cols="80" class="form-control"></textarea>')
-
-
-            });
-
-            let authors = [{id: '0', name: $('#created-checkbox').attr('tag')}];
-            let ids = [];
-
-            $('.authors-checkbox input').on('click', function () {
-
-
-                let id = $(this).attr("id");
-                let name = $(this).attr("tag")
-
-
-                var obj = {
-                    id: id,
-                    name: name
-                }
-
-
-                if ($(this).is(":checked")) {
-                    authors.push(obj);
-                } else {
-
-                    let index = authors.map(x => {
-                        return x.id;
-                    }).indexOf(id)
-
-                    authors.splice(index, 1);
-                }
-
-                let names = '';
-                ids = [];
-
-                authors.forEach((obj, i) => {
-                        let apix = i === 0 ? '' : ' - ';
-                        names += apix + obj.name;
-
-                        if (obj.id != 0) {
-                            ids.push(obj.id);
-                        }
+                        $.ajax({
+                            type: 'get',
+                            url: '/authors/search',
+                            data: {'search': $value},
+                            success: (data) => {
+                                $('.authors-checkbox').html(data);
+                            }
+                        });
                     }
-                );
+                });
+            },
 
-                $('.co-authors').html('<p>' + names + '</p>');
+            // Setup del gestore dei template
+            setupTemplateHandler() {
+                $('#template-selected').on('change', function () {
+                    const templateId = $(this).val();
+                    if (!templateId) return;
 
+                    $('#template').val(templateId);
 
-                $("input[name=coauthors]").val(ids.join(','));
+                    $.getJSON(`/templates/${templateId}`, (jsonData) => {
+                        $('#textarea-section').empty();
+                        const fields = JSON.parse(jsonData.fields);
 
-                // $('.co-authors').html('<p>CIAO A TUTTI</p>');
+                        fields.forEach((value, key) => {
+                            const fieldHtml = `
+                        <div class="form-group">
+                            <label>${value.name}</label>
+                            <textarea name="field_${key + 1}"
+                                     id="field_${key + 1}"
+                                     rows="10"
+                                     cols="80"
+                                     form="regForm">
+                            </textarea>
+                        </div>`;
 
+                            $('#textarea-section').append(fieldHtml);
+                            CKEDITOR.replace(`field_${key + 1}`, options);
+                        });
+                    });
+                });
+            },
 
-            });
+            // Inizializzazione dei checkbox esistenti
+            initializeExistingCheckboxes() {
+                document.querySelectorAll('.authors-checkbox input[type="checkbox"]').forEach(checkbox => {
+                    this.initializeAuthorCheckbox(checkbox);
+                });
+            },
 
-            var fields = $('#count_fields').val();
+            // Inizializzazione di un singolo checkbox autore
+            initializeAuthorCheckbox(checkbox) {
+                $(checkbox).on('change', (e) => {
+                    const $checkbox = $(e.target);
+                    const authorId = $checkbox.data('author-id');
+                    const authorName = $checkbox.data('author-name');
 
+                    if ($checkbox.is(':checked')) {
+                        this.addAuthorToSortableList({
+                            id: authorId,
+                            name: authorName
+                        });
+                    } else {
+                        $(`#selectedAuthors li[data-author-id="${authorId}"]`).remove();
+                    }
 
-            var txt = document.getElementsByTagName("textarea");
+                    this.updateAuthorsOrder();
+                });
+            },
 
-            for (var i = 0; i < txt.length; i++) {
-                var id = txt[i].getAttribute('id');
-                CKEDITOR.replace(id, options);
-            }
+            // Gestione del form modale
+            setupAuthorModal() {
+                const $addAuthorModal = $('#addAuthorModal');
+                const $authorFormError = $('#authorFormError');
+                const $saveAuthorBtn = $('#saveAuthorBtn');
+                const $addNewAuthorBtn = $('#addNewAuthorBtn');
 
-            $('#pdf').filemanager('file', '', false);
-        });
+                if ($addNewAuthorBtn.length) {
+                    $addNewAuthorBtn.on('click', () => {
+                        $('#firstname, #lastname, #email').val('');
+                        $authorFormError.hide();
+                        $addAuthorModal.modal('show');
+                    });
+                }
 
-        var currentTab = 0; // Current tab is set to be the first tab (0)
-        showTab(currentTab); // Display the current tab
+                if ($saveAuthorBtn.length) {
+                    $saveAuthorBtn.on('click', () => {
+                        this.handleNewAuthorSubmission($addAuthorModal, $saveAuthorBtn);
+                    });
+                }
+            },
 
-        function showTab(n) {
-            // This function will display the specified tab of the form ...
-            var x = document.getElementsByClassName("tab");
-            x[n].style.display = "block";
-            // ... and fix the Previous/Next buttons:
-            if (n == 0) {
-                document.getElementById("prevBtn").style.display = "none";
-            } else {
-                document.getElementById("prevBtn").style.display = "inline";
-            }
-            if (n == (x.length - 1)) {
-                document.getElementById("nextBtn").innerHTML = "Save Draft";
-                document.getElementById('error').innerHTML = '';
-                document.getElementById("divSubmit").innerHTML = '<button type="button" id="submBtn" onclick="validateFormReview()" class="btn btn-danger">Submit For Review</button>';
-            } else {
-                document.getElementById("nextBtn").innerHTML = "Next";
-                document.getElementById("divSubmit").innerHTML = '';
-            }
-            // ... and run a function that displays the correct step indicator:
-            fixStepIndicator(n)
-        }
+            // Gestione della validazione del form modale
+            validateAuthorForm() {
+                const firstname = $('#firstname').val();
+                const lastname = $('#lastname').val();
+                const email = $('#email').val();
+                let valid = true;
+                let errors = [];
 
+                if (!firstname) {
+                    errors.push('First Name');
+                    $('#firstname').addClass('invalid');
+                    valid = false;
+                }
 
-        function nextPrev(n) {
-            // This function will figure out which tab to display
-            var x = document.getElementsByClassName("tab");
-            // Exit the function if any field in the current tab is invalid:
-            if (n == 1 && !validateForm()) return false;
-            // Hide the current tab:
-            x[currentTab].style.display = "none";
-            // Increase or decrease the current tab by 1:
-            currentTab = currentTab + n;
-            // if you have reached the end of the form... :
-            if (currentTab >= x.length) {
+                if (!lastname) {
+                    errors.push('Last Name');
+                    $('#lastname').addClass('invalid');
+                    valid = false;
+                }
 
-                $('#modalSave').modal('show');
-                document.getElementById("prevBtn").style.display = "none";
-                document.getElementById('loader').style.display = "block";
-                document.getElementById("prevBtn").style.display = "none";
-                document.getElementById("nextBtn").style.display = "none";
-                document.getElementById("submBtn").style.display = "none";
+                if (!email) {
+                    errors.push('Email');
+                    $('#email').addClass('invalid');
+                    valid = false;
+                } else {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(email)) {
+                        errors.push('Email (invalid format)');
+                        $('#email').addClass('invalid');
+                        valid = false;
+                    }
+                }
 
+                if (!valid) {
+                    this.showAlert('danger', 'Please fill in all required fields: ' + errors.join(', '));
+                }
 
-                //...the form gets submitted:
-                document.getElementById('source').value = 'save';
+                return valid;
+            },
 
+            // Gestione della sottomissione di un nuovo autore
+            handleNewAuthorSubmission($modal, $btn) {
+                if (!this.validateAuthorForm()) return;
+
+                const formData = {
+                    firstname: $('#firstname').val(),
+                    lastname: $('#lastname').val(),
+                    email: $('#email').val(),
+                    _token: $('input[name="_token"]').val()
+                };
+
+                const originalText = $btn.text();
+                $btn.prop('disabled', true).text('Saving...');
+
+                $.ajax({
+                    url: '/admin/authors/check-exists',
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: formData,
+                    success: (response) => {
+                        if (response.exists) {
+                            this.handleExistingAuthorResponse(response, $modal, $btn, originalText);
+                        } else {
+                            this.createNewAuthor(formData, $btn, originalText, $modal);
+                        }
+                    },
+                    error: (xhr) => {
+                        this.handleAjaxError(xhr);
+                        $btn.prop('disabled', false).text(originalText);
+                    }
+                });
+            },
+
+            // Gestione della risposta per autore esistente
+            handleExistingAuthorResponse(response, $modal, $btn, originalText) {
+                // Verifichiamo prima se l'autore è già presente nei checkbox
+                let existingCheckbox = $(`.authors-checkbox input[value="${response.author.id}"]`);
+
+                // Verifichiamo se l'autore è già presente nella lista sortable
+                let existingInSortable = $(`#selectedAuthors li[data-author-id="${response.author.id}"]`).length > 0;
+
+                if (existingCheckbox.length > 0) {
+                    if (existingCheckbox.prop('checked') && existingInSortable) {
+                        this.showAlert('warning', 'This author is already in your co-authors list');
+                    } else if (!existingCheckbox.prop('checked')) {
+                        existingCheckbox.prop('checked', true).trigger('change');
+                        this.showAlert('success', 'Author added to your co-authors list');
+                    }
+                } else {
+                    this.addAuthorToList(response.author);
+                    this.showAlert('success', 'New author added to your co-authors list');
+                }
+
+                $modal.modal('hide');
+                $btn.prop('disabled', false).text(originalText);
+            },
+
+            // Creazione di un nuovo autore
+            createNewAuthor(formData, $btn, originalText, $modal) {
+                $.ajax({
+                    url: '/admin/authors',
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: formData,
+                    success: (response) => {
+                        if (response.success) {
+                            $modal.modal('hide');
+                            if (response.author) {
+                                let existingCheckbox = $(`.authors-checkbox input[data-author-id="${response.author.id}"]`);
+                                if (existingCheckbox.length === 0) {
+                                    this.addAuthorToList(response.author);
+                                } else if (!existingCheckbox.prop('checked')) {
+                                    existingCheckbox.prop('checked', true).trigger('change');
+                                }
+                                this.showAlert(response.exists ? 'warning' : 'success', response.message);
+                            }
+                        } else {
+                            this.showAlert('danger', response.message || 'Error processing author');
+                        }
+                    },
+                    error: (xhr) => this.handleAjaxError(xhr),
+                    complete: () => $btn.prop('disabled', false).text(originalText)
+                });
+            },
+
+            // Aggiunta di un autore alla lista
+            addAuthorToList(author) {
+                if (!author?.id || !author?.firstname || !author?.lastname) {
+                    console.error('Invalid author data:', author);
+                    this.showAlert('danger', 'Invalid author data received');
+                    return;
+                }
+
+                const checkboxHtml = `
+            <div class="item col-md-6 col-xs-6 mb-3">
+                <div class="form-check authors-checkbox">
+                    <input type="checkbox"
+                           id="author_${author.id}"
+                           name="authors[]"
+                           value="${author.id}"
+                           data-author-id="${author.id}"
+                           data-author-name="${author.firstname} ${author.lastname}">
+                    <label class="form-check-label" for="author_${author.id}">
+                        ${author.firstname} ${author.lastname}
+                    </label>
+                </div>
+            </div>
+        `;
+
+                const $authorsContainer = $('.authors-checkbox').first().closest('.form-group.row');
+                $authorsContainer.append(checkboxHtml);
+
+                const $newCheckbox = $(`input[data-author-id="${author.id}"]`);
+                if ($newCheckbox.length) {
+                    this.initializeAuthorCheckbox($newCheckbox[0]);
+                    $newCheckbox.prop('checked', true).trigger('change');
+                }
+            },
+
+            // Aggiunta di un autore alla lista ordinabile
+            addAuthorToSortableList(author) {
+                if ($(`#selectedAuthors li[data-author-id="${author.id}"]`).length) return;
+
+                const li = document.createElement('li');
+                li.className = 'list-group-item';
+                li.dataset.authorId = author.id;
+
+                // Determiniamo se l'autore è il submitter (id = 0)
+                const isSubmitter = author.id === '0';
+
+                if (isSubmitter) {
+                    li.className += ' is-submitter';
+                }
+
+                li.innerHTML = `
+                    ${author.name}
+                    ${isSubmitter ? '<span class="badge badge-primary ml-2">Submitter</span>' : ''}
+                    <i class="fas fa-grip-lines float-right"></i>
+                `;
+
+                document.getElementById('selectedAuthors').appendChild(li);
+                this.updateAuthorsOrder();
+            },
+
+            // Aggiornamento dell'ordine degli autori
+            updateAuthorsOrder() {
+                const orderedAuthors = [];
+                let submitterPosition = 1;
+
+                const authorElements = $('#selectedAuthors li').map(function (index) {
+                    return {
+                        id: $(this).data('author-id').toString(),
+                        text: $(this).text().trim(),
+                        position: index + 1
+                    };
+                }).get();
+
+                const submitterElement = authorElements.find(element => element.id === '0');
+                if (submitterElement) {
+                    submitterPosition = submitterElement.position;
+                }
+
+                authorElements.forEach(element => {
+                    if (element.id !== '0') {
+                        orderedAuthors.push(element.id);
+                    }
+                });
+
+                $('#coauthors').val(orderedAuthors.join(','));
+                $('#submitter_position').val(submitterPosition);
+
+                console.log('Debug dell\'ordine degli autori:', {
+                    authorElements,
+                    submitterElement,
+                    submitterPosition,
+                    orderedAuthors
+                });
+            },
+
+            // Gestione degli errori AJAX
+            handleAjaxError(xhr) {
+                let errorMessage = 'An error occurred. Please try again.';
+
+                if (xhr.status === 422 && xhr.responseJSON?.errors) {
+                    errorMessage = Object.values(xhr.responseJSON.errors).flat().join('<br>');
+                } else if (xhr.responseJSON?.message) {
+                    errorMessage = xhr.responseJSON.message;
+                } else if (xhr.status === 405) {
+                    console.error('Route method not allowed. Check route configuration.');
+                    errorMessage = 'Server configuration error. Please contact administrator.';
+                } else if (xhr.status === 500) {
+                    const response = xhr.responseJSON;
+                    errorMessage = response?.message || 'An error occurred while processing your request';
+                }
+
+                this.showAlert('danger', errorMessage);
+                $('#authorFormError').html(errorMessage).show();
+
+                console.error('Ajax Error:', {
+                    status: xhr.status,
+                    statusText: xhr.statusText,
+                    responseText: xhr.responseText,
+                    error: xhr.responseJSON
+                });
+            },
+
+            // ... continua dal codice precedente ...
+
+            // Visualizzazione degli alert
+            showAlert(type, message) {
+                $('.alert').remove();
+
+                const alertHtml = `
+            <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                ${message}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        `;
+
+                $('.card-body').first().prepend(alertHtml);
 
                 setTimeout(() => {
-                    document.getElementById("regForm").submit();
-                }, 3000)
-                return false;
-            }
-            // Otherwise, display the correct tab:
-            showTab(currentTab);
-        }
+                    $('.alert').fadeOut('slow', function() {
+                        $(this).remove();
+                    });
+                }, 5000);
+            },
 
-        function validateForm() {
-            // This function deals with validation of the form fields
-            var x, y, i, z, k, valid = true;
-            x = document.getElementsByClassName("tab");
-            let neededElements = [].filter.call(document.getElementsByTagName('input'), el => el.className.indexOf('exists') >= 0);
-            y = x[currentTab].getElementsByTagName("input");
-            //z = x[currentTab].getElementsByTagName("textarea");
+            // Gestione delle tab
+            showTab(n) {
+                const x = document.getElementsByClassName("tab");
+                x[n].style.display = "block";
 
-            var template = document.getElementById("template-selected");
-            var title = document.getElementById("title");
-
-
-            if (!template.value || !title.value) {
-                valid = false;
-            } else {
-                valid = true;
-            }
-
-            if (!template.value) {
-                template.className += ' invalid';
-            } else {
-                template.classList.remove('invalid');
-            }
-
-            if (!title.value) {
-                title.className += ' invalid';
-            } else {
-                title.classList.remove('invalid');
-            }
-
-            /*
-            var checkbox = document.querySelector('input[name="authors[]"]:checked');
-            if (!checkbox) {
-                document.getElementById('author_error').innerHTML = '<p class="text-danger">Please select an author</p>'
-                valid = false;
-            } else {
-                document.getElementById('author_error').innerHTML = '';
-                valid = true;
-            }
-            */
-
-            // A loop that checks every input field in the current tab:
-            /*
-            for (i = 0; i < y.length; i++) {
-                // If a field is empty...
-                if (y[i].value == "") {
-                    // add an "invalid" class to the field:
-                    y[i].className += " invalid";
-                    // and set the current valid status to false:
-                    valid = false;
-                }
-
-            }*/
-
-            /*
-            for (i = 0; i < z.length; i++) {
-                var id = z[i].getAttribute('id');
-
-                if (CKEDITOR.instances[id].getData() === "") {
-                    z[i].className += " invalid";
-                    // and set the current valid status to false:
-                    valid = false;
+                if (n == 0) {
+                    document.getElementById("prevBtn").style.display = "none";
                 } else {
-                    z[i].classList.remove('invalid');
+                    document.getElementById("prevBtn").style.display = "inline";
                 }
-            }*/
-            // If the valid status is true, mark the step as finished and valid:
-            if (valid) {
-                document.getElementsByClassName("step")[currentTab].className += " finish";
-            }
-            return valid; // return the valid status
-        }
 
-        function fixStepIndicator(n) {
-            // This function removes the "active" class of all steps...
-            var i, x = document.getElementsByClassName("step");
-            for (i = 0; i < x.length; i++) {
-                x[i].className = x[i].className.replace(" active", "");
-            }
-            //... and adds the "active" class to the current step:
-            x[n].className += " active";
-        }
-
-        function save() {
-            console.log('save');
-        }
-
-        function validateFormReview() {
-            let input_textarea = document.getElementById('regForm').getElementsByTagName("textarea");
-            let input_field = document.getElementById('regForm').getElementsByTagName("input");
-            let pdf = document.getElementById('pdf');
-
-
-            var inputsWeActuallyWant = [];
-            for (var j = (input_field.length - 1); j >= 0; j--) {
-
-                if (input_field[j].id !== "pdf" && input_field[j].id !== "coauthors") {
-                    console.log(input_field[j].id);
-                    inputsWeActuallyWant.push(input_field[j]);
-                }
-            }
-            input_field = inputsWeActuallyWant;
-
-            //or images[i].remove();
-            //you can also decrement i by one with each delete, more than one way to skin a cat as they say.
-
-
-            let valid = true;
-            let i;
-            document.getElementById('source').value = 'submitted';
-
-            for (i = 0; i < input_textarea.length; i++) {
-                var id = input_textarea[i].getAttribute('id');
-                // If a field is empty...
-                if (CKEDITOR.instances[id].getData() === "") {
-
-                    // add an "invalid" class to the field:
-                    input_textarea[i].className += " invalid";
-                    // and set the current valid status to false:
-                    valid = false;
+                if (n == (x.length - 1)) {
+                    document.getElementById("nextBtn").innerHTML = "Save Draft";
+                    document.getElementById('error').innerHTML = '';
+                    document.getElementById("divSubmit").innerHTML = '<button type="button" id="submBtn" onclick="ManuscriptEditor.validateFormReview()" class="btn btn-danger">Submit For Review</button>';
                 } else {
-                    input_textarea[i].classList.remove("invalid");
+                    document.getElementById("nextBtn").innerHTML = "Next";
+                    document.getElementById("divSubmit").innerHTML = '';
                 }
 
-            }
+                this.fixStepIndicator(n);
+            },
 
-            console.log(input_field);
+            // Navigazione tra le tab
+            nextPrev(n) {
+                const x = document.getElementsByClassName("tab");
 
-            for (i = 0; i < input_field.length; i++) {
-                // If a field is empty...
-                if (input_field[i].value === "") {
-                    // add an "invalid" class to the field:
-                    input_field[i].className += " invalid";
-                    // and set the current valid status to false:
+                if (n == 1 && !this.validateForm()) return false;
+
+                x[this.currentTab].style.display = "none";
+                this.currentTab = this.currentTab + n;
+
+                if (this.currentTab >= x.length) {
+                    $('#modalSave').modal('show');
+                    document.getElementById("prevBtn").style.display = "none";
+                    document.getElementById('loader').style.display = "block";
+                    document.getElementById("prevBtn").style.display = "none";
+                    document.getElementById("nextBtn").style.display = "none";
+                    document.getElementById("submBtn").style.display = "none";
+
+                    document.getElementById('source').value = 'save';
+
+                    setTimeout(() => {
+                        document.getElementById("regForm").submit();
+                    }, 3000);
+
+                    return false;
+                }
+
+                this.showTab(this.currentTab);
+            },
+
+            // Validazione del form
+            validateForm() {
+                const x = document.getElementsByClassName("tab");
+                let valid = true;
+
+                const template = document.getElementById("template-selected");
+                const title = document.getElementById("title");
+
+                if (!template.value || !title.value) {
                     valid = false;
-                } else {
-                    input_field[i].classList.remove("invalid");
                 }
+
+                if (!template.value) {
+                    template.className += ' invalid';
+                } else {
+                    template.classList.remove('invalid');
+                }
+
+                if (!title.value) {
+                    title.className += ' invalid';
+                } else {
+                    title.classList.remove('invalid');
+                }
+
+                if (valid) {
+                    document.getElementsByClassName("step")[this.currentTab].className += " finish";
+                }
+
+                return valid;
+            },
+
+            // Validazione del form per il review
+            validateFormReview() {
+                const form = document.getElementById('regForm');
+                const textareas = form.getElementsByTagName("textarea");
+                let valid = true;
+
+                // Filtraggio degli input da validare
+                const inputsToValidate = Array.from(form.getElementsByTagName("input"))
+                    .filter(input => {
+                        const excludedIds = ["pdf", "coauthors", "firstname", "lastname", "email", "source", "submitter_position"];
+                        return !excludedIds.includes(input.id) && !input.id.startsWith('author_');
+                    });
+
+                // Validazione textarea
+                Array.from(textareas).forEach(textarea => {
+                    const id = textarea.getAttribute('id');
+                    if (CKEDITOR.instances[id].getData() === "") {
+                        textarea.className += " invalid";
+                        valid = false;
+                    } else {
+                        textarea.classList.remove("invalid");
+                    }
+                });
+
+                // Validazione input
+                inputsToValidate.forEach(input => {
+                    if (input.value === "") {
+                        input.className += " invalid";
+                        valid = false;
+                    } else {
+                        input.classList.remove("invalid");
+                    }
+                });
+
+                if (!valid) {
+                    document.getElementById('error').innerHTML = '<p class="text-danger">Please fill in all required fields</p>';
+                } else {
+                    document.getElementById('error').innerHTML = '';
+                    document.getElementById('post_state').value = 2;
+                    $('#modalSubmit').modal('show');
+
+                    $('#confirmSubmit').off('click').on('click', () => {
+                        document.getElementById("regForm").submit();
+                    });
+                }
+            },
+
+            // Indicatore dei passi del form
+            fixStepIndicator(n) {
+                const x = document.getElementsByClassName("step");
+                for (let i = 0; i < x.length; i++) {
+                    x[i].className = x[i].className.replace(" active", "");
+                }
+                x[n].className += " active";
             }
 
-            if (!valid) {
-                document.getElementById('error').innerHTML = '<p class="text-danger">please fill in all required fields</p>'
-            } else {
-                document.getElementById('error').innerHTML = '';
-                document.getElementById('post_state').value = 2;
-                $('#modalSubmit').modal('show');
-                $('#confirmSubmit').on('click', function () {
-                    document.getElementById("regForm").submit();
-                })
-            }
 
 
         }
+
+        // Inizializzazione quando il documento è pronto
+        $(document).ready(() => {
+            ManuscriptEditor.init();
+
+            // Setup dei button handlers
+            const nextBtn = document.getElementById("nextBtn");
+            const prevBtn = document.getElementById("prevBtn");
+
+            if (nextBtn) {
+                nextBtn.onclick = () => ManuscriptEditor.nextPrev(1);
+            }
+
+            if (prevBtn) {
+                prevBtn.onclick = () => ManuscriptEditor.nextPrev(-1);
+            }
+        })
 
 
     </script>
@@ -663,3 +1020,23 @@
 
 
 
+<style>
+    .list-group-item {
+        cursor: move;
+        user-select: none;
+    }
+
+    .list-group-item.sortable-ghost {
+        opacity: 0.4;
+        background-color: #c8ebfb;
+    }
+
+    .list-group-item.sortable-chosen {
+        background-color: #e9ecef;
+    }
+
+    .list-group-item i.fa-grip-lines {
+        color: #999;
+        cursor: move;
+    }
+</style>

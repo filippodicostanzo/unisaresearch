@@ -31324,6 +31324,14 @@ select.invalid {
   overflow: auto;
 }
 
+#cke_notifications_area_editor1 {
+  display: none !important;
+}
+
+.cke_notification {
+  display: none !important;
+}
+
 @-webkit-keyframes loading-frame {
   0% {
     border-color: #3acfd5;

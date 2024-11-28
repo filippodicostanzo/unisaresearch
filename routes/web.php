@@ -31,7 +31,7 @@ Route::get('/calendar', [CalendarController::class, 'index']);
 
 Route::get('templates/{id}', [TemplateController::class, 'jsonTemplate']);
 
-//Route::get('/authors/search',[\App\Http\Controllers\Auth\AuthorController::class, 'search']);
+
 
 Route::get('/home', function () {
     if (Auth::user()->hasRole('superadministrator')) {
@@ -75,6 +75,13 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
 
     Route::resource('templates', 'TemplateController');
     Route::resource('categories', 'CategoryController');
+
+    Route::get('/authors/search', [
+        \App\Http\Controllers\Auth\AuthorController::class,
+        'search'
+    ])->name('authors.admin.search');
+
+
     Route::resource('authors', 'AuthorController');
 
     Route::resource('users', 'UserController');
@@ -148,11 +155,13 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
 Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', 'middleware' => ['role:researcher|superadministrator|administrator|supervisor']], function () {
 
 
+    Route::post('authors/check-exists', [AuthorController::class, 'checkExists'])->name('authors.check-exists');
     Route::resource('posts', 'PostController');
     Route::get('/posts', [PostController::class, 'index'])->name('posts.author');
     Route::resource('authors', 'AuthorController');
     Route::get('/profile', [ProfileController::class, 'edit']);
     Route::patch('/profile/{id}', [UserController::class, 'update'])->middleware('verified');
+
 
 });
 

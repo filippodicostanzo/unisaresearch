@@ -75,59 +75,71 @@ class AuthorController extends Controller
      */
     public function store(Request $request)
     {
-        /*
-                $validator = Validator::make($request->all(), [
-                    'firstname' => 'required',
-                    'lastname' => 'required',
-                    'email' => 'required|unique:authors'
+        try {
+            // Validazione
+            $this->validate($request, [
+                'firstname' => 'required',
+                'lastname' => 'required',
+                'email' => 'required|email'
+            ]);
+
+            // Verifica se l'autore esiste già
+            $author_find = Author::where('email', $request->email)->first();
+
+            if ($author_find) {
+                // L'autore esiste già, aggiorna la relazione
+                $author_find->users()->syncWithoutDetaching([Auth::id()]);
+
+                return response()->json([
+                    'success' => true,
+                    'exists' => true,
+                    'author' => [
+                        'id' => $author_find->id,
+                        'firstname' => $author_find->firstname,
+                        'lastname' => $author_find->lastname,
+                        'email' => $author_find->email
+                    ],
+                    'message' => 'Author already exists and has been added to your co-authors list'
                 ]);
+            } else {
+                // Crea nuovo autore
+                $author = new Author($request->all());
+                $author->user_id = Auth::id();
+                $saved = $author->save();
 
-                if ($validator->fails()) {
-                    return response()->json([
-                        'errors' => "Password does't match",
-                    ], 422);
-        //            return response()->json(['isValid'=>false,'errors'=>$validator->messages()]);
+                if (!$saved) {
+                    throw new \Exception('Failed to save author');
                 }
-                else {
 
+                // Crea la relazione con l'utente corrente
+                $author->users()->attach(Auth::id());
 
-        */
+                return response()->json([
+                    'success' => true,
+                    'exists' => false,
+                    'author' => [
+                        'id' => $author->id,
+                        'firstname' => $author->firstname,
+                        'lastname' => $author->lastname,
+                        'email' => $author->email
+                    ],
+                    'message' => 'New author has been created and added to your co-authors list'
+                ]);
+            }
 
-        $this->validate($request, [
-            'firstname' => 'required',
-            'lastname' => 'required',
-            'email' => 'required'
-        ]);
-
-
-        /**
-         * CHECK IS AUTHOR IS PRESENT
-         *
-         */
-
-        $email = $request['email'];
-        $author_find = Author::where('email', '=', $email)->first();
-
-        if ($author_find) {
-            $author_find->users()->sync(Auth::id(), false);
-            $message = 'You have already added this email address, associating it to another name and surname. Please, check your list of co-authors carefully.';
-            session()->flash('message', $message);
-        } else {
-
-
-            $author = new Author($request->all());
-            $author['user_id'] = Auth::id();
-
-            $res = $author->save();
-
-            $author->users()->sync(Auth::id());
-
-
-            $message = $res ? 'The Author ' . $author->name . ' has been saved' : 'The Author ' . $author->name . ' was not saved';
-            session()->flash('message', $message);
-            session()->flash('alert-class', 'alert-success');
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'errors' => $e->errors(),
+                'message' => 'Validation failed'
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error creating/updating author',
+                'error' => $e->getMessage()
+            ], 500);
         }
-        //}
     }
 
     /**
@@ -412,6 +424,53 @@ class AuthorController extends Controller
 
         unlink($file_name);
 
+    }
+
+    public function checkExists(Request $request)
+    {
+        // Trova l'autore per email
+        $author = Author::where('email', $request->email)->first();
+
+        if (!$author) {
+            return response()->json([
+                'exists' => false,
+                'message' => 'Author not found'
+            ]);
+        }
+
+        // Ottieni l'utente autenticato
+        $user = auth()->user();
+
+        // Verifica se esiste già la relazione nella tabella pivot
+        $relationExists = $author->users()->where('user_id', $user->id)->exists();
+
+        if ($relationExists) {
+            return response()->json([
+                'exists' => true,
+                'relationExists' => true,
+                'author' => $author,
+                'message' => 'This author is already in your co-authors list'
+            ]);
+        }
+
+        // Se l'autore esiste ma non c'è la relazione, la creiamo
+        try {
+            $author->users()->attach($user->id);
+
+            return response()->json([
+                'exists' => true,
+                'relationExists' => false,
+                'author' => $author,
+                'message' => 'Author found and added to your co-authors list'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'exists' => true,
+                'relationExists' => false,
+                'error' => true,
+                'message' => 'Error adding author to your co-authors list'
+            ], 500);
+        }
     }
 
 }

@@ -37,6 +37,7 @@ class Post extends Model
         'field_8',
         'field_9',
         'latest_modify',
+        'submitter_position',
     ];
 
     public function category_fk()

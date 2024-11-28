@@ -79,10 +79,12 @@ class PostController extends Controller
     public function store(Request $request)
     {
 
-
         $administrators = User::whereRoleIs('superadministrator')->get();
 
         $post = new Post($request->all());
+
+
+
 
         //Check consistency of input hidden STATE
         if ($post['state'] != '1' && $post['state'] != '2') {
@@ -165,16 +167,14 @@ class PostController extends Controller
 
         $roles = $user->roles()->first();
 
-        if($roles->name ==='researcher') {
-            if ($item->created ===$user->id){
-                return view('posts.show', ['item' => $item, 'role' => $roles, 'title' => $this->title, 'source' => $source,'comment'=>$comment]);
-            }
-            else {
+        if ($roles->name === 'researcher') {
+            if ($item->created === $user->id) {
+                return view('posts.show', ['item' => $item, 'role' => $roles, 'title' => $this->title, 'source' => $source, 'comment' => $comment]);
+            } else {
                 return abort(403);
             }
-        }
-        else {
-            return view('posts.show', ['item' => $item, 'role' => $roles, 'title' => $this->title, 'source' => $source, 'comment'=>$comment]);
+        } else {
+            return view('posts.show', ['item' => $item, 'role' => $roles, 'title' => $this->title, 'source' => $source, 'comment' => $comment]);
         }
     }
 
@@ -192,14 +192,10 @@ class PostController extends Controller
         if ($item->created === Auth::id() && $item->state === '1') {
 
             return view('posts.edit', ['title' => $this->title, 'item' => $item]);
-        }
-
-        else if ($item->created === Auth::id() && $item->state === '4') {
+        } else if ($item->created === Auth::id() && $item->state === '4') {
 
             return view('posts.edit', ['title' => $this->title, 'item' => $item]);
-        }
-
-        else if ($item->supervisor === Auth::id()) {
+        } else if ($item->supervisor === Auth::id()) {
             return view('posts.edit', ['title' => $this->title, 'item' => $item]);
         } else {
 
@@ -237,7 +233,7 @@ class PostController extends Controller
 
 
         //Check consistency of input hidden STATE
-        if ($data['state'] != '1' && $data['state'] != '2' && $data['state']!='6') {
+        if ($data['state'] != '1' && $data['state'] != '2' && $data['state'] != '6') {
             abort(403);
         }
 
@@ -248,8 +244,8 @@ class PostController extends Controller
         $data['authors'] = $authors;
         $data['latest_modify'] = Carbon::now();
 
-        if ($data['state'] ==4 && $data['definitve_pdf'] != null) {
-            $data['state']=6;
+        if ($data['state'] == 4 && $data['definitve_pdf'] != null) {
+            $data['state'] = 6;
         }
 
         $res = Post::find($post->id)->update($data);
@@ -506,7 +502,8 @@ class PostController extends Controller
 
     }
 
-    function definitivepost(Request  $request) {
+    function definitivepost(Request $request)
+    {
 
     }
 
@@ -521,7 +518,6 @@ class PostController extends Controller
 
 
         $allpapers = [];
-
 
 
         foreach ($papers as $p) {
