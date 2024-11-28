@@ -303,6 +303,7 @@ export default {
             elem.users = item.users;
             elem.state_fk = item.state_fk;
             elem.state_def = item.state_fk.name;
+            elem.submitter_position = item.submitter_position;
 
             elem.authors_export = `${elem.user_fk.name} ${elem.user_fk.surname} [${elem.user_fk.email}]; `;
             elem.authors.forEach((el)=>{
@@ -393,18 +394,40 @@ export default {
             console.log('User cancelled the loader.')
         },
 
+        /**
+         * Formatta la lista degli autori considerando la posizione del submitter
+         * @param {Object} rowObj - L'oggetto riga contenente i dati del paper
+         * @returns {string} Stringa formattata con tutti gli autori nell'ordine corretto
+         */
         colAuthors(rowObj) {
-            let coauthors = '';
-            if (rowObj.authors.length > 0) {
-                rowObj.authors.forEach((author, index) => {
-                    if (index < rowObj.authors.length) {
-                        coauthors += ' - ';
-                    }
-                    coauthors += `${author.firstname} ${author.lastname}`;
-                })
+            // Se non ci sono co-autori, restituisci solo il submitter in grassetto
+            if (!rowObj.authors || rowObj.authors.length === 0) {
+                return `<strong>${rowObj.user_fk.name} ${rowObj.user_fk.surname}</strong>`;
             }
-            return `${rowObj.user_fk.name} ${rowObj.user_fk.surname} ${coauthors}`;
 
+            // Creiamo un array di tutti gli autori, incluso il submitter
+            let allAuthors = [...rowObj.authors];
+
+            // Creiamo l'oggetto submitter
+            const submitter = {
+                firstname: rowObj.user_fk.name,
+                lastname: rowObj.user_fk.surname,
+                isSubmitter: true
+            };
+
+            // Prendiamo la posizione del submitter (default a 0 se non specificata)
+            const submitterPosition = Number((rowObj.submitter_position-1) || 0);
+
+            // Inseriamo il submitter nella posizione corretta
+            allAuthors.splice(submitterPosition, 0, submitter);
+
+            // Creiamo la stringa degli autori con il submitter in grassetto
+            return allAuthors.map((author, index) => {
+                if (author.isSubmitter) {
+                    return `<strong>${author.firstname || author.name} ${author.lastname || author.surname}</strong>`;
+                }
+                return `${author.firstname || author.name} ${author.lastname || author.surname}`;
+            }).join(' - ');
         },
 
         colStatus(rowObj) {

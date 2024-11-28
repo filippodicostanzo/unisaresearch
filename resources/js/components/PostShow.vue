@@ -20,25 +20,39 @@
 
                 <div class="card-body no-padding">
                     <div class="row pt-3">
-                        <div class="col-md-6 col-sm-12" v-if="json_role.name!=='supervisor'"><span class="text-bold">Submitted By: </span>
-                            {{rendered.user_fk.name}} {{rendered.user_fk.surname}}
-                        </div>
-                        <div class="col-md-6 col-sm-12" v-if="json_role.name!=='supervisor'"><span class="text-bold">Co Authors: </span>
-                            <span
-                                v-for="(author, index) in this.rendered.authors">{{author.firstname}} {{author.lastname}} <span
-                                v-if="index+1 != rendered.authors.length">-&nbsp;</span></span>
+                        <div class="col-md-12 col-sm-12" v-if="json_role.name!=='supervisor'">
+                            <span class="text-bold">Authors: </span>
+                            <span v-for="(author, index) in getSortedAuthors()" :key="index">
+                                <span :class="{'font-weight-bold': author.isSubmitter}">
+                                    {{author.firstname || author.name}} {{author.lastname || author.surname}}
+                                </span>
+                                <span v-if="index + 1 !== getAuthorsCount()">&nbsp;-&nbsp;</span>
+                            </span>
                         </div>
 
-                        <div class="col-md-6 col-sm-12"><span class="text-bold">Template: </span>
-                            {{rendered.template_fk.name}}
-                        </div>
-                        <div class="col-md-6 col-sm-12" v-if="rendered.category_fk"><span
-                            class="text-bold">Topic:</span>
-                            {{rendered.category_fk.name}}
-                        </div>
 
                     </div>
+                </div>
+            </div>
 
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="m0 text-dark card-title text-xl">
+                        Info
+                    </h1>
+                </div>
+
+                <div class="card-body no-padding">
+                    <div class="row pt-3">
+                        <div class="col-md-6 col-sm-12">
+                            <span class="text-bold">Template: </span>
+                            {{rendered.template_fk.name}}
+                        </div>
+                        <div class="col-md-6 col-sm-12" v-if="rendered.category_fk">
+                            <span class="text-bold">Topic: </span>
+                            {{rendered.category_fk.name}}
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -173,8 +187,46 @@
                 if (this.rendered.fields_9 != '') {
                     this.fields.push(this.rendered.field_9);
                 }
+            },
 
+            /**
+             * Ordina gli autori considerando la posizione del submitter
+             * @returns {Array} Array ordinato di autori con il submitter nella posizione corretta
+             */
+            getSortedAuthors() {
+                if (!this.rendered.authors || this.rendered.authors.length === 0) {
+                    return [{
+                        firstname: this.rendered.user_fk.name,
+                        lastname: this.rendered.user_fk.surname,
+                        isSubmitter: true
+                    }];
+                }
 
+                // Creiamo un array di tutti gli autori
+                let allAuthors = [...this.rendered.authors];
+
+                // Creiamo l'oggetto submitter
+                const submitter = {
+                    firstname: this.rendered.user_fk.name,
+                    lastname: this.rendered.user_fk.surname,
+                    isSubmitter: true
+                };
+
+                // Calcoliamo la posizione corretta (sottrai 1 perché l'array è zero-based)
+                const submitterPosition = Number((this.rendered.submitter_position - 1) || 0);
+
+                // Inseriamo il submitter nella posizione specificata
+                allAuthors.splice(submitterPosition, 0, submitter);
+
+                return allAuthors;
+            },
+
+            /**
+             * Calcola il numero totale di autori
+             * @returns {number} Numero totale di autori incluso il submitter
+             */
+            getAuthorsCount() {
+                return (this.rendered.authors?.length || 0) + 1;
             },
 
         },
@@ -195,4 +247,7 @@
         }
     }
 
+    .font-weight-bold {
+        font-weight: bold;
+    }
 </style>
