@@ -43,7 +43,8 @@
                 <div class="card card-mini">
                     <div class="card-header">
                         <h1 class="m0 text-dark card-title text-xl">
-                            Edit {{$title}}
+                            Edit {{$title}}<br>
+                            <span class="text-red text-sm">* All fields are required.</span>
                         </h1>
                         <div class="card-action">
                             <a href="{{ route('posts.author') }}">
@@ -221,7 +222,7 @@
                                             <i class="fa fa-picture-o"></i> Choose
                                         </a>
                                         </span>
-                                    {!! Form::text('pdf', null, array('placeholder' => 'Upload and select the file from File Manager','class' => 'form-control file-src','id' => 'document')) !!}
+                                    {!! Form::text('pdf', null, array('placeholder' => 'Please, upload your (new) file, than select it to proceed','class' => 'form-control file-src','id' => 'document')) !!}
 
                                 </div>
 

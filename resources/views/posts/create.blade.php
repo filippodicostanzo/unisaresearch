@@ -30,13 +30,16 @@
                 <div class="card card-mini">
                     <div class="card-header">
                         <h1 class="m0 text-dark card-title text-xl">
-                            Create New Submission
+                            Create New Submission <br>
+                            <span class="text-red text-sm">* All fields are required.</span>
                         </h1>
+
                         <div class="card-action">
                             <a href="{{ route('posts.author') }}">
                                 <i class="fas fa-arrow-circle-left fa-3x fa-fw" aria-hidden="true"></i>
                             </a>
                         </div>
+
                     </div>
                     <div class="card-body">
                         <input type="hidden" id="count_fields" value="{{count($fields)}}">
@@ -270,7 +273,7 @@
                                             <i class="fa fa-picture-o"></i> Choose
                                         </a>
                                         </span>
-                                    {!! Form::text('pdf', null, array('placeholder' => 'Upload and select the file from File Manager','class' => 'form-control file-src','id' => 'document')) !!}
+                                    {!! Form::text('pdf', null, array('placeholder' => 'Please, upload your (new) file, than select it to proceed','class' => 'form-control file-src','id' => 'document')) !!}
 
                                 </div>
 
