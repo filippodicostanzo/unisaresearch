@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\SingleEmail;
 use App\Models\Author;
 use App\Models\Comment;
 use App\Models\Edition;
@@ -84,8 +85,6 @@ class PostController extends Controller
         $post = new Post($request->all());
 
 
-
-
         //Check consistency of input hidden STATE
         if ($post['state'] != '1' && $post['state'] != '2') {
             abort(403);
@@ -119,27 +118,32 @@ class PostController extends Controller
 
 
         // SEND MAIL FOR PAPER SUBMITTED
-        $authors_post = Post::where('id', $post->id)->with('authors')->first();
+        // Nel tuo PostController
+        $authors_post = Post::where('id', $post->id)
+            ->with(['authors', 'template_fk'])  // Includiamo entrambe le relazioni
+            ->first();
         $auts = $authors_post->authors()->get();
-        $authors_post->authors_fk = $auts;
         $coauthors = [];
 
-        // SEND MAIL FOR PAPER SUBMITTED
         if ($request->state === '2') {
-            foreach ($administrators as $admin) {
-                Mail::to($admin->email)->send(new \App\Mail\NewPaperEmail($post));
-            }
-
+            // Raccogliamo gli indirizzi email per il CC
             foreach ($auts as $aut) {
                 $coauthors[] = $aut->email;
             }
 
+            // Prima inviamo agli amministratori
+            foreach ($administrators as $admin) {
+                Mail::to($admin->email)->send(new \App\Mail\NewPaperEmail($post));
+            }
 
-            Mail::to($post->user_fk->email)->cc($coauthors)->send(new \App\Mail\AddAuthorEmail($auts, $authors_post));
-            /*
-                        foreach ($auts as $aut) {
-                            Mail::to($aut->email)->send(new \App\Mail\AddAuthorEmail($auts, $authors_post));
-                        }*/
+            // Ora inviamo la notifica di submission
+            Mail::to($post->user_fk->email)
+                ->cc($coauthors)
+                ->send(new \App\Mail\PaperSubmission(
+                    $post->user_fk,     // autore principale
+                    $post,              // il post
+                    $auts              // collection completa dei coautori
+                ));
         }
 
         $message = $res ? 'The Paper ' . $post->title . ' has been saved' : 'The Paper ' . $post->title . ' was not saved';
@@ -260,26 +264,33 @@ class PostController extends Controller
         }
 
 
-        $authors_post = Post::where('id', $post->id)->with('authors')->first();
+        // SEND MAIL FOR PAPER SUBMITTED
+        // Nel tuo PostController
+        $authors_post = Post::where('id', $post->id)
+            ->with(['authors', 'template_fk'])  // Includiamo entrambe le relazioni
+            ->first();
         $auts = $authors_post->authors()->get();
-        $authors_post->authors_fk = $auts;
         $coauthors = [];
 
-        // SEND MAIL FOR PAPER SUBMITTED
-        if ($data['state'] === '2') {
-            foreach ($administrators as $admin) {
-                Mail::to($admin->email)->send(new \App\Mail\NewPaperEmail($post));
-            }
-
+        if ($request->state === '2') {
+            // Raccogliamo gli indirizzi email per il CC
             foreach ($auts as $aut) {
                 $coauthors[] = $aut->email;
             }
 
-            Mail::to($post->user_fk->email)->cc($coauthors)->send(new \App\Mail\AddAuthorEmail($auts, $authors_post));
+            // Prima inviamo agli amministratori
+            foreach ($administrators as $admin) {
+                Mail::to($admin->email)->send(new \App\Mail\NewPaperEmail($post));
+            }
 
-            /* foreach ($auts as $aut) {
-                 Mail::to($aut->email)->send(new \App\Mail\AddAuthorEmail($aut, $authors_post));
-             }*/
+            // Ora inviamo la notifica di submission
+            Mail::to($post->user_fk->email)
+                ->cc($coauthors)
+                ->send(new \App\Mail\PaperSubmission(
+                    $post->user_fk,     // autore principale
+                    $post,              // il post
+                    $auts              // collection completa dei coautori
+                ));
         }
 
         $message = $res ? 'The Paper ' . $data['title'] . ' has been saved' : 'The Paper ' . $data['title'] . ' was not saved';
@@ -375,9 +386,10 @@ class PostController extends Controller
 
 
         $supervisors_post = Post::where('id', $post->id)->with('users')->first();
+
         if ($data['state'] === '3' && $post->state != '3') {
             foreach ($supervisors_post->users as $supervisor) {
-                Mail::to($supervisor->email)->send(new \App\Mail\SupervisorPaper($supervisor, $supervisors_post));
+                Mail::to($supervisor->email)->send(new \App\Mail\ReviewerAssignment($supervisor, $supervisors_post));
             }
         }
 
@@ -406,6 +418,7 @@ class PostController extends Controller
         if ($this->user->hasRole('superadministrator|administrator')) {
             return view('posts.valid', ['title' => $this->title, 'item' => $itm, 'comment' => $comment, 'reviews' => $reviews, 'status' => $status]);
         }
+
 
     }
 
@@ -442,6 +455,7 @@ class PostController extends Controller
                 $comment->save();
             }
         }
+
 
         //ACCEPTED PAPER
         if ($request['state'] == '4') {
@@ -505,6 +519,106 @@ class PostController extends Controller
     function definitivepost(Request $request)
     {
 
+    }
+
+    function singleemail($post, Request $request)
+    {
+        $item = Post::with('state_fk', 'category_fk', 'template_fk', 'authors', 'user_fk')
+            ->where('id', $post)
+            ->first();
+
+
+
+        if ($request->has('user')) {
+            // Se c'è un user_id nella query, questo è un reviewer
+            $reviewer = User::find($request->user);
+            if ($reviewer) {
+                $item->is_reviewer = true;
+                $item->reviewer_data = $reviewer;
+                unset($item->users);
+            }
+        } else {
+            $item->load('users');
+        }
+
+        return view('posts.email', [
+            'item' => $item,
+            'title' => $this->title
+        ]);
+    }
+
+    public function sendsingleemail(Request $request, Post $post)
+    {
+        $subject = $request->input('subject');
+        $body = $request->input('body');
+        $isReviewer = $request->input('is_reviewer');
+
+        try {
+            if ($isReviewer) {
+                // Gestione email per reviewer
+                $reviewerData = $request->input('reviewer');
+
+                // Invia l'email al reviewer
+                \Mail::to($reviewerData['email'])->send(new SingleEmail(
+                    $reviewerData,
+                    [
+                        'id' => $post->id,
+                        'title' => $post->title
+                    ],
+                    [], // no coauthors per reviewer
+                    $subject,
+                    $body,
+                    'reviewer' // nuovo tipo per reviewer
+                ));
+            } else {
+                // Gestione email per autori (codice esistente)
+                $recipientType = $request->input('recipient');
+                $authorData = $request->input('author');
+                $coauthorsData = $request->input('coauthors');
+
+                $postData = [
+                    'id' => $post->id,
+                    'title' => $post->title
+                ];
+
+                // Determina i destinatari in base al tipo selezionato
+                $recipients = [];
+                switch ($recipientType) {
+                    case 'author':
+                        $recipients[] = $authorData['email'];
+                        break;
+                    case 'author-coauthors':
+                        $recipients[] = $authorData['email'];
+                        $recipients = array_merge($recipients,
+                            collect($coauthorsData)->pluck('email')->toArray());
+                        break;
+                    case 'coauthors':
+                        $recipients = collect($coauthorsData)->pluck('email')->toArray();
+                        break;
+                }
+
+                // Rimuovi duplicati e valori vuoti
+                $recipients = array_unique(array_filter($recipients));
+
+                // Invia l'email a tutti i destinatari
+                \Mail::to($recipients)->send(new SingleEmail(
+                    $authorData,
+                    $postData,
+                    $coauthorsData,
+                    $subject,
+                    $body,
+                    $recipientType
+                ));
+            }
+
+            session()->flash('message', 'Email for paper "' . $post->title . '" sent successfully');
+            session()->flash('alert-class', 'alert-success');
+
+        } catch (\Exception $e) {
+            session()->flash('message', 'An error occurred while sending the email');
+            session()->flash('alert-class', 'alert-danger');
+            \Log::error('Email sending error: ' . $e->getMessage());
+        }
     }
 
     function generate(Request $request)

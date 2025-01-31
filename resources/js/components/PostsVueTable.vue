@@ -108,6 +108,13 @@
                                         <i class="fas fa-clipboard-check fa-1x fa-lg" aria-hidden="true"></i>
                                     </a>
 
+                                 <a class="btn btn-default btn-xs"
+                                    :href="route('posts.singleemail', {post: props.row.id})"
+                                    v-if="source==='admin'">
+                                        <i class="fas fa-envelope fa-1x fa-lg" aria-hidden="true"></i>
+                                    </a>
+
+
                                     <a class="btn btn-default btn-xs"
                                        :href="route('posts.edit', {id: props.row.id})"
                                        v-if="source==='author' && props.row.state == 1">

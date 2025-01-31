@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthorController;
+use App\Http\Controllers\Auth\EmailTemplateController;
 use App\Http\Controllers\Auth\PostController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\ReviewController;
@@ -31,7 +32,7 @@ Route::get('/calendar', [CalendarController::class, 'index']);
 
 Route::get('templates/{id}', [TemplateController::class, 'jsonTemplate']);
 
-
+//Route::get('/authors/search',[\App\Http\Controllers\Auth\AuthorController::class, 'search']);
 
 Route::get('/home', function () {
     if (Auth::user()->hasRole('superadministrator')) {
@@ -75,13 +76,6 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
 
     Route::resource('templates', 'TemplateController');
     Route::resource('categories', 'CategoryController');
-
-    Route::get('/authors/search', [
-        \App\Http\Controllers\Auth\AuthorController::class,
-        'search'
-    ])->name('authors.admin.search');
-
-
     Route::resource('authors', 'AuthorController');
 
     Route::resource('users', 'UserController');
@@ -93,6 +87,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
     Route::resource('events', 'EventController');
     Route::resource('reviews', 'ReviewController');
     Route::resource('editions', 'EditionController');
+    Route::resource('email-templates', 'EmailTemplateController');
 
     Route::get('/posts/all', [PostController::class, 'postsadmin'])->name('posts.admin');
 
@@ -101,6 +96,9 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
 
     Route::get('/posts/{post}/validate', [PostController::class, 'valid']);
     Route::patch('/posts/{post}/validate', [PostController::class, 'validupdate'])->name('posts.valid');
+
+    Route::get('/posts/{post}/email/{user?}', [PostController::class, 'singleemail'])->name('posts.singleemail');
+    Route::post('/posts/{post}/email', [PostController::class, 'sendsingleemail'])->name('posts.sendsingleemail');
 
 
 
@@ -114,6 +112,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
         \Artisan::call('cache:clear');
         return 'Application cache cleared';
     });
+
+
 
 });
 
@@ -155,13 +155,11 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
 Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', 'middleware' => ['role:researcher|superadministrator|administrator|supervisor']], function () {
 
 
-    Route::post('authors/check-exists', [AuthorController::class, 'checkExists'])->name('authors.check-exists');
     Route::resource('posts', 'PostController');
     Route::get('/posts', [PostController::class, 'index'])->name('posts.author');
     Route::resource('authors', 'AuthorController');
     Route::get('/profile', [ProfileController::class, 'edit']);
     Route::patch('/profile/{id}', [UserController::class, 'update'])->middleware('verified');
-
 
 });
 
