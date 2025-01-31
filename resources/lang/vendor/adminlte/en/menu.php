@@ -42,4 +42,5 @@ return [
     'my_posts'                      => 'My Posts',
     'my_papers'                     => 'My Papers',
     'assigned_reviews'               => 'Assigned Reviews',
+    'email_templates'               => 'Email Templates',
 ];

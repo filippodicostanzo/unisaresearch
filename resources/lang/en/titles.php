@@ -24,7 +24,8 @@ return [
     'templates' => 'Templates',
     'profile' => 'Profile',
     'editions' => 'Editions',
-    'reviews' => 'Reviewers'
+    'reviews' => 'Reviewers',
+    'email_templates' => 'Email Templates',
 
 
 

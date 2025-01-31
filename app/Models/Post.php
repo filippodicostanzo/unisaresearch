@@ -74,5 +74,9 @@ class Post extends Model
         return $this->belongsTo('App\Models\Edition', 'edition', 'id');
     }
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 
 }

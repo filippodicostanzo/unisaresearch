@@ -22,3 +22,24 @@ mix.webpackConfig({
         },
     },
 });
+
+
+/***
+ * Remove console log for production build
+ */
+
+
+
+
+mix.options({
+    terser: {
+        terserOptions: {
+            compress: {
+                drop_console: true,
+            }
+        }
+    }
+});
+
+
+

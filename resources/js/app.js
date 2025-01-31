@@ -69,6 +69,9 @@ import CalendarTable from "./components/CalendarTable";
 import VueTable from "./components/VueTable";
 import Welcome from "./components/Welcome";
 import PostsVueTable from "./components/PostsVueTable";
+import EmailTemplateTable from "./components/EmailTemplateTable.vue";
+import EmailTemplateCreate from "./components/EmailTemplateCreate.vue";
+import PostEmailSingle from "./components/PostEmailSingle.vue";
 
 window.route = route;
 window.Ziggy = Ziggy;
@@ -134,6 +137,9 @@ const app = new Vue({
         'welcome':Welcome,
         'vue-table': VueTable,
         'posts-vue-table': PostsVueTable,
+        'email-template-table':EmailTemplateTable,
+        'email-template-create':EmailTemplateCreate,
+        'post-email-single': PostEmailSingle
     }
 });
 

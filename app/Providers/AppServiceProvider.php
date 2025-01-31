@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Author;
 use App\Models\Category;
 use App\Models\Edition;
+use App\Models\EmailTemplate;
 use App\Models\Event;
 use App\Models\Post;
 use App\Models\Room;
@@ -95,6 +96,14 @@ class AppServiceProvider extends ServiceProvider
                     'url' => 'admin/reviewers/count',
                     'icon' => 'fas fa-fw fa-at',
                     'label' => User::whereRoleIs('superadministrator')->orWhereRoleIs('supervisor')->count(),
+                    'label_color' => 'success',
+                ],
+
+                [
+                    'text' => 'email_templates',
+                    'url' => 'admin/email-templates',
+                    'icon' => 'fas fa-fw fa-envelope',
+                    'label' => EmailTemplate::count(),
                     'label_color' => 'success',
                 ],
             ];
