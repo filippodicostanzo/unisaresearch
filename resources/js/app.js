@@ -72,6 +72,7 @@ import PostsVueTable from "./components/PostsVueTable";
 import EmailTemplateTable from "./components/EmailTemplateTable.vue";
 import EmailTemplateCreate from "./components/EmailTemplateCreate.vue";
 import PostEmailSingle from "./components/PostEmailSingle.vue";
+import EmailTemplateShow from "./components/EmailTemplateShow.vue";
 
 window.route = route;
 window.Ziggy = Ziggy;
@@ -139,6 +140,7 @@ const app = new Vue({
         'posts-vue-table': PostsVueTable,
         'email-template-table':EmailTemplateTable,
         'email-template-create':EmailTemplateCreate,
+        'email-template-show':EmailTemplateShow,
         'post-email-single': PostEmailSingle
     }
 });
