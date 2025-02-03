@@ -435,7 +435,7 @@ class PostController extends Controller
 
         $data = $request['state'];
 
-        $postfind = Post::find($post->id);
+        $postfind = Post::find($post->id)->with('authors')->first();
 
         if ($postfind) {
             $post->state = $data;
@@ -456,10 +456,22 @@ class PostController extends Controller
             }
         }
 
-
         //ACCEPTED PAPER
         if ($request['state'] == '4') {
-            Mail::to($post->user_fk->email)->send(new \App\Mail\AcceptedPaper($post));
+            $authors_post = Post::where('id', $post->id)
+                ->with(['authors', 'template_fk'])
+                ->first();
+            $auts = $authors_post->authors()->get();
+            $coauthors = [];
+
+            // Collect co-authors' email addresses for CC
+            foreach ($auts as $aut) {
+                $coauthors[] = $aut->email;
+            }
+
+            Mail::to($post->user_fk->email)
+                ->cc($coauthors)
+                ->send(new \App\Mail\AcceptedPaper($post));
         }
 
         //REJECTED PAPER

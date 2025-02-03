@@ -84,7 +84,7 @@ class SingleEmail extends Mailable
     protected function getCommentText()
     {
         $comment = $this->post->comments()->first();
-        return $comment && !empty($comment->comment) ? '<strong>' . $comment->comment . '</strong>' : '';
+        return $comment && !empty($comment->comment) ? 'Based on the comments received, we want to inform you that: ' . $comment->comment : '';
     }
 
     protected function formatCoauthorsList()

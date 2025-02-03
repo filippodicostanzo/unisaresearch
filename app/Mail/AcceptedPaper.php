@@ -47,7 +47,7 @@ class AcceptedPaper extends Mailable
     protected function replaceVariables($content)
     {
         $comment = $this->details->comments()->first();
-        $commentText = $comment && $comment->comment ? '<strong> based on the comments received, we want to tell you that: ' . $comment->comment . '</strong>' : '';
+        $commentText = $comment && $comment->comment ? 'Based on the comments received, we want to inform you that: ' . $comment->comment  : '';
 
         // Ora includiamo i tag strong direttamente nelle sostituzioni
         $variables = [

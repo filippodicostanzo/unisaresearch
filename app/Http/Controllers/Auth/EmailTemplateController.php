@@ -131,7 +131,10 @@ class EmailTemplateController extends Controller
      */
     public function show(EmailTemplate $emailTemplate)
     {
-        //
+        return view('email-templates.show', [
+            'title' => $this->title,
+            'item' => $emailTemplate
+        ]);
     }
 
     /**
