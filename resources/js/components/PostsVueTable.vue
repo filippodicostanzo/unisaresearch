@@ -5,11 +5,8 @@
                 <div class="card-header">
                     <h1 class="m0 text-dark card-title text-xl">
                         {{ this.title }}
-                        <i
-                            class="fa fa-info-circle fa-fw pointer"
-                            aria-hidden="true"
-                            @click="showModal"
-                            v-if="source==='admin' ||source==='reviewer'"></i>
+                        <i class="fa fa-info-circle fa-fw pointer" aria-hidden="true" @click="showModal"
+                            v-if="source === 'admin' || source === 'reviewer'"></i>
                     </h1>
                     <div class="card-action">
                         <a :href="route('posts.create')">
@@ -18,114 +15,103 @@
                     </div>
                 </div>
                 <div class="card-body no-padding card-table">
-                    <vue-good-table ref="my-table"
-                                    @on-selected-rows-change="selectionChanged"
-                                    styleClass="vgt-table striped"
-                                    :columns="columns"
-                                    :rows="elements"
-                                    :select-options="{ enabled: true, selectOnCheckboxOnly: true }"
-                                    :search-options="{ enabled: true }"
-                                    :pagination-options="{
-                                        enabled: true,
-                                        mode: 'records',
-                                        perPage: 20,
-                                        position: 'bottom',
-                                        perPageDropdown: [50,100, 200],
-                                        dropdownAllowAll: true,
-                                        setCurrentPage: 1,
-                                        jumpFirstOrLast : true,
-                                        firstLabel : 'First Page',
-                                        lastLabel : 'Last Page',
-                                        nextLabel: 'next',
-                                        prevLabel: 'prev',
-                                        rowsPerPageLabel: 'Rows per page',
-                                        ofLabel: 'of',
-                                        pageLabel: 'page', // for 'pages' mode
-                                        allLabel: 'All',
-                                        infoFn: (params) => `my own page ${params.firstRecordOnPage}`,
-                                        }"
-                    >
+                    <vue-good-table ref="my-table" @on-selected-rows-change="selectionChanged"
+                        styleClass="vgt-table striped" :columns="columns" :rows="elements"
+                        :select-options="{ enabled: true, selectOnCheckboxOnly: true }"
+                        :search-options="{ enabled: true }" :pagination-options="{
+                            enabled: true,
+                            mode: 'records',
+                            perPage: 20,
+                            position: 'bottom',
+                            perPageDropdown: [50, 100, 200],
+                            dropdownAllowAll: true,
+                            setCurrentPage: 1,
+                            jumpFirstOrLast: true,
+                            firstLabel: 'First Page',
+                            lastLabel: 'Last Page',
+                            nextLabel: 'next',
+                            prevLabel: 'prev',
+                            rowsPerPageLabel: 'Rows per page',
+                            ofLabel: 'of',
+                            pageLabel: 'page', // for 'pages' mode
+                            allLabel: 'All',
+                            infoFn: (params) => `my own page ${params.firstRecordOnPage}`,
+                        }">
 
-                        <div slot="selected-row-actions" v-if="source==='admin'">
+                        <div slot="selected-row-actions" v-if="source === 'admin'">
                             <button class="btn btn-success" @click="downloadSelected()">Download Selected</button>
+                            <button class="btn btn-danger" @click="generatePDF()">Export to PDF</button>
                         </div>
 
 
                         <template slot="table-row" slot-scope="props">
 
-                            <span v-if="props.column.field==='state'">
-                                <span :style="`background-color:${props.row.state_fk.color}`"
-                                      class="post-status">{{ props.row.state_fk.name }}</span>
+                            <span v-if="props.column.field === 'state'">
+                                <span :style="`background-color:${props.row.state_fk.color}`" class="post-status">{{
+                                    props.row.state_fk.name }}</span>
                             </span>
 
-                            <span v-else-if="props.column.field==='reviews'">
+                            <span v-else-if="props.column.field === 'reviews'">
 
 
-                                    <span v-for="reviews in props.row.users" v-if="source==='admin'">
+                                <span v-for="reviews in props.row.users" v-if="source === 'admin'">
 
-                                        <i class="far fa-circle" v-if="!reviews.checked"
-                                           data-toggle="tooltip" data-placement="top"
-                                           :title="reviews.name+' '+ reviews.surname"></i>
+                                    <i class="far fa-circle" v-if="!reviews.checked" data-toggle="tooltip"
+                                        data-placement="top" :title="reviews.name + ' ' + reviews.surname"></i>
+                                    <i class="fas fa-circle" v-if="reviews.checked" data-toggle="tooltip"
+                                        data-placement="top" :title="reviews.name + ' ' + reviews.surname"></i></span>
+
+
+
+                                <span v-for="reviews in props.row.users" v-if="source === 'reviewer'">
+                                    <span v-if="reviews.id === json_user.id">
+                                        <i class="far fa-circle" v-if="!reviews.checked" data-toggle="tooltip"
+                                            data-placement="top" :title="reviews.name + ' ' + reviews.surname"></i>
                                         <i class="fas fa-circle" v-if="reviews.checked" data-toggle="tooltip"
-                                           data-placement="top" :title="reviews.name+' '+ reviews.surname"></i></span>
-
-
-
-                                    <span v-for="reviews in  props.row.users" v-if="source==='reviewer'">
-                                        <span v-if="reviews.id === json_user.id">
-                                        <i class="far fa-circle" v-if="!reviews.checked"
-                                           data-toggle="tooltip" data-placement="top"
-                                           :title="reviews.name+' '+ reviews.surname"></i>
-                                        <i
-                                            class="fas fa-circle" v-if="reviews.checked" data-toggle="tooltip"
-                                            data-placement="top" :title="reviews.name+' '+ reviews.surname"></i></span>
-                                    </span>
+                                            data-placement="top" :title="reviews.name + ' ' + reviews.surname"></i></span>
+                                </span>
 
                             </span>
 
                             <span v-else-if="props.column.field === 'options'">
 
-                                 <a class="btn btn-default btn-xs"
+                                <a class="btn btn-default btn-xs"
                                     :href="route('posts.show', props.row.id).withQuery({ source: source })">
 
-                                        <i class="fas fa-eye fa-1x fa-lg" aria-hidden="true"></i>
-                                    </a>
+                                    <i class="fas fa-eye fa-1x fa-lg" aria-hidden="true"></i>
+                                </a>
 
-                                    <a class="btn btn-default btn-xs" :href="'../reviews/create?id='+ props.row.id"
-                                       v-if="source==='reviewer' && props.row.state ==3">
-                                        <i class="fas fa-pencil-alt fa-1x fa-lg" aria-hidden="true"></i>
-                                    </a>
+                                <a class="btn btn-default btn-xs" :href="'../reviews/create?id=' + props.row.id"
+                                    v-if="source === 'reviewer' && props.row.state == 3">
+                                    <i class="fas fa-pencil-alt fa-1x fa-lg" aria-hidden="true"></i>
+                                </a>
 
-                                    <a class="btn btn-default btn-xs"
-                                       :href="route('posts.link', {id: props.row.id})"
-                                       v-if="source==='admin' && props.row.state!=6">
-                                        <i class="fas fa-link fa-1x fa-lg" aria-hidden="true"></i>
-                                    </a>
+                                <a class="btn btn-default btn-xs" :href="route('posts.link', { id: props.row.id })"
+                                    v-if="source === 'admin' && props.row.state != 6">
+                                    <i class="fas fa-link fa-1x fa-lg" aria-hidden="true"></i>
+                                </a>
 
-                                    <a class="btn btn-default btn-xs"
-                                       :href="route('posts.valid', {id: props.row.id})"
-                                       v-if="source==='admin' && props.row.state!=6">
-                                        <i class="fas fa-clipboard-check fa-1x fa-lg" aria-hidden="true"></i>
-                                    </a>
+                                <a class="btn btn-default btn-xs" :href="route('posts.valid', { id: props.row.id })"
+                                    v-if="source === 'admin' && props.row.state != 6">
+                                    <i class="fas fa-clipboard-check fa-1x fa-lg" aria-hidden="true"></i>
+                                </a>
 
-                                 <a class="btn btn-default btn-xs"
-                                    :href="route('posts.singleemail', {post: props.row.id})"
-                                    v-if="source==='admin'">
-                                        <i class="fas fa-envelope fa-1x fa-lg" aria-hidden="true"></i>
-                                    </a>
+                                <a class="btn btn-default btn-xs"
+                                    :href="route('posts.singleemail', { post: props.row.id })" v-if="source === 'admin'">
+                                    <i class="fas fa-envelope fa-1x fa-lg" aria-hidden="true"></i>
+                                </a>
 
 
-                                    <a class="btn btn-default btn-xs"
-                                       :href="route('posts.edit', {id: props.row.id})"
-                                       v-if="source==='author' && props.row.state == 1">
-                                        <i class="fas fa-pencil-alt fa-1x fa-lg" aria-hidden="true"></i>
-                                    </a>
+                                <a class="btn btn-default btn-xs" :href="route('posts.edit', { id: props.row.id })"
+                                    v-if="source === 'author' && props.row.state == 1">
+                                    <i class="fas fa-pencil-alt fa-1x fa-lg" aria-hidden="true"></i>
+                                </a>
 
 
-                                    <a class="btn btn-danger btn-xs" v-on:click="deleteItem(props.row.id, $event)"
-                                       v-if="source==='admin' || props.row.state ==1">
-                                        <i class="fas fa-minus-circle fa-1x fa-lg" aria-hidden="true"></i>
-                                    </a>
+                                <a class="btn btn-danger btn-xs" v-on:click="deleteItem(props.row.id, $event)"
+                                    v-if="source === 'admin' || props.row.state == 1">
+                                    <i class="fas fa-minus-circle fa-1x fa-lg" aria-hidden="true"></i>
+                                </a>
                             </span>
 
 
@@ -134,19 +120,23 @@
                 </div>
             </div>
         </div>
-        <modal v-show="isModalVisible" :data="modalHTML" @close="closeModal"/>
+        <modal v-show="isModalVisible" :data="modalHTML" @close="closeModal" />
+        <modal-pdf :visible="isPdfModalVisible" :progress="pdfProgress" :status-message="pdfStatusMessage"
+            @cancel="cancelPdfGeneration" />
     </div>
 </template>
 
 <script>
 
-import {VueGoodTable} from 'vue-good-table';
+import { VueGoodTable } from 'vue-good-table';
 import Modal from "./Modal";
-import {format} from 'date-fns'
+import ModalPDF from "./ModalPDF";
+import { format } from 'date-fns'
 
 export default {
     name: "PostsVueTable.vue",
-    components: {VueGoodTable, 'modal': Modal},
+    components: { VueGoodTable, 'modal': Modal, 'modal-pdf': ModalPDF },
+    props: ['id', 'title', 'items', 'role', 'reviews', 'user', 'statuses', 'source', 'categories'],
     props: ['id', 'title', 'items', 'role', 'reviews', 'user', 'statuses', 'source', 'categories'],
 
     data() {
@@ -154,12 +144,12 @@ export default {
             elements: [],
             json_categories: [],
             paper_state: [
-                {value: 'Created', text: 'Created'},
-                {value: 'Review', text: 'Review'},
-                {value: 'Submitted', text: 'Submitted'},
-                {value: 'Accepted', text: 'Accepted'},
-                {value: 'Rejected', text: 'Rejected'},
-                {value: 'Final', text: 'Final'}
+                { value: 'Created', text: 'Created' },
+                { value: 'Review', text: 'Review' },
+                { value: 'Submitted', text: 'Submitted' },
+                { value: 'Accepted', text: 'Accepted' },
+                { value: 'Rejected', text: 'Rejected' },
+                { value: 'Final', text: 'Final' }
             ],
             columns: [
                 {
@@ -253,7 +243,11 @@ export default {
                         <p>The button <i aria-hidden="true" class="fas fa-minus-circle fa-1x fa-lg"></i> allows you to delete this item.</p>
                         </div>
                     `
-            }
+            },
+            isPdfModalVisible: false,
+            pdfProgress: 0,
+            pdfStatusMessage: "Preparazione dei documenti...",
+            pdfCancelSource: null
         }
     },
 
@@ -313,7 +307,7 @@ export default {
             elem.submitter_position = item.submitter_position;
 
             elem.authors_export = `${elem.user_fk.name} ${elem.user_fk.surname} [${elem.user_fk.email}]; `;
-            elem.authors.forEach((el)=>{
+            elem.authors.forEach((el) => {
                 elem.authors_export += `${el.firstname} ${el.lastname} [${el.email}]; `
             })
             elem.state_export = elem.state_fk.name;
@@ -339,7 +333,7 @@ export default {
                 this.$http
                     //.delete("/admin/posts/" + id)
 
-                    .post('/admin/posts/' + id, {_method: 'delete'})
+                    .post('/admin/posts/' + id, { _method: 'delete' })
 
                     .then(response => {
                         if (response.status === 200) {
@@ -381,20 +375,116 @@ export default {
         },
 
         downloadSelected() {
-            axios.post( this.url = window.location.href + '/generate',
-                {papers: this.$refs['my-table'].selectedRows}, {responseType: 'blob'}
+            axios.post(this.url = window.location.href + '/generate',
+                { papers: this.$refs['my-table'].selectedRows }, { responseType: 'blob' }
             ).then(
                 (response) => {
                     const data = format(new Date(), 'yyyyMMddHHmmss');
                     const url = window.URL.createObjectURL(new Blob([response.data]));
                     const link = document.createElement('a');
                     link.href = url;
-                    link.setAttribute('download', 'papers-'+data+'.csv'); //or any other extension
+                    link.setAttribute('download', 'papers-' + data + '.csv'); //or any other extension
                     document.body.appendChild(link);
                     link.click();
 
 
                 });
+        },
+
+        generatePDF() {
+            if (this.$refs['my-table'].selectedRows.length === 0) {
+                alert('Seleziona almeno un post per generare il PDF');
+                return;
+            }
+
+            // Mostra il modal e inizializza i valori
+            this.isPdfModalVisible = true;
+            this.pdfProgress = 0;
+            this.pdfStatusMessage = "Preparazione dei documenti...";
+
+            // Crea un token di cancellazione per axios
+            this.pdfCancelSource = axios.CancelToken.source();
+
+            // Simula l'avanzamento della percentuale
+            this.startProgressSimulation();
+
+            axios.post(
+                window.location.href + '/generate-pdf',
+                { papers: this.$refs['my-table'].selectedRows },
+                {
+                    responseType: 'blob',
+                    cancelToken: this.pdfCancelSource.token
+                }
+            ).then(
+                (response) => {
+                    // Completa la barra di progresso
+                    this.pdfProgress = 100;
+                    this.pdfStatusMessage = "PDF generato con successo!";
+
+                    // Breve ritardo prima di chiudere il modal e scaricare il file
+                    setTimeout(() => {
+                        this.isPdfModalVisible = false;
+
+                        const data = format(new Date(), 'yyyyMMddHHmmss');
+                        const url = window.URL.createObjectURL(new Blob([response.data]));
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', 'papers-' + data + '.pdf');
+                        document.body.appendChild(link);
+                        link.click();
+                    }, 500);
+                }
+            ).catch(error => {
+                if (axios.isCancel(error)) {
+                    console.log('Generazione PDF annullata dall\'utente');
+                    this.pdfStatusMessage = "Generazione PDF annullata";
+                } else {
+                    console.error('Error generating PDF:', error);
+                    this.pdfStatusMessage = "Errore nella generazione del PDF";
+                    alert('Error generating PDF. Please try again.');
+                }
+
+                // Chiudi il modal dopo un breve ritardo
+                setTimeout(() => {
+                    this.isPdfModalVisible = false;
+                }, 1000);
+            });
+        },
+
+        cancelPdfGeneration() {
+            if (this.pdfCancelSource) {
+                this.pdfCancelSource.cancel('Operazione annullata dall\'utente');
+                this.pdfStatusMessage = "Annullamento in corso...";
+            }
+        },
+
+        startProgressSimulation() {
+            // Simula l'avanzamento della percentuale poiché non possiamo ottenere il progresso reale
+            let progress = 0;
+            const interval = setInterval(() => {
+                if (!this.isPdfModalVisible) {
+                    clearInterval(interval);
+                    return;
+                }
+
+                if (progress < 90) {
+                    // Incrementa gradualmente fino al 90%
+                    const increment = Math.random() * 5;
+                    progress += increment;
+                    this.pdfProgress = Math.min(Math.round(progress), 90);
+
+                    // Aggiorna il messaggio in base al progresso
+                    if (this.pdfProgress < 30) {
+                        this.pdfStatusMessage = "Preparazione dei documenti...";
+                    } else if (this.pdfProgress < 60) {
+                        this.pdfStatusMessage = "Generazione PDF in corso...";
+                    } else {
+                        this.pdfStatusMessage = "Finalizzazione del documento...";
+                    }
+                } else {
+                    clearInterval(interval);
+                }
+            }, 300);
         },
 
         onCancel() {
@@ -423,7 +513,7 @@ export default {
             };
 
             // Prendiamo la posizione del submitter (default a 0 se non specificata)
-            const submitterPosition = Number((rowObj.submitter_position-1) || 0);
+            const submitterPosition = Number((rowObj.submitter_position - 1) || 0);
 
             // Inseriamo il submitter nella posizione corretta
             allAuthors.splice(submitterPosition, 0, submitter);
@@ -444,22 +534,22 @@ export default {
         tdClassFunc(row) {
 
             switch (row.state) {
-                case '1' : {
+                case '1': {
                     return 'celeste-class post-status'
                 }
-                case '2' : {
+                case '2': {
                     return 'orange-class post-status'
                 }
-                case '3' : {
+                case '3': {
                     return 'blue-class post-status'
                 }
-                case '4' : {
+                case '4': {
                     return 'green-class post-status'
                 }
-                case '5' : {
+                case '5': {
                     return 'red-class post-status';
                 }
-                default : {
+                default: {
                     return 'violet-class post-status';
                 }
             }
@@ -478,7 +568,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 .post-status {
     span {
         padding: 5px 10px;
@@ -535,5 +624,4 @@ export default {
         }
     }
 }
-
 </style>

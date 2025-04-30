@@ -88,6 +88,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
     Route::resource('users', 'UserController');
     Route::post('users/generate', [UserController::class, 'generate']);
 
+    Route::post('posts/all/generate-pdf', [PostController::class, 'generatePDF'])->name('posts.generate-pdf');
+
     //Route::resource('posts', 'PostController');
     Route::resource('statuses', 'StatusController');
     Route::resource('rooms', 'RoomController');

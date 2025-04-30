@@ -13,6 +13,8 @@ use App\Models\Status;
 use App\Models\User;
 use App\Models\PaperExport;
 use Carbon\Carbon;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -712,6 +714,40 @@ class PostController extends Controller
         readfile($file_name);
 
         unlink($file_name);
+    }
+
+
+
+// Add this method to your PostController class
+    public function generatePDF(Request $request)
+    {
+        $papers = $request->get('papers');
+
+        // Get full post data for all selected posts
+        $postIds = collect($papers)->pluck('id');
+        $posts = Post::whereIn('id', $postIds)
+            ->with(['state_fk', 'category_fk', 'template_fk', 'authors', 'users', 'user_fk'])
+            ->get();
+
+        // Create PDF file
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true); // To load images from remote URLs if needed
+
+        $dompdf = new Dompdf($options);
+
+        // Create HTML content
+        $html = view('pdf.posts', ['posts' => $posts])->render();
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        $fileName = 'papers-' . date('YmdHis') . '.pdf';
+
+        return response($dompdf->output())
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'attachment; filename="' . $fileName . '"');
     }
 
 }
