@@ -41,6 +41,7 @@
                         <div slot="selected-row-actions" v-if="source === 'admin'">
                             <button class="btn btn-success" @click="downloadSelected()">Download Selected</button>
                             <button class="btn btn-danger" @click="generatePDF()">Export to PDF</button>
+                            <button class="btn btn-primary" @click="generateWord()">Export to Word</button>
                         </div>
 
 
@@ -123,6 +124,8 @@
         <modal v-show="isModalVisible" :data="modalHTML" @close="closeModal" />
         <modal-pdf :visible="isPdfModalVisible" :progress="pdfProgress" :status-message="pdfStatusMessage"
             @cancel="cancelPdfGeneration" />
+        <modal-word ref="modalWord" :selectedRows="$refs['my-table'] ? $refs['my-table'].selectedRows : []"></modal-word>
+
     </div>
 </template>
 
@@ -132,11 +135,11 @@ import { VueGoodTable } from 'vue-good-table';
 import Modal from "./Modal";
 import ModalPDF from "./ModalPDF";
 import { format } from 'date-fns'
+import ModalWord from "./ModalWord.vue";
 
 export default {
     name: "PostsVueTable.vue",
-    components: { VueGoodTable, 'modal': Modal, 'modal-pdf': ModalPDF },
-    props: ['id', 'title', 'items', 'role', 'reviews', 'user', 'statuses', 'source', 'categories'],
+    components: { VueGoodTable, 'modal': Modal, 'modal-pdf': ModalPDF, 'modal-word': ModalWord },
     props: ['id', 'title', 'items', 'role', 'reviews', 'user', 'statuses', 'source', 'categories'],
 
     data() {
@@ -247,7 +250,7 @@ export default {
             isPdfModalVisible: false,
             pdfProgress: 0,
             pdfStatusMessage: "Preparazione dei documenti...",
-            pdfCancelSource: null
+            pdfCancelSource: null,
         }
     },
 
@@ -485,6 +488,16 @@ export default {
                     clearInterval(interval);
                 }
             }, 300);
+        },
+
+        generateWord() {
+            if (this.$refs['my-table'].selectedRows.length === 0) {
+                alert("Seleziona almeno un elemento prima di esportare.");
+                return;
+            }
+
+            // Mostra il modal tramite il riferimento al componente
+            this.$refs.modalWord.show();
         },
 
         onCancel() {

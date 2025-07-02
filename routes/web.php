@@ -90,6 +90,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'prefix' => 'admin', '
 
     Route::post('posts/all/generate-pdf', [PostController::class, 'generatePDF'])->name('posts.generate-pdf');
 
+    Route::post('posts/all/generate-word', [PostController::class, 'generateWord'])->name('posts.generate-word');
+
     //Route::resource('posts', 'PostController');
     Route::resource('statuses', 'StatusController');
     Route::resource('rooms', 'RoomController');
