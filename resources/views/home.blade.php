@@ -4,6 +4,7 @@
 
 @php
     use App\Models\Post;
+    use App\Models\Edition;
     use Illuminate\Support\Facades\Auth;
     use Illuminate\Support\Facades\DB;
 
@@ -11,16 +12,23 @@ $items=Post::orderBy('id', 'DESC')->limit(20)->with('state_fk', 'category_fk', '
 
 $user=Auth::user();
 $roles = $user->roles()->first();
+$activeEdition = Edition::where('active', true)->first();
 
-$postresearcher =  Post::where('created','=',Auth::id())->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->orderBy('id', 'DESC')->limit(20)->get();
+
+
+$postresearcher =  Post::where('created','=',Auth::id())->where('edition', $activeEdition->id)
+->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')
+->orderBy('id', 'DESC')
+->limit(20)
+->get();
 //$postsupervisor = Post::with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->get();
 
-        $postsupervisor = Post::whereHas('users', function($q) {
+$postsupervisor = Post::whereHas('users', function($q) {
         $q->where('users.id', Auth::id());
     })
-->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->limit(20)
+    ->where('edition', $activeEdition->id)
+    ->with('state_fk', 'category_fk', 'template_fk', 'authors', 'users')->limit(20)
     ->get();
-
 
 @endphp
 
@@ -54,15 +62,15 @@ $postresearcher =  Post::where('created','=',Auth::id())->with('state_fk', 'cate
     @if(count($postresearcher)==0)
         <div class="row mt-5">
 
-            <welcome  user="{{$user}}"></welcome>
+            <welcome user="{{$user}}"></welcome>
 
         </div>
     @else
-    <div class="row mt-5">
-        <div class="col-12">
-            <card-table data="{{$postresearcher}}" user="{{$user}}" role="{{json_encode($roles)}}"></card-table>
+        <div class="row mt-5">
+            <div class="col-12">
+                <card-table data="{{$postresearcher}}" user="{{$user}}" role="{{json_encode($roles)}}"></card-table>
+            </div>
         </div>
-    </div>
     @endif
     @endrole
 @stop
